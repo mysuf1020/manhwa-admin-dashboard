@@ -1,4 +1,4 @@
-import { pgTable, serial, text, varchar, timestamp, integer } from 'drizzle-orm/pg-core';
+import { pgTable, serial, text, varchar, timestamp, integer, real, unique } from 'drizzle-orm/pg-core';
 
 // Tabel Direktori Utama Komik
 export const comics = pgTable('comics', {
@@ -12,6 +12,8 @@ export const comics = pgTable('comics', {
 	genres: varchar('genres', { length: 255 }),
 	coverUrl: text('cover_url'),
 	sourceUrl: text('source_url'), // Digunakan jika web melakukan scraping dari web aslinya
+	averageRating: real('average_rating').default(0).notNull(), // Perhitungan Cache untuk Rendering Cepat
+	ratingCount: integer('rating_count').default(0).notNull(), // Total orang yang me-rating
 	createdAt: timestamp('created_at').defaultNow().notNull(),
 	updatedAt: timestamp('updated_at').defaultNow().notNull()
 });
@@ -81,4 +83,35 @@ export const history = pgTable('history', {
 		.notNull()
 		.references(() => chapters.id),
 	readAt: timestamp('read_at').defaultNow().notNull()
+});
+
+// Tabel Penilaian Komik (Rating 1-5 Bintang)
+export const ratings = pgTable('ratings', {
+	id: serial('id').primaryKey(),
+	userId: text('user_id')
+		.notNull()
+		.references(() => users.id, { onDelete: 'cascade' }),
+	comicId: integer('comic_id')
+		.notNull()
+		.references(() => comics.id, { onDelete: 'cascade' }),
+	score: integer('score').notNull(), // Disarankan membatasi insert antara 1 hingga 5
+	createdAt: timestamp('created_at').defaultNow().notNull()
+}, (t) => ({
+	unq: unique().on(t.userId, t.comicId) // Memaksa 1 User hanya boleh memilliki 1 row rating per komik
+}));
+
+// Tabel Komentar Diskusi Chapter
+export const comments = pgTable('comments', {
+	id: serial('id').primaryKey(),
+	userId: text('user_id')
+		.notNull()
+		.references(() => users.id, { onDelete: 'cascade' }),
+	comicId: integer('comic_id')
+		.notNull()
+		.references(() => comics.id, { onDelete: 'cascade' }),
+	chapterId: integer('chapter_id')
+		.notNull()
+		.references(() => chapters.id, { onDelete: 'cascade' }), // Komentar terikat kuat pada sebuah Chapter spesifik
+	content: text('content').notNull(),
+	createdAt: timestamp('created_at').defaultNow().notNull()
 });

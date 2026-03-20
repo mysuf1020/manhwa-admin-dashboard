@@ -1,8 +1,8 @@
-import { error } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types';
+import { error, fail } from '@sveltejs/kit';
+import type { PageServerLoad, Actions } from './$types';
 import { db } from '$lib/server/db';
-import { comics, chapters, pages, history } from '$lib/server/schema';
-import { eq, and, asc } from 'drizzle-orm';
+import { comics, chapters, pages, history, comments, users } from '$lib/server/schema';
+import { eq, and, asc, desc } from 'drizzle-orm';
 
 export const load: PageServerLoad = async (event) => {
 	const { params, locals } = event;
@@ -51,9 +51,61 @@ export const load: PageServerLoad = async (event) => {
 		}
 	}
 
+	// 5. Tarik Komentar (Chat Thread) untuk chapter ini
+	const chapterComments = await db
+		.select({
+			id: comments.id,
+			content: comments.content,
+			createdAt: comments.createdAt,
+			user: {
+				id: users.id,
+				username: users.username,
+				role: users.role
+			}
+		})
+		.from(comments)
+		.innerJoin(users, eq(comments.userId, users.id))
+		.where(eq(comments.chapterId, currentChapter.id))
+		.orderBy(desc(comments.createdAt));
+
 	return {
 		comic,
 		chapter: currentChapter,
-		pages: chapterPages
+		pages: chapterPages,
+		comments: chapterComments,
+		user
 	};
+};
+
+export const actions: Actions = {
+	addComment: async (event) => {
+		const user = event.locals.user;
+		if (!user) return fail(401, { error: 'Harap Login untuk berkomentar' });
+
+		const formData = await event.request.formData();
+		const content = formData.get('content') as string;
+		if (!content || !content.trim()) return fail(400, { error: 'Komentar tidak boleh kosong' });
+
+		const slug = event.params.slug;
+		const chapterNumber = event.params.chapter;
+		
+		const comicRecord = await db.select().from(comics).where(eq(comics.slug, slug)).limit(1);
+		if (!comicRecord.length) return fail(404, { error: 'Komik tidak valid' });
+
+		const chapterRecord = await db
+			.select()
+			.from(chapters)
+			.where(and(eq(chapters.comicId, comicRecord[0].id), eq(chapters.chapterNumber, chapterNumber)))
+			.limit(1);
+		if (!chapterRecord.length) return fail(404, { error: 'Chapter tidak valid' });
+
+		await db.insert(comments).values({
+			userId: user.id,
+			comicId: comicRecord[0].id,
+			chapterId: chapterRecord[0].id,
+			content
+		});
+
+		return { success: true };
+	}
 };

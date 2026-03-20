@@ -3,6 +3,7 @@
 	import { enhance } from '$app/forms';
 	import ReadButton from '$lib/components/ReadButton.svelte';
 	import ChapterRow from '$lib/components/ChapterRow.svelte';
+	import RatingStars from '$lib/components/RatingStars.svelte';
 
 	let { data }: { data: PageData } = $props();
 </script>
@@ -62,7 +63,19 @@
 			</span>
 		</div>
 
-		<!-- Action Bar: Bookmarks -->
+		<!-- Action Bar: Ratings & Bookmarks -->
+		<div class="mb-5">
+			<RatingStars 
+				interactive={!!data.user} 
+				rating={data.comic.averageRating} 
+				count={data.comic.ratingCount} 
+				userRating={data.userRating} 
+			/>
+			{#if !data.user}
+				<p class="text-xs text-slate-500 mt-2">Masuk/Login untuk memberikan penilaian karya ini.</p>
+			{/if}
+		</div>
+
 		<div class="mb-8 flex items-center gap-3">
 			{#if data.isBookmarked}
 				<form action="?/toggleBookmark" method="POST" use:enhance>

@@ -2,6 +2,7 @@
 	import type { PageData } from './$types';
 	import ReaderNav from '$lib/components/ReaderNav.svelte';
 	import ReaderFooter from '$lib/components/ReaderFooter.svelte';
+	import CommentSection from '$lib/components/CommentSection.svelte';
 
 	let { data }: { data: PageData } = $props();
 </script>
@@ -60,5 +61,8 @@
 	<!-- Area Bawah Pembaca (Call to Actions) -->
 	{#if data.pages.length > 0}
 		<ReaderFooter chapterNumber={data.chapter.chapterNumber} />
+		<div class="w-full max-w-3xl mt-6 border-t border-slate-800">
+			<CommentSection comments={data.comments} user={data.user} />
+		</div>
 	{/if}
 </main>
