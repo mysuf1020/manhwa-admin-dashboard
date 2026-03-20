@@ -12,9 +12,9 @@
 	<title>{data.comic.title} - MangaReader</title>
 </svelte:head>
 
-<div class="max-w-5xl px-4 py-8 md:flex-row gap-8 mx-auto flex min-h-screen flex-col">
+<div class="max-w-5xl px-4 py-4 md:py-8 md:flex-row gap-4 md:gap-8 mx-auto flex min-h-screen flex-col">
 	<!-- Left Side: Cover Image Profil -->
-	<div class="md:w-64 w-full shrink-0">
+	<div class="md:w-64 w-full max-w-[200px] md:max-w-none mx-auto md:mx-0 shrink-0">
 		<div class="rounded-xl shadow-2xl border-slate-800 overflow-hidden border">
 			<img
 				src={data.comic.coverUrl}
@@ -40,7 +40,7 @@
 
 	<!-- Right Side: Details & Chapters Database -->
 	<div class="grow">
-		<h1 class="text-3xl md:text-5xl font-bold mb-2">{data.comic.title}</h1>
+		<h1 class="text-2xl md:text-4xl font-bold mb-2">{data.comic.title}</h1>
 		<div class="gap-4 text-sm text-slate-400 mb-6 mt-3 flex items-center">
 			<span class="bg-slate-800 text-slate-200 px-3 py-1 border-slate-700 rounded-full border"
 				>{data.comic.status}</span

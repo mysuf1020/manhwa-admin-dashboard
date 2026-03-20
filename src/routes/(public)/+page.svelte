@@ -28,18 +28,16 @@
 	<title>MangaReader - Katalog Lengkap</title>
 </svelte:head>
 
-<div class="max-w-7xl px-4 py-8 mx-auto">
-	<!-- Hero Section with Search (Removed entirely) -->
-
+<div class="max-w-7xl px-4 py-4 md:py-6 mx-auto">
 	<!-- Filters -->
-	<section class="max-w-4xl mx-auto mb-16 relative z-20 -mt-16 flex justify-center px-4">
+	<section class="mb-6 flex justify-center">
 		<div
-			class="flex flex-wrap items-center justify-center gap-3 bg-slate-900/80 backdrop-blur-xl p-2 rounded-2xl border border-slate-700/50 shadow-xl shadow-black/40"
+			class="flex items-center gap-1.5 md:gap-2 overflow-x-auto no-scrollbar bg-slate-900/80 backdrop-blur-xl p-1.5 rounded-xl border border-slate-700/50 shadow-lg"
 		>
 			{#each categories as cat (cat.id)}
 				<button
 					onclick={() => setTypeFilter(cat.id)}
-					class={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold transition-all ${data.typeFilter === cat.id ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20' : 'text-slate-300 hover:bg-slate-800 hover:text-white'}`}
+					class={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-bold transition-all ${data.typeFilter === cat.id ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}
 				>
 					{cat.label}
 				</button>
@@ -49,16 +47,16 @@
 
 	<!-- Popular Comics Section -->
 	{#if data.popularComics && data.popularComics.length > 0 && !data.searchQuery && data.typeFilter === 'All' && data.currentPage === 1}
-		<section class="mb-12">
-			<div class="mb-6 flex items-center justify-between">
-				<h2 class="text-2xl font-black text-white flex items-center gap-3 px-2">
+		<section class="mb-8">
+			<div class="mb-4 flex items-center justify-between">
+				<h2 class="text-lg md:text-xl font-black text-white">
 					Trending Minggu Ini
 				</h2>
 			</div>
-			<!-- Container bergeser (Horizontal Scroll) -->
-			<div class="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 no-scrollbar border-b border-slate-800/80">
+			<!-- Horizontal Scroll Container -->
+			<div class="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-4 no-scrollbar">
 				{#each data.popularComics as comic (comic.slug)}
-					<div class="min-w-[140px] md:min-w-[170px] snap-start shrink-0">
+					<div class="w-[120px] md:w-[150px] snap-start shrink-0">
 						<ComicCard href="/comic/{comic.slug}" {comic} isHot={true} />
 					</div>
 				{/each}
@@ -68,9 +66,9 @@
 
 	<!-- Latest Updates Grid -->
 	<section>
-		<div class="mb-6 flex items-center justify-between px-2 pt-2">
+		<div class="mb-4 flex items-center justify-between">
 			<div>
-				<h2 class="text-2xl font-black text-white flex items-center gap-3">
+				<h2 class="text-lg md:text-xl font-black text-white flex items-center gap-2">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						class="h-7 w-7 text-purple-500"
@@ -126,7 +124,7 @@
 				>
 			</div>
 		{:else}
-			<div class="md:grid-cols-4 lg:grid-cols-6 gap-6 grid grid-cols-2">
+			<div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2.5 md:gap-4">
 				{#each data.latestUpdates as comic (comic.slug)}
 					<ComicCard href="/comic/{comic.slug}" {comic} isHot={false} />
 				{/each}

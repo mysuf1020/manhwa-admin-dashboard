@@ -19,13 +19,16 @@
 				</a>
 			{/if}
 		</nav>
-		<div class="gap-3 flex items-center">
+		<div class="gap-2 md:gap-3 flex items-center">
 			<form action="/" method="GET" class="hidden md:flex relative items-center">
 				<input type="search" name="q" placeholder="Cari judul..." class="bg-slate-950 border border-slate-700 focus:border-purple-500 rounded-full py-1.5 pl-4 pr-10 text-sm text-white focus:outline-none transition-colors w-48 focus:w-64">
 				<button type="submit" class="absolute right-2 text-slate-400 hover:text-purple-400" aria-label="Search">
 					<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
 				</button>
 			</form>
+			<a href="/" class="md:hidden p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-full transition-colors" aria-label="Search">
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+			</a>
 
 			{#if $page.data.user}
 				<div class="flex items-center gap-2 pl-2">
