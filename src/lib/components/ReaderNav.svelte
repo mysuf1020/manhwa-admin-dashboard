@@ -1,50 +1,58 @@
 <script lang="ts">
-	let { title, chapterNumber, comicSlug, prevChapterNumber = null, nextChapterNumber = null } = $props<{
+	import { fly } from 'svelte/transition';
+
+	let { 
+		title, 
+		chapterNumber, 
+		comicSlug, 
+		prevChapterNumber = null, 
+		nextChapterNumber = null,
+		visible = false
+	} = $props<{
 		title: string;
 		chapterNumber: string;
 		comicSlug: string;
 		prevChapterNumber?: string | null;
 		nextChapterNumber?: string | null;
+		visible?: boolean;
 	}>();
 </script>
 
+{#if visible}
 <nav
-	class="top-0 bg-slate-950/80 backdrop-blur-lg border-slate-800/80 px-2 md:px-6 py-3 shadow-lg shadow-purple-900/5 sticky z-50 flex items-center justify-between border-b transition-all duration-300"
+	transition:fly={{ y: 100, duration: 300 }}
+	class="fixed bottom-0 left-0 right-0 bg-slate-950/95 backdrop-blur-md border-t border-slate-800/80 px-4 md:px-8 py-5 shadow-[0_-20px_50px_rgba(0,0,0,0.6)] z-50 flex items-center justify-between"
 >
-	<!-- eslint-disable-next-line -->
+	<!-- Return Button -->
 	<a
 		href={`/comic/${comicSlug}`}
-		class="text-slate-400 hover:text-white gap-1 md:gap-2 flex items-center transition-colors"
+		class="text-slate-400 hover:text-white flex items-center gap-2 transition-colors"
+		onclick={(e) => e.stopPropagation()}
 	>
-		<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-			<path
-				fill-rule="evenodd"
-				d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
-				clip-rule="evenodd"
-			/>
+		<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+			<path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
 		</svg>
-		<span
-			class="font-semibold text-sm md:text-base sm:inline md:max-w-none hidden max-w-[150px] truncate"
-			>{title}</span
-		>
-		<span class="sm:hidden font-semibold">Kembali</span>
+		<span class="font-bold sm:inline hidden max-w-[150px] md:max-w-[250px] truncate">{title}</span>
 	</a>
 
-	<div class="font-bold text-lg text-purple-400 tracking-wide">
-		Ch. {chapterNumber}
-	</div>
-
-	<div class="gap-1 md:gap-2 flex">
+	<!-- Controls Center -->
+	<div class="flex items-center gap-2 md:gap-4">
 		{#if prevChapterNumber}
-			<a href="/comic/{comicSlug}/{prevChapterNumber}" class="p-2 text-xs md:text-sm bg-slate-900 border-slate-700 rounded hover:bg-slate-800 shadow-sm border transition-colors inline-block text-center">&larr; Prev</a>
+			<a href="/comic/{comicSlug}/{prevChapterNumber}" class="px-4 md:px-6 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-colors shadow-sm" onclick={(e) => e.stopPropagation()}>&larr; Prev</a>
 		{:else}
-			<button class="p-2 text-xs md:text-sm bg-slate-900 border-slate-700 rounded shadow-sm border opacity-30 cursor-not-allowed" disabled>&larr; Prev</button>
+			<button class="px-4 md:px-6 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-sm font-semibold text-slate-600 cursor-not-allowed shadow-inner" disabled onclick={(e) => e.stopPropagation()}>&larr; Prev</button>
 		{/if}
 
 		{#if nextChapterNumber}
-			<a href="/comic/{comicSlug}/{nextChapterNumber}" class="p-2 text-xs md:text-sm bg-purple-600 border-purple-500 rounded hover:bg-purple-500 text-white font-medium shadow-md shadow-purple-900/20 border transition-colors inline-block text-center">Next &rarr;</a>
+			<a href="/comic/{comicSlug}/{nextChapterNumber}" class="px-4 md:px-6 py-2.5 bg-purple-600 border border-purple-500 rounded-xl text-sm font-bold text-white hover:bg-purple-500 shadow-lg shadow-purple-900/40 transition-colors" onclick={(e) => e.stopPropagation()}>Next &rarr;</a>
 		{:else}
-			<button class="p-2 text-xs md:text-sm bg-purple-900 border-purple-800 rounded text-white/50 font-medium shadow-md shadow-purple-900/20 border opacity-50 cursor-not-allowed" disabled>Next &rarr;</button>
+			<button class="px-4 md:px-6 py-2.5 bg-purple-900 border border-purple-800 rounded-xl text-sm font-bold text-white/50 cursor-not-allowed shadow-inner" disabled onclick={(e) => e.stopPropagation()}>Next &rarr;</button>
 		{/if}
 	</div>
+
+	<!-- Chapter Indicator -->
+	<div class="font-black text-xl text-purple-400 tracking-wide hidden sm:block">
+		<span class="text-slate-500 text-sm font-semibold mr-1">Ch.</span>{chapterNumber}
+	</div>
 </nav>
+{/if}

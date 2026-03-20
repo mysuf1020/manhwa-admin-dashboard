@@ -5,24 +5,35 @@
 	import CommentSection from '$lib/components/CommentSection.svelte';
 
 	let { data }: { data: PageData } = $props();
+
+	// State boolean untuk menampilkan navbar di bagian bawah
+	let showNav = $state(false);
+
+	function toggleNav() {
+		showNav = !showNav;
+	}
 </script>
 
 <svelte:head>
 	<title>Chapter {data.chapter.chapterNumber} - {data.comic.title} | MangaReader</title>
 </svelte:head>
 
-<!-- Sticky Top Nav Reader -->
+<!-- Overlay Bottom Nav Reader -->
 <ReaderNav
 	title={data.comic.title}
 	chapterNumber={data.chapter.chapterNumber}
 	comicSlug={data.comic.slug}
 	prevChapterNumber={data.prevChapterNumber}
 	nextChapterNumber={data.nextChapterNumber}
+	visible={showNav}
 />
 
 <!-- Area Utama Pembaca (Infinite Scroll Format Seamless) -->
 <main class="bg-black pb-12 flex min-h-screen flex-col items-center select-none">
-	<div class="max-w-3xl shadow-2xl relative flex w-full flex-col">
+	<!-- Area yang dapat di-klik untuk Memunculkan Navigasi -->
+	<!-- svelte-ignore a11y_click_events_have_key_events -->
+	<!-- svelte-ignore a11y_no_static_element_interactions -->
+	<div class="max-w-3xl shadow-2xl relative flex w-full flex-col cursor-pointer" onclick={toggleNav}>
 		{#if data.pages.length === 0}
 			<!-- Jika data gambar kosong karena admin belum nge-upload file gambar panel komik -->
 			<div
