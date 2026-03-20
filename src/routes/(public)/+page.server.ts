@@ -24,7 +24,15 @@ export const load: PageServerLoad = async ({ url }) => {
 	const pageSize = 24;
 
 	// Query Populer (Top 6 berdasarkan Views) Hanya ketika tidak sedang search/filter dan di page 1
-	let popularComics: any[] = [];
+	let popularComics: {
+		id: number;
+		slug: string;
+		title: string;
+		type: string;
+		chapter: string;
+		time: string;
+		cover: string;
+	}[] = [];
 	if (!searchQuery && (!typeFilter || typeFilter === 'All') && page === 1) {
 		const popularQuery = await db
 			.select()
