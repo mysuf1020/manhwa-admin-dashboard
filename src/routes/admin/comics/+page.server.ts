@@ -17,6 +17,8 @@ export const actions: Actions = {
 		const coverUrl = formData.get('coverUrl') as string;
 		const author = formData.get('author') as string;
 		const status = formData.get('status') as string;
+		const type = formData.get('type') as string;
+		const genres = formData.get('genres') as string;
 		const description = formData.get('description') as string;
 
 		if (!title || !slug) {
@@ -30,6 +32,8 @@ export const actions: Actions = {
 				coverUrl: coverUrl || null,
 				author: author || null,
 				status: status || 'Ongoing',
+				type: type || 'Manhwa',
+				genres: genres || null,
 				description: description || null
 			});
 			return { success: true };

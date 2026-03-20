@@ -8,6 +8,8 @@ export const comics = pgTable('comics', {
 	description: text('description'),
 	author: varchar('author', { length: 255 }),
 	status: varchar('status', { length: 50 }).default('Ongoing'),
+	type: varchar('type', { length: 50 }).default('Manhwa').notNull(),
+	genres: varchar('genres', { length: 255 }),
 	coverUrl: text('cover_url'),
 	sourceUrl: text('source_url'), // Digunakan jika web melakukan scraping dari web aslinya
 	createdAt: timestamp('created_at').defaultNow().notNull(),

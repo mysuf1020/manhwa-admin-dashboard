@@ -86,10 +86,10 @@
 						</div>
 					</td>
 					<td class="p-4">
-						<span
-							class="px-2 py-1 bg-slate-800 rounded text-xs border-slate-700 font-semibold border"
-							>{comic.status}</span
-						>
+						<div class="flex gap-2 flex-wrap mb-2">
+							<span class="px-2 py-1 bg-slate-800 rounded text-xs border-slate-700 font-semibold border text-slate-300">{comic.status}</span>
+							<span class="px-2 py-1 bg-purple-900/30 rounded text-xs border-purple-500/20 font-semibold border text-purple-400">{comic.type}</span>
+						</div>
 						<div class="text-xs text-slate-500 mt-2 gap-1 flex items-center">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -315,8 +315,39 @@
 						placeholder="https://i.ibb.co/example.jpg"
 					/>
 					<p class="text-xs text-slate-500 mt-1.5">
-						Kosongkan jika tidak ada, sistem akan memberikan gambar placeholder otomatis.
+						Kosongkan jika tidak ada, sistem otomatis memberi gambar placeholder.
 					</p>
+				</div>
+
+				<div class="md:grid-cols-2 gap-5 mb-5 grid grid-cols-1">
+					<div>
+						<label for="type" class="text-sm font-semibold text-slate-300 mb-1.5 block"
+							>Tipe Terbitan</label
+						>
+						<div class="relative">
+							<select
+								id="type"
+								name="type"
+								class="bg-slate-950 border-slate-700 rounded-lg px-4 py-2.5 text-white focus:border-purple-500 font-medium w-full appearance-none border transition-all focus:outline-none"
+							>
+								<option value="Manhwa">🔥 Manhwa (Korea)</option>
+								<option value="Manga">❤️ Manga (Jepang)</option>
+								<option value="Manhua">🐉 Manhua (China)</option>
+							</select>
+						</div>
+					</div>
+					<div>
+						<label for="genres" class="text-sm font-semibold text-slate-300 mb-1.5 block"
+							>Genre (Pipisahkan Koma)</label
+						>
+						<input
+							type="text"
+							id="genres"
+							name="genres"
+							class="bg-slate-950 border-slate-700 rounded-lg px-4 py-2.5 text-white focus:border-purple-500 w-full border transition-all focus:outline-none"
+							placeholder="Action, Fantasy, Romance"
+						/>
+					</div>
 				</div>
 
 				<div class="mb-6">
