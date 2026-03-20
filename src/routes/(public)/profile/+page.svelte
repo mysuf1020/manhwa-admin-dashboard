@@ -11,7 +11,7 @@
 
 <div class="max-w-7xl mx-auto px-4 py-8">
     <div class="mb-10 flex items-center gap-5 bg-slate-900 border border-slate-800 p-8 rounded-3xl shadow-2xl">
-        <div class="w-20 h-20 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-2xl flex items-center justify-center text-3xl font-black text-white shadow-xl shadow-purple-900/30 transform rotate-3">
+        <div class="w-20 h-20 bg-linear-to-br from-purple-500 to-indigo-600 rounded-2xl flex items-center justify-center text-3xl font-black text-white shadow-xl shadow-purple-900/30 transform rotate-3">
             {data.user?.username[0].toUpperCase()}
         </div>
         <div>
@@ -38,7 +38,7 @@
             </div>
         {:else}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                {#each data.userHistory as item}
+                {#each data.userHistory as item (item.id)}
                     <a href={`/comic/${item.comicSlug}/${item.chapterId}`} class="bg-slate-900 border border-slate-700 hover:border-emerald-500 rounded-2xl p-4 flex gap-5 transition-all group hover:shadow-xl hover:shadow-emerald-900/10 hover:-translate-y-1">
                         {#if item.comicCoverUrl}
                             <img src={item.comicCoverUrl} alt={item.comicTitle} class="w-20 h-28 object-cover rounded-xl shadow-lg border border-slate-800 bg-slate-950" />
@@ -75,7 +75,7 @@
             </div>
         {:else}
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
-                {#each data.userBookmarks as comic}
+                {#each data.userBookmarks as comic (comic.id)}
                     <ComicCard {comic} href={`/comic/${comic.slug}`} />
                 {/each}
             </div>

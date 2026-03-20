@@ -6,7 +6,7 @@
 	<div class="max-w-7xl px-4 h-16 mx-auto flex items-center justify-between">
 		<a
 			href="/"
-			class="text-xl font-black from-purple-400 to-emerald-400 bg-gradient-to-r bg-clip-text text-transparent"
+			class="text-xl font-black from-purple-400 to-emerald-400 bg-linear-to-r bg-clip-text text-transparent"
 		>
 			MangaReader
 		</a>

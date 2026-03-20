@@ -59,7 +59,7 @@ export const actions: Actions = {
 			// Auto login
 			const session = await createSession(userId);
 			setSessionTokenCookie(event, session.id, session.expiresAt);
-		} catch (e) {
+		} catch {
 			return fail(500, { error: 'Kegagalan Server saat pendaftaran.' });
 		}
 
