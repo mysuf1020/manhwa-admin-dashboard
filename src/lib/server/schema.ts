@@ -14,6 +14,7 @@ export const comics = pgTable('comics', {
 	sourceUrl: text('source_url'), // Digunakan jika web melakukan scraping dari web aslinya
 	averageRating: real('average_rating').default(0).notNull(), // Perhitungan Cache untuk Rendering Cepat
 	ratingCount: integer('rating_count').default(0).notNull(), // Total orang yang me-rating
+	viewCount: integer('view_count').default(0).notNull(), // Analytics Total Dilihat
 	createdAt: timestamp('created_at').defaultNow().notNull(),
 	updatedAt: timestamp('updated_at').defaultNow().notNull()
 });

@@ -14,6 +14,13 @@ export const load: PageServerLoad = async (event) => {
 
 	const comic = comicData[0];
 
+	// Hitung dan Increment Analytics View Count
+	await db.update(comics)
+		.set({ viewCount: comic.viewCount + 1 })
+		.where(eq(comics.id, comic.id));
+
+	const currentViewCount = comic.viewCount + 1;
+
 	// Tarik seluruh daftar chapter
 	const chapterList = await db
 		.select()
@@ -42,7 +49,7 @@ export const load: PageServerLoad = async (event) => {
 	}
 
 	return {
-		comic,
+		comic: { ...comic, viewCount: currentViewCount },
 		chapters: chapterList,
 		isBookmarked,
 		userRating,

@@ -16,6 +16,8 @@
 	title={data.comic.title}
 	chapterNumber={data.chapter.chapterNumber}
 	comicSlug={data.comic.slug}
+	prevChapterNumber={data.prevChapterNumber}
+	nextChapterNumber={data.nextChapterNumber}
 />
 
 <!-- Area Utama Pembaca (Infinite Scroll Format Seamless) -->
@@ -60,7 +62,11 @@
 
 	<!-- Area Bawah Pembaca (Call to Actions) -->
 	{#if data.pages.length > 0}
-		<ReaderFooter chapterNumber={data.chapter.chapterNumber} />
+		<ReaderFooter 
+			chapterNumber={data.chapter.chapterNumber} 
+			comicSlug={data.comic.slug} 
+			nextChapterNumber={data.nextChapterNumber} 
+		/>
 		<div class="w-full max-w-3xl mt-6 border-t border-slate-800">
 			<CommentSection comments={data.comments} user={data.user} />
 		</div>

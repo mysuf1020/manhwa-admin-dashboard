@@ -22,6 +22,17 @@ export const load: PageServerLoad = async (event) => {
 	if (!chapterRecord.length) error(404, 'Chapter tidak ditemukan.');
 	const currentChapter = chapterRecord[0];
 
+	// 2B. Hitung Navigasi Lanjut/Kembali (Next/Prev)
+	const allChapters = await db
+		.select({ id: chapters.id, chapterNumber: chapters.chapterNumber })
+		.from(chapters)
+		.where(eq(chapters.comicId, comic.id))
+		.orderBy(asc(chapters.createdAt));
+
+	const currentIndex = allChapters.findIndex(c => c.id === currentChapter.id);
+	const prevChapterNumber = currentIndex > 0 ? allChapters[currentIndex - 1].chapterNumber : null;
+	const nextChapterNumber = currentIndex < allChapters.length - 1 ? allChapters[currentIndex + 1].chapterNumber : null;
+
 	// 3. Tarik seluruh gambar pindaian webtoon (Pages)
 	const chapterPages = await db
 		.select()
@@ -73,7 +84,9 @@ export const load: PageServerLoad = async (event) => {
 		chapter: currentChapter,
 		pages: chapterPages,
 		comments: chapterComments,
-		user
+		user,
+		prevChapterNumber,
+		nextChapterNumber
 	};
 };
 

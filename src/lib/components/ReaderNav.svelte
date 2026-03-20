@@ -1,8 +1,10 @@
 <script lang="ts">
-	let { title, chapterNumber, comicSlug } = $props<{
+	let { title, chapterNumber, comicSlug, prevChapterNumber = null, nextChapterNumber = null } = $props<{
 		title: string;
 		chapterNumber: string;
 		comicSlug: string;
+		prevChapterNumber?: string | null;
+		nextChapterNumber?: string | null;
 	}>();
 </script>
 
@@ -33,16 +35,16 @@
 	</div>
 
 	<div class="gap-1 md:gap-2 flex">
-		<button
-			class="p-2 text-xs md:text-sm bg-slate-900 border-slate-700 rounded hover:bg-slate-800 shadow-sm border transition-colors disabled:opacity-30"
-			disabled
-		>
-			&larr; Prev
-		</button>
-		<button
-			class="p-2 text-xs md:text-sm bg-purple-600 border-purple-500 rounded hover:bg-purple-500 text-white font-medium shadow-md shadow-purple-900/20 border transition-colors"
-		>
-			Next &rarr;
-		</button>
+		{#if prevChapterNumber}
+			<a href="/comic/{comicSlug}/{prevChapterNumber}" class="p-2 text-xs md:text-sm bg-slate-900 border-slate-700 rounded hover:bg-slate-800 shadow-sm border transition-colors inline-block text-center">&larr; Prev</a>
+		{:else}
+			<button class="p-2 text-xs md:text-sm bg-slate-900 border-slate-700 rounded shadow-sm border opacity-30 cursor-not-allowed" disabled>&larr; Prev</button>
+		{/if}
+
+		{#if nextChapterNumber}
+			<a href="/comic/{comicSlug}/{nextChapterNumber}" class="p-2 text-xs md:text-sm bg-purple-600 border-purple-500 rounded hover:bg-purple-500 text-white font-medium shadow-md shadow-purple-900/20 border transition-colors inline-block text-center">Next &rarr;</a>
+		{:else}
+			<button class="p-2 text-xs md:text-sm bg-purple-900 border-purple-800 rounded text-white/50 font-medium shadow-md shadow-purple-900/20 border opacity-50 cursor-not-allowed" disabled>Next &rarr;</button>
+		{/if}
 	</div>
 </nav>
