@@ -195,7 +195,7 @@
 				</div>
 			{:else}
 				<div class="sm:grid-cols-3 lg:grid-cols-5 gap-4 grid grid-cols-2">
-					{#each data.pages as page}
+					{#each data.pages as page (page.id)}
 						<PageCard {page} />
 					{/each}
 				</div>

@@ -17,6 +17,7 @@
 <div class="bg-slate-900 border-slate-800 rounded-xl shadow-lg overflow-hidden border">
 	<div class="px-6 py-4 border-slate-800 flex items-center justify-between border-b">
 		<h2 class="font-bold text-lg text-white">Recently Added Chapters</h2>
+		<!-- eslint-disable-next-line -->
 		<a href="/admin/chapters" class="text-sm text-purple-400 hover:underline">View All</a>
 	</div>
 	<div class="w-full overflow-x-auto">
