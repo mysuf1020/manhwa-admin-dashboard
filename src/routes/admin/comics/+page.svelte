@@ -233,6 +233,7 @@
 			<form
 				method="POST"
 				action="?/create"
+				enctype="multipart/form-data"
 				use:enhance={() => {
 					return async ({ update, result }) => {
 						await update();
@@ -304,18 +305,18 @@
 				</div>
 
 				<div class="mb-5">
-					<label for="coverUrl" class="text-sm font-semibold text-slate-300 mb-1.5 block"
-						>Cover Image (URL Eksternal)</label
+					<label for="cover" class="text-sm font-semibold text-slate-300 mb-1.5 block"
+						>Upload Cover Image</label
 					>
 					<input
-						type="url"
-						id="coverUrl"
-						name="coverUrl"
-						class="bg-slate-950 border-slate-700 rounded-lg px-4 py-2.5 text-white focus:border-purple-500 font-mono text-sm w-full border transition-all focus:outline-none"
-						placeholder="https://i.ibb.co/example.jpg"
+						type="file"
+						id="cover"
+						name="cover"
+						accept="image/png, image/jpeg, image/webp"
+						class="bg-slate-950 border-slate-700 rounded-lg px-4 py-2.5 text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-900/40 file:text-purple-400 hover:file:bg-purple-900/60 focus:border-purple-500 w-full border transition-all focus:outline-none"
 					/>
 					<p class="text-xs text-slate-500 mt-1.5">
-						Kosongkan jika tidak ada, sistem otomatis memberi gambar placeholder.
+						Kosongkan jika tidak ada, sistem otomatis memberi gambar placeholder. Maksimal 5MB.
 					</p>
 				</div>
 

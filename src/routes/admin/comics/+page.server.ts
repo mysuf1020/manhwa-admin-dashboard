@@ -1,6 +1,7 @@
 import type { PageServerLoad, Actions } from './$types';
 import { db } from '$lib/server/db';
 import { comics } from '$lib/server/schema';
+import { uploadFile } from '$lib/server/s3';
 import { eq, desc } from 'drizzle-orm';
 import { fail } from '@sveltejs/kit';
 
@@ -14,7 +15,7 @@ export const actions: Actions = {
 		const formData = await request.formData();
 		const title = formData.get('title') as string;
 		const slug = formData.get('slug') as string;
-		const coverUrl = formData.get('coverUrl') as string;
+		const coverFile = formData.get('cover') as File;
 		const author = formData.get('author') as string;
 		const status = formData.get('status') as string;
 		const type = formData.get('type') as string;
@@ -26,10 +27,15 @@ export const actions: Actions = {
 		}
 
 		try {
+			let coverUrl = null;
+			if (coverFile && coverFile.size > 0) {
+				coverUrl = await uploadFile(coverFile, 'covers');
+			}
+
 			await db.insert(comics).values({
 				title,
 				slug,
-				coverUrl: coverUrl || null,
+				coverUrl: coverUrl,
 				author: author || null,
 				status: status || 'Ongoing',
 				type: type || 'Manhwa',

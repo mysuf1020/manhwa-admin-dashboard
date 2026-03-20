@@ -58,18 +58,18 @@
 			</h3>
 
 			<p class="text-sm text-slate-400 mb-4 leading-relaxed">
-				Salin barisan URL link gambar dari Cloudflare R2 secara sekuensial. Pisahkan tiap aset
-				gambar ke bawah (Enter).
+				Pilih aset-aset gambar (JPG/PNG/WEBP) secara sekelompok (Bulk) dari komputer Anda. Sistem akan mengurutkannya otomatis.
 			</p>
 
-			<form method="POST" action="?/addPages" use:enhance>
-				<textarea
-					name="urls"
-					rows="12"
+			<form method="POST" action="?/addPages" enctype="multipart/form-data" use:enhance>
+				<input
+					type="file"
+					name="pages"
+					multiple
+					accept="image/png, image/jpeg, image/webp"
 					required
-					class="bg-slate-950 border-slate-700 rounded-lg p-3 text-slate-300 text-xs font-mono focus:border-emerald-500 focus:ring-emerald-500 mb-4 w-full border transition-all focus:ring-1 focus:outline-none"
-					placeholder="https://image1.jpg&#10;https://image2.jpg&#10;https://image3.jpg"
-				></textarea>
+					class="bg-slate-950 border-slate-700 rounded-lg p-3 text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-emerald-900/40 file:text-emerald-400 hover:file:bg-emerald-900/60 focus:border-emerald-500 mb-4 w-full border transition-all focus:ring-1 focus:outline-none"
+				/>
 
 				<Button type="submit" variant="success" class="py-3 shadow-lg shadow-emerald-900/40 w-full">
 					<svg
@@ -85,7 +85,7 @@
 							d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
 						/></svg
 					>
-					Tembak URL ke Database
+					Unggah Panel ke R2 Server
 				</Button>
 			</form>
 
