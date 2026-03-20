@@ -2,13 +2,19 @@
 	import { enhance } from '$app/forms';
 
 	let { comments = [], user = null } = $props<{
-		comments?: any[];
+		comments?: {
+			id: number;
+			content: string;
+			createdAt: Date;
+			user: { id: string; username: string; role: string | null };
+		}[];
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		user?: any;
 	}>();
 
 	// Reset textarea parameter after successful POST server action
 	function submitEnhance() {
-		return async ({ update }: any) => {
+		return async ({ update }: { update: (opts: { reset: boolean }) => Promise<void> }) => {
 			await update({ reset: true });
 		};
 	}
@@ -100,7 +106,7 @@
 
 	<!-- Daftar Ulasan Chat Thread -->
 	<div class="flex flex-col gap-5">
-		{#each comments as comment}
+		{#each comments as comment (comment.id)}
 			<div class="flex gap-4">
 				<div
 					class="w-10 h-10 rounded-full flex shrink-0 items-center justify-center font-bold text-sm uppercase {comment
