@@ -5,24 +5,19 @@
 
 	let { data }: { data: PageData } = $props();
 
-	// Extracted initial state to satisfy Svelte compile-time checking rules
-	const initialQuery = data.searchQuery;
-	let searchInput = $state(initialQuery);
-
-	$effect(() => {
-		searchInput = data.searchQuery;
-	});
-
-	// Handler form action (Hijacking native behavior to perform Client-Side CSR Svelte Routing)
+	// Handler form action (Mencegah reload dan melempar state filter murni ke SSR)
 	function handleSearch(e: Event) {
 		e.preventDefault();
+		const form = e.target as HTMLFormElement;
+		const formData = new FormData(form);
+		const query = formData.get('q') as string;
+
 		const url = new URL(window.location.href);
-		if (searchInput) {
-			url.searchParams.set('q', searchInput);
+		if (query) {
+			url.searchParams.set('q', query);
 		} else {
 			url.searchParams.delete('q');
 		}
-		// Reset to page 1 natively if pagination existed, simply go to new URL parameters natively
 		goto(url.toString(), { keepFocus: true });
 	}
 
@@ -92,7 +87,8 @@
 				</div>
 				<input
 					type="search"
-					bind:value={searchInput}
+					name="q"
+					value={data.searchQuery}
 					placeholder="Cari judul komik favoritmu disini..."
 					class="w-full bg-slate-950/80 backdrop-blur-md border-2 border-slate-700 focus:border-purple-500 rounded-2xl py-4 pl-12 pr-32 text-white font-medium text-lg focus:outline-none transition-all focus:ring-4 focus:ring-purple-500/10 placeholder-slate-500"
 				/>
@@ -172,8 +168,10 @@
 				</p>
 				<button
 					onclick={() => {
-						searchInput = '';
-						setTypeFilter('All');
+						const url = new URL(window.location.href);
+						url.searchParams.delete('q');
+						url.searchParams.delete('type');
+						goto(url.toString());
 					}}
 					class="mt-6 font-bold text-purple-400 hover:text-purple-300 decoration-purple-500 hover:underline"
 					>Reset Semua Filter</button
