@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { PageData } from './$types';
+	import { enhance } from '$app/forms';
 	import ReadButton from '$lib/components/ReadButton.svelte';
 	import ChapterRow from '$lib/components/ChapterRow.svelte';
 
@@ -59,6 +60,25 @@
 				>
 				{data.comic.author || 'Author Tidak Diketahui'}
 			</span>
+		</div>
+
+		<!-- Action Bar: Bookmarks -->
+		<div class="mb-8 flex items-center gap-3">
+			{#if data.isBookmarked}
+				<form action="?/toggleBookmark" method="POST" use:enhance>
+					<button class="flex items-center gap-2 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-bold px-4 py-2.5 rounded-lg transition-all hover:bg-emerald-500 hover:text-white hover:border-emerald-500 shadow-lg shadow-emerald-900/10 active:scale-95">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" /></svg>
+						Tersimpan di Koleksi
+					</button>
+				</form>
+			{:else}
+				<form action="?/toggleBookmark" method="POST" use:enhance>
+					<button class="flex items-center gap-2 bg-slate-800 text-slate-300 border border-slate-700 font-bold px-4 py-2.5 rounded-lg transition-all hover:bg-purple-600 hover:text-white hover:border-purple-500 shadow-lg active:scale-95">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg>
+						Tambah ke Favorit
+					</button>
+				</form>
+			{/if}
 		</div>
 
 		<div class="prose prose-invert mb-10 max-w-none">

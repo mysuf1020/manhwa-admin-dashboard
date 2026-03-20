@@ -35,3 +35,48 @@ export const pages = pgTable('pages', {
 	pageNumber: integer('page_number').notNull(), // Urutan gambar (1, 2, 3...)
 	imageUrl: text('image_url').notNull() // URL ke object storage Cloudflare R2
 });
+
+// Tabel Pengguna (Auth)
+export const users = pgTable('users', {
+	id: text('id').primaryKey(), // UUID string
+	username: varchar('username', { length: 255 }).notNull().unique(),
+	passwordHash: text('password_hash').notNull(),
+	role: varchar('role', { length: 50 }).default('user'), // 'user' atau 'admin'
+	createdAt: timestamp('created_at').defaultNow().notNull()
+});
+
+// Tabel Sesi Login (Stateful Auth)
+export const sessions = pgTable('sessions', {
+	id: text('id').primaryKey(),
+	userId: text('user_id')
+		.notNull()
+		.references(() => users.id),
+	expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'date' }).notNull()
+});
+
+// Tabel Bookmark (Favorit)
+export const bookmarks = pgTable('bookmarks', {
+	id: serial('id').primaryKey(),
+	userId: text('user_id')
+		.notNull()
+		.references(() => users.id),
+	comicId: integer('comic_id')
+		.notNull()
+		.references(() => comics.id),
+	createdAt: timestamp('created_at').defaultNow().notNull()
+});
+
+// Tabel Riwayat Bacaan (History)
+export const history = pgTable('history', {
+	id: serial('id').primaryKey(),
+	userId: text('user_id')
+		.notNull()
+		.references(() => users.id),
+	comicId: integer('comic_id')
+		.notNull()
+		.references(() => comics.id),
+	chapterId: integer('chapter_id')
+		.notNull()
+		.references(() => chapters.id),
+	readAt: timestamp('read_at').defaultNow().notNull()
+});
