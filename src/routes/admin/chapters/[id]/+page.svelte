@@ -54,40 +54,43 @@
 						d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
 					/></svg
 				>
-				Bulk Injector URL
+				Injector Gambar
 			</h3>
 
-			<p class="text-sm text-slate-400 mb-4 leading-relaxed">
-				Pilih aset-aset gambar (JPG/PNG/WEBP) secara sekelompok (Bulk) dari komputer Anda. Sistem akan mengurutkannya otomatis.
-			</p>
+            <div class="bg-emerald-950/20 p-4 border border-emerald-900/30 rounded-lg mb-6">
+                <p class="text-sm text-emerald-400/80 mb-3 font-medium">Opsi 1: Upload (R2 Storage)</p>
+                <form method="POST" action="?/addPages" enctype="multipart/form-data" use:enhance>
+                    <input
+                        type="file"
+                        name="pages"
+                        multiple
+                        accept="image/png, image/jpeg, image/webp"
+                        required
+                        class="bg-slate-950 border-slate-700 rounded p-2 text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-emerald-900/40 file:text-emerald-400 hover:file:bg-emerald-900/60 focus:border-emerald-500 mb-3 w-full border transition-all focus:ring-1 focus:outline-none text-xs"
+                    />
 
-			<form method="POST" action="?/addPages" enctype="multipart/form-data" use:enhance>
-				<input
-					type="file"
-					name="pages"
-					multiple
-					accept="image/png, image/jpeg, image/webp"
-					required
-					class="bg-slate-950 border-slate-700 rounded-lg p-3 text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-emerald-900/40 file:text-emerald-400 hover:file:bg-emerald-900/60 focus:border-emerald-500 mb-4 w-full border transition-all focus:ring-1 focus:outline-none"
-				/>
+                    <Button type="submit" variant="success" class="py-2 text-sm shadow-emerald-900/40 w-full">
+                        Unggah File
+                    </Button>
+                </form>
+            </div>
 
-				<Button type="submit" variant="success" class="py-3 shadow-lg shadow-emerald-900/40 w-full">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						class="h-5 w-5"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke="currentColor"
-						><path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-						/></svg
-					>
-					Unggah Panel ke R2 Server
-				</Button>
-			</form>
+            <div class="bg-indigo-950/20 p-4 border border-indigo-900/30 rounded-lg">
+                <p class="text-sm text-indigo-400/80 mb-3 font-medium">Opsi 2: URL Eksternal Bulking</p>
+                <form method="POST" action="?/addPagesByUrl" use:enhance>
+                    <textarea
+                        name="urls"
+                        rows="5"
+                        required
+                        class="bg-slate-950 border-slate-700 rounded p-3 text-slate-300 text-xs font-mono focus:border-indigo-500 focus:ring-indigo-500 mb-3 w-full border transition-all focus:ring-1 focus:outline-none"
+                        placeholder="https://i.img.co/1.jpg&#10;https://i.img.co/2.jpg"
+                    ></textarea>
+
+                    <Button type="submit" variant="ghost" class="py-2 text-sm w-full border-indigo-900/50 bg-indigo-900/20 text-indigo-400 hover:bg-indigo-600 hover:text-white border">
+                        Inject URLs
+                    </Button>
+                </form>
+            </div>
 
 			{#if form?.error}
 				<div

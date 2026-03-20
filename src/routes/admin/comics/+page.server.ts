@@ -16,6 +16,7 @@ export const actions: Actions = {
 		const title = formData.get('title') as string;
 		const slug = formData.get('slug') as string;
 		const coverFile = formData.get('cover') as File;
+		const coverUrlExt = formData.get('coverUrl') as string;
 		const author = formData.get('author') as string;
 		const status = formData.get('status') as string;
 		const type = formData.get('type') as string;
@@ -27,7 +28,7 @@ export const actions: Actions = {
 		}
 
 		try {
-			let coverUrl = null;
+			let coverUrl = coverUrlExt || null;
 			if (coverFile && coverFile.size > 0) {
 				coverUrl = await uploadFile(coverFile, 'covers');
 			}

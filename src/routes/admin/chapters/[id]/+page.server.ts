@@ -72,6 +72,46 @@ export const actions: Actions = {
 			return fail(500, { error: (e as Error).message || 'Gagal push aset ke Cloudflare R2 / Database' });
 		}
 	},
+	addPagesByUrl: async ({ request, params }) => {
+		const chapterId = parseInt(params.id);
+		const formData = await request.formData();
+		const urlsText = formData.get('urls') as string;
+
+		if (!urlsText || !urlsText.trim())
+			return fail(400, { error: 'Please provide at least one URL' });
+
+		const newUrls = urlsText
+			.split('\n')
+			.map((u) => u.trim())
+			.filter((u) => u.length > 0);
+		if (newUrls.length === 0) return fail(400, { error: 'No valid URLs found' });
+
+		// Get max page number currently
+		const existingPages = await db
+			.select()
+			.from(pages)
+			.where(eq(pages.chapterId, chapterId))
+			.orderBy(asc(pages.pageNumber));
+		let nextNumber =
+			existingPages.length > 0 ? existingPages[existingPages.length - 1].pageNumber + 1 : 1;
+
+		const insertData = newUrls.map((url) => {
+			const data = {
+				chapterId,
+				pageNumber: nextNumber,
+				imageUrl: url
+			};
+			nextNumber++;
+			return data;
+		});
+
+		try {
+			await db.insert(pages).values(insertData);
+			return { success: true, count: insertData.length, mode: 'URL' };
+		} catch (e) {
+			return fail(500, { error: (e as Error).message || 'Failed to insert pages' });
+		}
+	},
 	deletePage: async ({ request }) => {
 		const formData = await request.formData();
 		const idStr = formData.get('id') as string;
