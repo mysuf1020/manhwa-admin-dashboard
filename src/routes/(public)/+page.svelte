@@ -5,23 +5,6 @@
 
 	let { data }: { data: PageData } = $props();
 
-	// Handler form action (Mencegah reload dan melempar state filter murni ke SSR)
-	function handleSearch(e: Event) {
-		e.preventDefault();
-		const form = e.target as HTMLFormElement;
-		const formData = new FormData(form);
-		const query = formData.get('q') as string;
-
-		const url = new URL(window.location.href);
-		url.searchParams.delete('page'); // Reset paginasi
-		if (query) {
-			url.searchParams.set('q', query);
-		} else {
-			url.searchParams.delete('q');
-		}
-		goto(url.toString(), { keepFocus: true });
-	}
-
 	function setTypeFilter(type: string) {
 		const url = new URL(window.location.href);
 		url.searchParams.delete('page'); // Reset paginasi
@@ -34,10 +17,10 @@
 	}
 
 	const categories = [
-		{ id: 'All', label: 'Semua Rilisan', icon: '📚' },
-		{ id: 'Manhwa', label: 'Manhwa', icon: '🔥' },
-		{ id: 'Manga', label: 'Manga', icon: '❤️' },
-		{ id: 'Manhua', label: 'Manhua', icon: '🐉' }
+		{ id: 'All', label: 'Semua Rilisan' },
+		{ id: 'Manhwa', label: 'Manhwa' },
+		{ id: 'Manga', label: 'Manga' },
+		{ id: 'Manhua', label: 'Manhua' }
 	];
 </script>
 
@@ -46,63 +29,7 @@
 </svelte:head>
 
 <div class="max-w-7xl px-4 py-8 mx-auto">
-	<!-- Hero Section with Search -->
-	<section
-		class="mb-10 rounded-3xl bg-slate-900 border-slate-800 border shadow-2xl relative flex flex-col items-center justify-center p-8 md:p-16 overflow-hidden"
-	>
-		<div
-			class="absolute inset-0 bg-[url('https://picsum.photos/seed/manga/1200/400')] opacity-10 blur-sm object-cover"
-		></div>
-		<div class="absolute inset-0 bg-linear-to-t from-slate-900 via-slate-900/80 to-transparent"></div>
-
-		<div class="relative z-10 w-full max-w-3xl mx-auto text-center">
-			<h1 class="text-4xl md:text-6xl font-black mb-4 tracking-tight translate-y-2">
-				Eksplorasi Dunia <span
-					class="text-transparent bg-clip-text bg-linear-to-r from-purple-400 to-emerald-400"
-					>Komik</span
-				>
-			</h1>
-			<p class="text-slate-400 text-lg mb-8 font-medium">
-				Ribuan judul Manhwa, Manga, dan Manhua siap dibaca kapan saja tanpa gangguan.
-			</p>
-
-			<form
-				onsubmit={handleSearch}
-				class="relative flex items-center w-full max-w-2xl mx-auto shadow-2xl shadow-purple-900/20 group"
-			>
-				<div
-					class="absolute left-4 text-slate-400 group-focus-within:text-purple-400 transition-colors"
-				>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						class="h-6 w-6"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke="currentColor"
-						stroke-width="2"
-						><path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-						/></svg
-					>
-				</div>
-				<input
-					type="search"
-					name="q"
-					value={data.searchQuery}
-					placeholder="Cari judul komik favoritmu disini..."
-					class="w-full bg-slate-950/80 backdrop-blur-md border-2 border-slate-700 focus:border-purple-500 rounded-2xl py-4 pl-12 pr-32 text-white font-medium text-lg focus:outline-none transition-all focus:ring-4 focus:ring-purple-500/10 placeholder-slate-500"
-				/>
-				<button
-					type="submit"
-					class="absolute right-2 bg-purple-600 hover:bg-purple-500 text-white font-bold py-2.5 px-6 rounded-xl transition-all shadow-lg active:scale-95"
-				>
-					Cari
-				</button>
-			</form>
-		</div>
-	</section>
+	<!-- Hero Section with Search (Removed entirely) -->
 
 	<!-- Filters -->
 	<section class="max-w-4xl mx-auto mb-16 relative z-20 -mt-16 flex justify-center px-4">
@@ -114,7 +41,6 @@
 					onclick={() => setTypeFilter(cat.id)}
 					class={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold transition-all ${data.typeFilter === cat.id ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20' : 'text-slate-300 hover:bg-slate-800 hover:text-white'}`}
 				>
-					<span class="text-lg">{cat.icon}</span>
 					{cat.label}
 				</button>
 			{/each}
@@ -125,13 +51,16 @@
 	{#if data.popularComics && data.popularComics.length > 0 && !data.searchQuery && data.typeFilter === 'All' && data.currentPage === 1}
 		<section class="mb-12">
 			<div class="mb-6 flex items-center justify-between">
-				<h2 class="text-2xl font-black text-white flex items-center gap-3">
-					<span class="text-3xl">🔥</span> Trending & Terpopuler
+				<h2 class="text-2xl font-black text-white flex items-center gap-3 px-2">
+					Trending Minggu Ini
 				</h2>
 			</div>
-			<div class="md:grid-cols-4 lg:grid-cols-6 gap-6 grid grid-cols-2">
+			<!-- Container bergeser (Horizontal Scroll) -->
+			<div class="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 no-scrollbar border-b border-slate-800/80">
 				{#each data.popularComics as comic (comic.slug)}
-					<ComicCard href="/comic/{comic.slug}" {comic} isHot={true} />
+					<div class="min-w-[140px] md:min-w-[170px] snap-start shrink-0">
+						<ComicCard href="/comic/{comic.slug}" {comic} isHot={true} />
+					</div>
 				{/each}
 			</div>
 		</section>
@@ -139,7 +68,7 @@
 
 	<!-- Latest Updates Grid -->
 	<section>
-		<div class="mb-8 flex items-center justify-between border-t border-slate-800/80 pt-8">
+		<div class="mb-6 flex items-center justify-between px-2 pt-2">
 			<div>
 				<h2 class="text-2xl font-black text-white flex items-center gap-3">
 					<svg

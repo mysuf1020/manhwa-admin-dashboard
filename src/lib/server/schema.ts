@@ -116,3 +116,12 @@ export const comments = pgTable('comments', {
 	content: text('content').notNull(),
 	createdAt: timestamp('created_at').defaultNow().notNull()
 });
+
+// Tabel Analitik Popularitas Mingguan (1 Minggu Terakhir)
+export const comicViews = pgTable('comic_views', {
+	id: serial('id').primaryKey(),
+	comicId: integer('comic_id')
+		.notNull()
+		.references(() => comics.id, { onDelete: 'cascade' }),
+	createdAt: timestamp('created_at').defaultNow().notNull()
+});

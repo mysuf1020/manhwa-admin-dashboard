@@ -1,7 +1,7 @@
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
-import { comics, chapters, bookmarks, ratings } from '$lib/server/schema';
+import { comics, chapters, bookmarks, ratings, comicViews } from '$lib/server/schema';
 import { eq, desc, and, sql } from 'drizzle-orm';
 
 export const load: PageServerLoad = async (event) => {
@@ -18,6 +18,9 @@ export const load: PageServerLoad = async (event) => {
 	await db.update(comics)
 		.set({ viewCount: comic.viewCount + 1 })
 		.where(eq(comics.id, comic.id));
+
+	// Catat Analytics View 1 Minggu Terakhir (Khusus Trending)
+	await db.insert(comicViews).values({ comicId: comic.id });
 
 	const currentViewCount = comic.viewCount + 1;
 

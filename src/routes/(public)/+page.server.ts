@@ -34,20 +34,24 @@ export const load: PageServerLoad = async ({ url }) => {
 		cover: string;
 	}[] = [];
 	if (!searchQuery && (!typeFilter || typeFilter === 'All') && page === 1) {
-		const popularQuery = await db
-			.select()
-			.from(comics)
-			.orderBy(desc(comics.viewCount))
-			.limit(6);
+		const popularQuery = await db.execute(sql`
+			SELECT c.*, COUNT(v.id) as recent_views
+			FROM comics c
+			LEFT JOIN comic_views v ON c.id = v.comic_id AND v.created_at >= NOW() - INTERVAL '7 days'
+			GROUP BY c.id
+			ORDER BY recent_views DESC, c.view_count DESC
+			LIMIT 6
+		`);
 			
-		popularComics = popularQuery.map((c) => ({
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		popularComics = (popularQuery.rows || popularQuery).map((c: any) => ({
 			id: c.id,
 			slug: c.slug,
 			title: c.title,
 			type: c.type,
 			chapter: '🔥 HOT',
-			time: new Date(c.updatedAt || Date.now()).toLocaleDateString(),
-			cover: c.coverUrl || 'https://picsum.photos/seed/placeholder/300/400'
+			time: new Date(c.updated_at || Date.now()).toLocaleDateString(),
+			cover: c.cover_url || 'https://picsum.photos/seed/placeholder/300/400'
 		}));
 	}
 
