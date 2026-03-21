@@ -4,6 +4,7 @@ import { comics, chapters, pages } from '$lib/server/schema';
 import { uploadFile } from '$lib/server/s3';
 import { eq, asc } from 'drizzle-orm';
 import { error, fail } from '@sveltejs/kit';
+import JSZip from 'jszip';
 
 export const load: PageServerLoad = async ({ params }) => {
 	const chapterId = parseInt(params.id);
@@ -34,7 +35,6 @@ export const actions: Actions = {
 		if (!files || files.length === 0 || files[0].size === 0)
 			return fail(400, { error: 'Tolong pilih minimal satu file gambar legit.' });
 
-		// Cari relasi slug komik untuk pathing folder R2
 		const chapterRecord = await db.select().from(chapters).where(eq(chapters.id, chapterId));
 		if (!chapterRecord.length) return fail(404, { error: 'Unknown Chapter' });
 		const comicRecord = await db.select().from(comics).where(eq(comics.id, chapterRecord[0].comicId));
@@ -42,7 +42,6 @@ export const actions: Actions = {
 
 		const r2FolderPath = `panels/${comicSlug}/${chapterRecord[0].chapterNumber}`;
 
-		// Get max page number currently
 		const existingPages = await db
 			.select()
 			.from(pages)
@@ -52,7 +51,6 @@ export const actions: Actions = {
 			existingPages.length > 0 ? existingPages[existingPages.length - 1].pageNumber + 1 : 1;
 
 		try {
-			// Upload files satu-persatu atau secara Promise.all ke Cloudflare R2
 			const uploadPromises = files.map(file => uploadFile(file, r2FolderPath));
 			const uploadedUrls = await Promise.all(uploadPromises);
 
@@ -72,6 +70,72 @@ export const actions: Actions = {
 			return fail(500, { error: (e as Error).message || 'Gagal push aset ke Cloudflare R2 / Database' });
 		}
 	},
+	addPagesFromZip: async ({ request, params }) => {
+		const chapterId = parseInt(params.id);
+		const formData = await request.formData();
+		const zipFile = formData.get('zipfile') as File;
+
+		if (!zipFile || zipFile.size === 0)
+			return fail(400, { error: 'Tolong pilih file ZIP yang valid.' });
+
+		const chapterRecord = await db.select().from(chapters).where(eq(chapters.id, chapterId));
+		if (!chapterRecord.length) return fail(404, { error: 'Unknown Chapter' });
+		const comicRecord = await db.select().from(comics).where(eq(comics.id, chapterRecord[0].comicId));
+		const comicSlug = comicRecord.length ? comicRecord[0].slug : 'unknown-comic';
+
+		const r2FolderPath = `panels/${comicSlug}/${chapterRecord[0].chapterNumber}`;
+
+		const existingPages = await db
+			.select()
+			.from(pages)
+			.where(eq(pages.chapterId, chapterId))
+			.orderBy(asc(pages.pageNumber));
+		let nextNumber =
+			existingPages.length > 0 ? existingPages[existingPages.length - 1].pageNumber + 1 : 1;
+
+		try {
+			const zipBuffer = await zipFile.arrayBuffer();
+			const zip = await JSZip.loadAsync(zipBuffer);
+
+			// Filter only image files, sort by filename for correct order
+			const imageExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
+			const imageFiles = Object.keys(zip.files)
+				.filter((name) => {
+					const lower = name.toLowerCase();
+					return !zip.files[name].dir && imageExtensions.some((ext) => lower.endsWith(ext));
+				})
+				.sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
+
+			if (imageFiles.length === 0) {
+				return fail(400, { error: 'ZIP tidak mengandung file gambar (jpg/png/webp).' });
+			}
+
+			const insertData: { chapterId: number; pageNumber: number; imageUrl: string }[] = [];
+
+			for (const fileName of imageFiles) {
+				const fileData = await zip.files[fileName].async('arraybuffer');
+				const ext = fileName.split('.').pop() || 'jpg';
+				const mimeMap: Record<string, string> = {
+					jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png',
+					webp: 'image/webp', gif: 'image/gif'
+				};
+				const blob = new File([fileData], fileName, { type: mimeMap[ext.toLowerCase()] || 'image/jpeg' });
+				const url = await uploadFile(blob, r2FolderPath);
+
+				insertData.push({
+					chapterId,
+					pageNumber: nextNumber,
+					imageUrl: url
+				});
+				nextNumber++;
+			}
+
+			await db.insert(pages).values(insertData);
+			return { success: true, count: insertData.length };
+		} catch (e) {
+			return fail(500, { error: (e as Error).message || 'Gagal mengekstrak ZIP atau upload ke R2' });
+		}
+	},
 	addPagesByUrl: async ({ request, params }) => {
 		const chapterId = parseInt(params.id);
 		const formData = await request.formData();
@@ -86,7 +150,6 @@ export const actions: Actions = {
 			.filter((u) => u.length > 0);
 		if (newUrls.length === 0) return fail(400, { error: 'No valid URLs found' });
 
-		// Get max page number currently
 		const existingPages = await db
 			.select()
 			.from(pages)

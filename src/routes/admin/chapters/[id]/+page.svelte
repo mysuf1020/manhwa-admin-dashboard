@@ -75,8 +75,26 @@
                 </form>
             </div>
 
+            <div class="bg-amber-950/20 p-4 border border-amber-900/30 rounded-lg mb-6">
+                <p class="text-sm text-amber-400/80 mb-3 font-medium">Opsi 2: Upload ZIP Archive</p>
+                <form method="POST" action="?/addPagesFromZip" enctype="multipart/form-data" use:enhance>
+                    <input
+                        type="file"
+                        name="zipfile"
+                        accept=".zip,application/zip"
+                        required
+                        class="bg-slate-950 border-slate-700 rounded p-2 text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-amber-900/40 file:text-amber-400 hover:file:bg-amber-900/60 focus:border-amber-500 mb-3 w-full border transition-all focus:ring-1 focus:outline-none text-xs"
+                    />
+                    <p class="text-[10px] text-slate-500 mb-3">ZIP akan diekstrak dan semua gambar di dalam akan otomatis diurutkan & diupload.</p>
+
+                    <Button type="submit" variant="ghost" class="py-2 text-sm w-full border-amber-900/50 bg-amber-900/20 text-amber-400 hover:bg-amber-600 hover:text-white border">
+                        Ekstrak & Upload ZIP
+                    </Button>
+                </form>
+            </div>
+
             <div class="bg-indigo-950/20 p-4 border border-indigo-900/30 rounded-lg">
-                <p class="text-sm text-indigo-400/80 mb-3 font-medium">Opsi 2: URL Eksternal Bulking</p>
+                <p class="text-sm text-indigo-400/80 mb-3 font-medium">Opsi 3: URL Eksternal Bulking</p>
                 <form method="POST" action="?/addPagesByUrl" use:enhance>
                     <textarea
                         name="urls"
