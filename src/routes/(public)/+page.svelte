@@ -83,6 +83,29 @@
 		</section>
 	{/if}
 
+	<!-- Continue Reading (hanya untuk user yang login) -->
+	{#if data.continueReading && data.continueReading.length > 0}
+		<section class="mb-8">
+			<h2 class="text-lg font-bold mb-3 text-slate-200 flex items-center gap-2">
+				<svg class="w-5 h-5 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+				Lanjutkan Membaca
+			</h2>
+			<div class="flex gap-3 overflow-x-auto pb-2 no-scrollbar snap-x">
+				{#each data.continueReading as item (item.comicId)}
+					<a href="/comic/{item.slug}/{item.chapterNumber}" class="shrink-0 snap-start group w-28 md:w-32">
+						<div class="aspect-3/4 rounded-lg overflow-hidden border border-slate-800 mb-1.5 relative">
+							<img src={item.cover} alt={item.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+							<div class="absolute bottom-0 inset-x-0 bg-linear-to-t from-black/90 to-transparent p-2 pt-6">
+								<span class="text-[10px] font-bold text-purple-300 bg-purple-500/20 px-1.5 py-0.5 rounded">Ch. {item.chapterNumber}</span>
+							</div>
+						</div>
+						<p class="text-xs text-slate-400 line-clamp-2 group-hover:text-purple-400 transition-colors font-medium">{item.title}</p>
+					</a>
+				{/each}
+			</div>
+		</section>
+	{/if}
+
 	<!-- Announcement Banners -->
 	{#if data.activeAnnouncements && data.activeAnnouncements.length > 0}
 		<section class="mb-6 flex gap-3 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-1">

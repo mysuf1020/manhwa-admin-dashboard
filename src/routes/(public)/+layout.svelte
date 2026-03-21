@@ -2,6 +2,8 @@
 	import '../../app.css';
 	import Navbar from '$lib/components/Navbar.svelte';
 	import Footer from '$lib/components/Footer.svelte';
+	import Toast from '$lib/components/Toast.svelte';
+	import ScrollToTop from '$lib/components/ScrollToTop.svelte';
 
 	let { children } = $props();
 </script>
@@ -15,3 +17,6 @@
 
 	<Footer />
 </div>
+
+<Toast />
+<ScrollToTop />

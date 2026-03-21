@@ -1,9 +1,9 @@
 import type { PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
-import { comics, announcements } from '$lib/server/schema';
+import { comics, announcements, history, chapters } from '$lib/server/schema';
 import { desc, ilike, and, eq, sql, asc } from 'drizzle-orm';
 
-export const load: PageServerLoad = async ({ url }) => {
+export const load: PageServerLoad = async ({ url, locals }) => {
 	const searchQuery = url.searchParams.get('q') || '';
 	const typeFilter = url.searchParams.get('type') || '';
 
@@ -134,11 +134,50 @@ export const load: PageServerLoad = async ({ url }) => {
 		.where(eq(announcements.isActive, true))
 		.orderBy(asc(announcements.sortOrder));
 
+	// Query Continue Reading (hanya untuk user yang login)
+	let continueReading: {
+		comicId: number;
+		slug: string;
+		title: string;
+		cover: string;
+		chapterNumber: string;
+		readAt: Date;
+	}[] = [];
+	const user = locals.user;
+	if (user && (!searchQuery && (!typeFilter || typeFilter === 'All') && page === 1)) {
+		const historyRecords = await db
+			.select({
+				comicId: history.comicId,
+				chapterId: history.chapterId,
+				readAt: history.readAt,
+				slug: comics.slug,
+				title: comics.title,
+				cover: comics.coverUrl,
+				chapterNumber: chapters.chapterNumber
+			})
+			.from(history)
+			.innerJoin(comics, eq(history.comicId, comics.id))
+			.innerJoin(chapters, eq(history.chapterId, chapters.id))
+			.where(eq(history.userId, user.id))
+			.orderBy(desc(history.readAt))
+			.limit(6);
+
+		continueReading = historyRecords.map((h) => ({
+			comicId: h.comicId,
+			slug: h.slug,
+			title: h.title,
+			cover: h.cover || 'https://picsum.photos/seed/placeholder/300/400',
+			chapterNumber: h.chapterNumber,
+			readAt: h.readAt
+		}));
+	}
+
 	return {
 		latestUpdates,
 		popularComics,
 		featuredComics,
 		activeAnnouncements,
+		continueReading,
 		searchQuery,
 		typeFilter: typeFilter || 'All',
 		currentPage: page,
