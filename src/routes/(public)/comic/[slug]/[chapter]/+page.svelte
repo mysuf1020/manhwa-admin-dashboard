@@ -32,10 +32,45 @@
 		if (currentPage > 0) currentPage--;
 	}
 
+	import { onMount, onDestroy } from 'svelte';
+	import { goto } from '$app/navigation';
+
 	function toggleReadingMode() {
 		readingMode = readingMode === 'scroll' ? 'page' : 'scroll';
 		currentPage = 0;
 	}
+
+	function handleKeydown(e: KeyboardEvent) {
+		if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+
+		switch (e.key.toLowerCase()) {
+			case 'arrowright':
+			case 'd':
+				if (readingMode === 'page') nextPage();
+				else if (data.nextChapterNumber) goto(`/comic/${data.comic.slug}/${data.nextChapterNumber}`);
+				break;
+			case 'arrowleft':
+			case 'a':
+				if (readingMode === 'page') prevPage();
+				else if (data.prevChapterNumber) goto(`/comic/${data.comic.slug}/${data.prevChapterNumber}`);
+				break;
+			case 'm':
+				toggleReadingMode();
+				break;
+			case 'f':
+				if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
+				else document.exitFullscreen().catch(() => {});
+				break;
+		}
+	}
+
+	onMount(() => {
+		window.addEventListener('keydown', handleKeydown);
+	});
+
+	onDestroy(() => {
+		if (typeof window !== 'undefined') window.removeEventListener('keydown', handleKeydown);
+	});
 </script>
 
 <svelte:head>
