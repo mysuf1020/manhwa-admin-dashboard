@@ -5,6 +5,7 @@
 	import ChapterRow from '$lib/components/ChapterRow.svelte';
 	import RatingStars from '$lib/components/RatingStars.svelte';
 	import ShareButtons from '$lib/components/ShareButtons.svelte';
+	import DonationWidget from '$lib/components/DonationWidget.svelte';
 
 	let { data }: { data: PageData } = $props();
 
@@ -19,6 +20,12 @@
 
 <svelte:head>
 	<title>{data.comic.title} - MangaReader</title>
+	<meta property="og:title" content="{data.comic.title} - MangaReader" />
+	<meta property="og:description" content="{data.comic.description ? data.comic.description.substring(0, 150) + '...' : 'Baca komik ini gratis di MangaReader'}" />
+	<meta property="og:image" content="{data.comic.coverUrl}" />
+	<meta name="twitter:title" content="{data.comic.title}" />
+	<meta name="twitter:description" content="{data.comic.description ? data.comic.description.substring(0, 150) + '...' : 'Baca komik ini gratis di MangaReader'}" />
+	<meta name="twitter:image" content="{data.comic.coverUrl}" />
 </svelte:head>
 
 <div class="max-w-5xl px-4 py-4 md:py-8 md:flex-row gap-4 md:gap-8 mx-auto flex min-h-screen flex-col">
@@ -101,12 +108,12 @@
 			{/if}
 		</div>
 
-		<div class="mb-8 flex items-center gap-3">
+		<div class="mb-8 flex items-center gap-3 flex-wrap">
 			{#if data.isBookmarked}
 				<form action="?/toggleBookmark" method="POST" use:enhance>
 					<button class="flex items-center gap-2 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-bold px-4 py-2.5 rounded-lg transition-all hover:bg-emerald-500 hover:text-slate-900 dark:text-white hover:border-emerald-500 shadow-lg shadow-emerald-900/10 active:scale-95">
 						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" /></svg>
-						Tersimpan di Koleksi
+						Tersimpan di Favorit
 					</button>
 				</form>
 			{:else}
@@ -116,6 +123,13 @@
 						Tambah ke Favorit
 					</button>
 				</form>
+			{/if}
+
+			{#if data.user}
+				<button onclick={() => {(document.getElementById('collectionModal') as HTMLDialogElement)?.showModal()}} class="flex items-center gap-2 bg-rose-500/10 text-rose-500 border border-rose-500/30 font-bold px-4 py-2.5 rounded-lg transition-all hover:bg-rose-500 hover:text-white shadow-[0_0_15px_rgba(244,63,94,0.1)] active:scale-95">
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+					Simpan ke List Pribadi
+				</button>
 			{/if}
 		</div>
 
@@ -129,8 +143,10 @@
 			</p>
 		</div>
 
+		<DonationWidget />
+
 		<!-- Chapter List UI -->
-		<div class="bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 rounded-xl p-1 md:p-6 mb-8 shadow-inner border">
+		<div class="bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 rounded-xl p-1 md:p-6 mb-8 mt-10 shadow-inner border">
 			<h3 class="text-xl font-semibold mb-4 mx-3 md:mx-0 border-slate-200 dark:border-slate-800 pb-3 border-b">
 				Daftar Chapter
 			</h3>
@@ -215,4 +231,42 @@
 			<p class="text-[10px] text-slate-600 mt-4">Keputusan ini berlaku selama sesi browser Anda saat ini.</p>
 		</div>
 	</div>
+{/if}
+
+<!-- Modal Dialog Tambah ke Koleksi -->
+{#if data.user}
+<dialog id="collectionModal" class="bg-transparent m-auto p-0 backdrop:backdrop-blur-sm backdrop:bg-slate-900/80">
+	<div class="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 md:p-8 w-[90vw] max-w-[400px] shadow-2xl relative">
+		<button onclick={() => {(document.getElementById('collectionModal') as HTMLDialogElement)?.close()}} class="absolute top-4 right-4 text-slate-400 hover:text-red-500 transition-colors bg-slate-100 dark:bg-slate-900 w-8 h-8 flex justify-center items-center rounded-full">✕</button>
+		
+		<h3 class="text-xl font-black text-slate-900 dark:text-white mb-2">Simpan ke List</h3>
+		<p class="text-sm text-slate-500 mb-6">Pilih koleksi mana yang akan menyimpan komik ini.</p>
+		
+		{#if !data.userCollections || data.userCollections.length === 0}
+			<div class="text-center py-6 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl mb-4">
+				<p class="text-slate-500 text-sm font-medium mb-2">Belum ada daftar koleksi</p>
+				<a onclick={() => {(document.getElementById('collectionModal') as HTMLDialogElement)?.close()}} href="/profile" class="text-purple-500 hover:text-purple-400 font-bold text-sm underline underline-offset-2">Buat koleksi baru di Profil</a>
+			</div>
+		{:else}
+			<div class="space-y-3 mb-6 max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
+				{#each data.userCollections as list (list.id)}
+					<form method="POST" action="?/toggleCollectionItem" use:enhance={() => {
+						return async ({ update }) => {
+							await update({ reset: false }); // keep scrolling context
+						};
+					}} class="flex items-center justify-between p-3 rounded-xl border transition-colors {list.hasComic ? 'bg-rose-500/10 border-rose-500/30' : 'bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-rose-400'}">
+						<input type="hidden" name="collectionId" value={list.id}>
+						<div class="flex flex-col">
+							<span class="font-bold text-sm {list.hasComic ? 'text-rose-600 dark:text-rose-400' : 'text-slate-800 dark:text-slate-200'}">{list.name}</span>
+							<span class="text-[10px] font-bold uppercase tracking-wider {list.isPublic ? 'text-emerald-500' : 'text-slate-500'}">{list.isPublic ? 'Publik' : 'Privat'}</span>
+						</div>
+						<button type="submit" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm active:scale-95 {list.hasComic ? 'bg-rose-500 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700'}">
+							{list.hasComic ? 'Tersimpan ✓' : 'Tambahkan +'}
+						</button>
+					</form>
+				{/each}
+			</div>
+		{/if}
+	</div>
+</dialog>
 {/if}

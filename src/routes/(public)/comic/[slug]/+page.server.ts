@@ -1,7 +1,7 @@
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
-import { comics, chapters, bookmarks, ratings, comicViews } from '$lib/server/schema';
+import { comics, chapters, bookmarks, ratings, comicViews, collections, collectionItems } from '$lib/server/schema';
 import { eq, desc, and, sql, ne, ilike, or } from 'drizzle-orm';
 import { addExperience } from '$lib/server/gamification';
 
@@ -52,6 +52,26 @@ export const load: PageServerLoad = async (event) => {
 		}
 	}
 
+	// Cek custom collections yang dimiliki user dan apakah komik ini ada di dalamnya
+	let userCollections: { id: number; name: string; isPublic: boolean; hasComic: boolean }[] = [];
+	if (user) {
+		const cols = await db.select({
+			id: collections.id,
+			name: collections.name,
+			isPublic: collections.isPublic
+		}).from(collections).where(eq(collections.userId, user.id));
+
+		if (cols.length > 0) {
+			const items = await db.select({ collectionId: collectionItems.collectionId }).from(collectionItems).where(eq(collectionItems.comicId, comic.id));
+			const itemSet = new Set(items.map(i => i.collectionId));
+
+			userCollections = cols.map(c => ({
+				...c,
+				hasComic: itemSet.has(c.id)
+			}));
+		}
+	}
+
 	// Query Related Comics (genre overlap)
 	let relatedComics: { id: number; slug: string; title: string; cover: string; type: string }[] = [];
 	if (comic.genres) {
@@ -80,6 +100,7 @@ export const load: PageServerLoad = async (event) => {
 		isBookmarked,
 		userRating,
 		relatedComics,
+		userCollections,
 		user
 	};
 };

@@ -27,7 +27,7 @@ export const actions: Actions = {
 		const newRole = formData.get('role') as string;
 
 		if (!userId || !newRole) return fail(400, { error: 'Invalid data' });
-		if (!['user', 'admin', 'banned'].includes(newRole)) return fail(400, { error: 'Invalid role' });
+		if (!['user', 'admin', 'banned', 'uploader'].includes(newRole)) return fail(400, { error: 'Invalid role' });
 
 		try {
 			await db.update(users).set({ role: newRole }).where(eq(users.id, userId));

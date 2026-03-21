@@ -181,3 +181,28 @@ export const reports = pgTable('reports', {
 	status: varchar('status', { length: 20 }).default('pending').notNull(), // 'pending', 'resolved', 'dismissed'
 	createdAt: timestamp('created_at').defaultNow().notNull()
 });
+
+// Tabel Koleksi Kustom User (Custom Lists)
+export const collections = pgTable('collections', {
+	id: serial('id').primaryKey(),
+	userId: text('user_id')
+		.notNull()
+		.references(() => users.id, { onDelete: 'cascade' }),
+	name: varchar('name', { length: 255 }).notNull(),
+	description: text('description'),
+	isPublic: boolean('is_public').default(true).notNull(),
+	createdAt: timestamp('created_at').defaultNow().notNull(),
+	updatedAt: timestamp('updated_at').defaultNow().notNull()
+});
+
+// Tabel Item di dalam Koleksi Kustom
+export const collectionItems = pgTable('collection_items', {
+	id: serial('id').primaryKey(),
+	collectionId: integer('collection_id')
+		.notNull()
+		.references(() => collections.id, { onDelete: 'cascade' }),
+	comicId: integer('comic_id')
+		.notNull()
+		.references(() => comics.id, { onDelete: 'cascade' }),
+	createdAt: timestamp('created_at').defaultNow().notNull()
+});

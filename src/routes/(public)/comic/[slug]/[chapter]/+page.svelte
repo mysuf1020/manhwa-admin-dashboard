@@ -4,6 +4,7 @@
 	import ReaderNav from '$lib/components/ReaderNav.svelte';
 	import ReaderFooter from '$lib/components/ReaderFooter.svelte';
 	import CommentSection from '$lib/components/CommentSection.svelte';
+	import DonationWidget from '$lib/components/DonationWidget.svelte';
 
 	let { data }: { data: PageData } = $props();
 
@@ -113,6 +114,12 @@
 
 <svelte:head>
 	<title>Chapter {data.chapter.chapterNumber} - {data.comic.title} | MangaReader</title>
+	<meta property="og:title" content="Chapter {data.chapter.chapterNumber} - {data.comic.title}" />
+	<meta property="og:description" content="Baca komik {data.comic.title} chapter {data.chapter.chapterNumber} bahasa Indonesia gratis & tanpa iklan di MangaReader!" />
+	<meta property="og:image" content="{data.comic.coverUrl}" />
+	<meta name="twitter:title" content="Chapter {data.chapter.chapterNumber} - {data.comic.title}" />
+	<meta name="twitter:description" content="Baca komik {data.comic.title} chapter {data.chapter.chapterNumber} bahasa Indonesia gratis & tanpa iklan di MangaReader!" />
+	<meta name="twitter:image" content="{data.comic.coverUrl}" />
 </svelte:head>
 
 <!-- Overlay Bottom Nav Reader -->
@@ -182,6 +189,10 @@
 			comicSlug={data.comic.slug}
 			nextChapterNumber={data.nextChapterNumber}
 		/>
+
+		<!-- Dukung Author/Penerjemah Kotak Donasi -->
+		<DonationWidget />
+
 		<div class="w-full max-w-3xl mt-6 border-t border-slate-200 dark:border-slate-800">
 			<!-- Baris Tindakan Ekstra -->
 			<div class="flex justify-between items-center px-4 py-4 md:px-0">

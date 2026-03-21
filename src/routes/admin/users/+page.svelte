@@ -15,6 +15,7 @@
 	const roleColors: Record<string, string> = {
 		admin: 'bg-purple-500/20 text-purple-400 border-purple-500/30',
 		user: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
+		uploader: 'bg-amber-500/20 text-amber-600 dark:text-amber-400 border-amber-500/30',
 		banned: 'bg-red-500/20 text-red-400 border-red-500/30'
 	};
 </script>
@@ -66,10 +67,11 @@
 							<input type="hidden" name="userId" value={user.id}>
 							<select name="role" class="bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-1 text-xs text-slate-900 dark:text-white appearance-none">
 								<option value="user" selected={user.role === 'user'}>User</option>
+								<option value="uploader" selected={user.role === 'uploader'}>Uploader</option>
 								<option value="admin" selected={user.role === 'admin'}>Admin</option>
 								<option value="banned" selected={user.role === 'banned'}>Banned</option>
 							</select>
-							<button type="submit" class="px-3 py-1 bg-purple-600 hover:bg-purple-500 text-slate-900 dark:text-white text-xs font-bold rounded-lg transition-colors">Set</button>
+							<button type="submit" class="px-3 py-1 bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold rounded-lg transition-colors">Set</button>
 						</form>
 					</td>
 				</tr>

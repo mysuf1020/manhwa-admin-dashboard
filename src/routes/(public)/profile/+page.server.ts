@@ -1,8 +1,8 @@
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
-import { bookmarks, history, comics, chapters } from '$lib/server/schema';
-import { eq, desc } from 'drizzle-orm';
+import { bookmarks, history, comics, chapters, collections, collectionItems } from '$lib/server/schema';
+import { eq, desc, count } from 'drizzle-orm';
 
 export const load: PageServerLoad = async (event) => {
 	const user = event.locals.user;
@@ -53,9 +53,24 @@ export const load: PageServerLoad = async (event) => {
 		.orderBy(desc(history.readAt))
 		.limit(20);
 
+	const userCollections = await db
+		.select({
+			id: collections.id,
+			name: collections.name,
+			description: collections.description,
+			isPublic: collections.isPublic,
+			itemCount: count(collectionItems.id)
+		})
+		.from(collections)
+		.leftJoin(collectionItems, eq(collections.id, collectionItems.collectionId))
+		.where(eq(collections.userId, user.id))
+		.groupBy(collections.id)
+		.orderBy(desc(collections.createdAt));
+
 	return {
 		userBookmarks: cleanBookmarks,
 		userHistory,
+		userCollections,
 		profile: user
 	};
 };
@@ -100,6 +115,29 @@ export const actions: Actions = {
 		} catch (e) {
 			console.error(e);
 			return fail(500, { error: 'Failed to update profile' });
+		}
+	},
+	createCollection: async ({ request, locals }) => {
+		if (!locals.user) return fail(401, { error: 'Unauthorized' });
+
+		const formData = await request.formData();
+		const name = formData.get('name')?.toString().trim();
+		const description = formData.get('description')?.toString().trim();
+		const isPublic = formData.get('isPublic') === 'on';
+
+		if (!name) return fail(400, { error: 'Nama koleksi tidak boleh kosong.' });
+
+		try {
+			await db.insert(collections).values({
+				userId: locals.user.id,
+				name,
+				description: description || null,
+				isPublic
+			});
+			return { success: true };
+		} catch (e) {
+			console.error(e);
+			return fail(500, { error: 'Gagal membuat koleksi.' });
 		}
 	}
 };
