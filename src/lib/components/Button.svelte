@@ -23,11 +23,11 @@
 		'font-bold rounded-lg transition-colors shadow-sm active:scale-95 flex items-center justify-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 duration-200';
 
 	const variantClasses = {
-		primary: 'bg-purple-600 hover:bg-purple-500 text-white border border-purple-400/30',
-		danger: 'bg-red-600 hover:bg-red-500 text-white border border-red-400/30',
-		success: 'bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-400/30',
-		secondary: 'bg-slate-700 hover:bg-slate-600 text-slate-200 border border-slate-600/50',
-		ghost: 'bg-transparent hover:bg-slate-800 text-slate-400 hover:text-white shadow-none'
+		primary: 'bg-purple-600 hover:bg-purple-500 text-slate-900 dark:text-white border border-purple-400/30',
+		danger: 'bg-red-600 hover:bg-red-500 text-slate-900 dark:text-white border border-red-400/30',
+		success: 'bg-emerald-600 hover:bg-emerald-500 text-slate-900 dark:text-white border border-emerald-400/30',
+		secondary: 'bg-slate-200 dark:bg-slate-700 hover:bg-slate-600 text-slate-800 dark:text-slate-200 border border-slate-600/50',
+		ghost: 'bg-transparent hover:bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:text-white shadow-none'
 	};
 
 	let combinedClasses = $derived(

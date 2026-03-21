@@ -20,7 +20,7 @@
 {#if visible}
 	<button
 		onclick={scrollToTop}
-		class="fixed bottom-6 left-6 z-9990 w-11 h-11 rounded-full bg-purple-600/90 hover:bg-purple-500 text-white shadow-xl shadow-purple-900/40 flex items-center justify-center transition-all hover:scale-110 active:scale-95 border border-purple-400/20 backdrop-blur-sm"
+		class="fixed bottom-6 left-6 z-9990 w-11 h-11 rounded-full bg-purple-600/90 hover:bg-purple-500 text-slate-900 dark:text-white shadow-xl shadow-purple-900/40 flex items-center justify-center transition-all hover:scale-110 active:scale-95 border border-purple-400/20 backdrop-blur-sm"
 		aria-label="Scroll to top"
 	>
 		<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

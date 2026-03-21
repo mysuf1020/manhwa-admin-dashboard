@@ -31,34 +31,34 @@
 
 <div class="max-w-5xl mx-auto px-4 py-10">
 	<div class="text-center mb-10">
-		<h1 class="text-4xl font-black text-white mb-4">👑 Leaderboard</h1>
-		<p class="text-slate-400">Komik terbaik dan terpopuler sepanjang masa.</p>
+		<h1 class="text-4xl font-black text-slate-900 dark:text-white mb-4">👑 Leaderboard</h1>
+		<p class="text-slate-600 dark:text-slate-400">Komik terbaik dan terpopuler sepanjang masa.</p>
 	</div>
 
 	<!-- Filter Controls -->
-	<div class="flex flex-col sm:flex-row gap-4 justify-between bg-slate-900 border border-slate-800 rounded-2xl p-4 mb-8">
+	<div class="flex flex-col sm:flex-row gap-4 justify-between bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 mb-8">
 		<!-- Metric Toggle -->
-		<div class="flex gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800 shrink-0">
+		<div class="flex gap-1 bg-white dark:bg-slate-950 p-1 rounded-xl border border-slate-200 dark:border-slate-800 shrink-0">
 			<button
 				onclick={() => handleMetricsFilter('views')}
-				class="flex-1 px-4 py-2 text-sm font-semibold rounded-lg transition-colors {data.metric === 'views' ? 'bg-purple-600 text-white shadow-lg' : 'text-slate-400 hover:text-slate-200'}"
+				class="flex-1 px-4 py-2 text-sm font-semibold rounded-lg transition-colors {data.metric === 'views' ? 'bg-purple-600 text-slate-900 dark:text-white shadow-lg' : 'text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200'}"
 			>
 				🔥 Terpopuler
 			</button>
 			<button
 				onclick={() => handleMetricsFilter('rating')}
-				class="flex-1 px-4 py-2 text-sm font-semibold rounded-lg transition-colors {data.metric === 'rating' ? 'bg-amber-500 text-white shadow-lg' : 'text-slate-400 hover:text-slate-200'}"
+				class="flex-1 px-4 py-2 text-sm font-semibold rounded-lg transition-colors {data.metric === 'rating' ? 'bg-amber-500 text-slate-900 dark:text-white shadow-lg' : 'text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200'}"
 			>
 				⭐ Tertinggi
 			</button>
 		</div>
 
 		<!-- Type Filter -->
-		<div class="flex gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800 overflow-x-auto no-scrollbar">
+		<div class="flex gap-1 bg-white dark:bg-slate-950 p-1 rounded-xl border border-slate-200 dark:border-slate-800 overflow-x-auto no-scrollbar">
 			{#each ['All', 'Manhwa', 'Manga', 'Manhua'] as type (type)}
 				<button
 					onclick={() => handleTypeFilter(type)}
-					class="px-4 py-2 text-sm font-semibold rounded-lg transition-colors whitespace-nowrap {data.typeFilter === type ? 'bg-slate-800 text-white' : 'text-slate-500 hover:text-slate-300'}"
+					class="px-4 py-2 text-sm font-semibold rounded-lg transition-colors whitespace-nowrap {data.typeFilter === type ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white' : 'text-slate-500 hover:text-slate-700 dark:text-slate-300'}"
 				>
 					{type === 'All' ? 'Semua Tipe' : type}
 				</button>
@@ -67,18 +67,18 @@
 	</div>
 
 	<!-- Ranking List -->
-	<div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
+	<div class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
 		{#if data.topComics.length === 0}
 			<div class="p-12 text-center text-slate-500 font-medium">Belum ada komik di kategori ini.</div>
 		{:else}
 			{#each data.topComics as comic, i (comic.id)}
-				<a href="/comic/{comic.slug}" class="flex items-center gap-4 p-4 border-b border-slate-800/50 hover:bg-slate-800/50 transition-colors group {i === 0 ? 'bg-purple-900/10' : ''}">
+				<a href="/comic/{comic.slug}" class="flex items-center gap-4 p-4 border-b border-slate-200 dark:border-slate-800/50 hover:bg-slate-100 dark:bg-slate-800/50 transition-colors group {i === 0 ? 'bg-purple-900/10' : ''}">
 					<!-- Rank Number -->
 					<div class="w-12 shrink-0 flex items-center justify-center font-black">
 						{#if i === 0}
 							<span class="text-4xl text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]">1</span>
 						{:else if i === 1}
-							<span class="text-3xl text-slate-300">2</span>
+							<span class="text-3xl text-slate-700 dark:text-slate-300">2</span>
 						{:else if i === 2}
 							<span class="text-3xl text-amber-700">3</span>
 						{:else}
@@ -87,16 +87,16 @@
 					</div>
 
 					<!-- Cover -->
-					<div class="w-16 h-20 shrink-0 rounded-lg overflow-hidden border border-slate-800 relative">
+					<div class="w-16 h-20 shrink-0 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 relative">
 						<img src={comic.cover} alt={comic.title} class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
 					</div>
 
 					<!-- Info -->
 					<div class="grow min-w-0">
-						<h3 class="text-lg font-bold text-white truncate mb-1 group-hover:text-purple-400 transition-colors">{comic.title}</h3>
+						<h3 class="text-lg font-bold text-slate-900 dark:text-white truncate mb-1 group-hover:text-purple-400 transition-colors">{comic.title}</h3>
 						
 						<div class="flex items-center gap-2 mb-2 flex-wrap">
-							<span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">{comic.type}</span>
+							<span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-300 dark:border-slate-700">{comic.type}</span>
 							{#if comic.status === 'Ongoing'}
 								<span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-blue-900/30 text-blue-400 border border-blue-500/20">Ongoing</span>
 							{:else}

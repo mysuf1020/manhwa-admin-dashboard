@@ -12,7 +12,7 @@
 	<Button
 		href={`/admin/comics/${data.comic.slug}`}
 		variant="ghost"
-		class="bg-slate-900 border-slate-800 shadow-sm text-slate-400 hover:text-emerald-400 px-4 w-fit rounded-full border"
+		class="bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-sm text-slate-600 dark:text-slate-400 hover:text-emerald-400 px-4 w-fit rounded-full border"
 	>
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
@@ -29,7 +29,7 @@
 		>
 		Kembali ke Daftar Chapter
 	</Button>
-	<h2 class="text-3xl font-bold text-white gap-3 flex items-center">
+	<h2 class="text-3xl font-bold text-slate-900 dark:text-white gap-3 flex items-center">
 		<span class="text-emerald-500">Inject Halaman Baca</span>
 		<span class="text-slate-600 font-light">/</span>
 		Ch. {data.chapter.chapterNumber}
@@ -39,8 +39,8 @@
 <div class="md:grid-cols-4 gap-6 grid grid-cols-1">
 	<!-- Kolom Kiri: Form Add Bulk -->
 	<div class="md:col-span-1">
-		<div class="bg-slate-900 rounded-xl border-slate-800 p-6 shadow-xl top-6 sticky border">
-			<h3 class="text-lg font-bold text-white mb-4 gap-2 flex items-center">
+		<div class="bg-slate-50 dark:bg-slate-900 rounded-xl border-slate-200 dark:border-slate-800 p-6 shadow-xl top-6 sticky border">
+			<h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4 gap-2 flex items-center">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					class="h-5 w-5 text-emerald-500"
@@ -66,7 +66,7 @@
                         multiple
                         accept="image/png, image/jpeg, image/webp"
                         required
-                        class="bg-slate-950 border-slate-700 rounded p-2 text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-emerald-900/40 file:text-emerald-400 hover:file:bg-emerald-900/60 focus:border-emerald-500 mb-3 w-full border transition-all focus:ring-1 focus:outline-none text-xs"
+                        class="bg-white dark:bg-slate-950 border-slate-300 dark:border-slate-700 rounded p-2 text-slate-600 dark:text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-emerald-900/40 file:text-emerald-400 hover:file:bg-emerald-900/60 focus:border-emerald-500 mb-3 w-full border transition-all focus:ring-1 focus:outline-none text-xs"
                     />
 
                     <Button type="submit" variant="success" class="py-2 text-sm shadow-emerald-900/40 w-full">
@@ -83,11 +83,11 @@
                         name="zipfile"
                         accept=".zip,application/zip"
                         required
-                        class="bg-slate-950 border-slate-700 rounded p-2 text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-amber-900/40 file:text-amber-400 hover:file:bg-amber-900/60 focus:border-amber-500 mb-3 w-full border transition-all focus:ring-1 focus:outline-none text-xs"
+                        class="bg-white dark:bg-slate-950 border-slate-300 dark:border-slate-700 rounded p-2 text-slate-600 dark:text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-amber-900/40 file:text-amber-400 hover:file:bg-amber-900/60 focus:border-amber-500 mb-3 w-full border transition-all focus:ring-1 focus:outline-none text-xs"
                     />
                     <p class="text-[10px] text-slate-500 mb-3">ZIP akan diekstrak dan semua gambar di dalam akan otomatis diurutkan & diupload.</p>
 
-                    <Button type="submit" variant="ghost" class="py-2 text-sm w-full border-amber-900/50 bg-amber-900/20 text-amber-400 hover:bg-amber-600 hover:text-white border">
+                    <Button type="submit" variant="ghost" class="py-2 text-sm w-full border-amber-900/50 bg-amber-900/20 text-amber-400 hover:bg-amber-600 hover:text-slate-900 dark:text-white border">
                         Ekstrak & Upload ZIP
                     </Button>
                 </form>
@@ -100,11 +100,11 @@
                         name="urls"
                         rows="5"
                         required
-                        class="bg-slate-950 border-slate-700 rounded p-3 text-slate-300 text-xs font-mono focus:border-indigo-500 focus:ring-indigo-500 mb-3 w-full border transition-all focus:ring-1 focus:outline-none"
+                        class="bg-white dark:bg-slate-950 border-slate-300 dark:border-slate-700 rounded p-3 text-slate-700 dark:text-slate-300 text-xs font-mono focus:border-indigo-500 focus:ring-indigo-500 mb-3 w-full border transition-all focus:ring-1 focus:outline-none"
                         placeholder="https://i.img.co/1.jpg&#10;https://i.img.co/2.jpg"
                     ></textarea>
 
-                    <Button type="submit" variant="ghost" class="py-2 text-sm w-full border-indigo-900/50 bg-indigo-900/20 text-indigo-400 hover:bg-indigo-600 hover:text-white border">
+                    <Button type="submit" variant="ghost" class="py-2 text-sm w-full border-indigo-900/50 bg-indigo-900/20 text-indigo-400 hover:bg-indigo-600 hover:text-slate-900 dark:text-white border">
                         Inject URLs
                     </Button>
                 </form>
@@ -152,11 +152,11 @@
 
 	<!-- Kolom Kanan: Live Preview Grid -->
 	<div class="md:col-span-3">
-		<div class="bg-slate-900 border-slate-800 rounded-xl p-6 shadow-xl mb-6 border">
+		<div class="bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-xl mb-6 border">
 			<div class="mb-6 flex items-center justify-between">
 				<div>
-					<h3 class="text-lg font-bold text-white">Pratinjau Urutan Halaman Asli</h3>
-					<p class="text-sm text-slate-400">Dimuat secara realtime: {data.pages.length} Halaman.</p>
+					<h3 class="text-lg font-bold text-slate-900 dark:text-white">Pratinjau Urutan Halaman Asli</h3>
+					<p class="text-sm text-slate-600 dark:text-slate-400">Dimuat secara realtime: {data.pages.length} Halaman.</p>
 				</div>
 				{#if data.pages.length > 0}
 					<form
@@ -174,7 +174,7 @@
 						<Button
 							type="submit"
 							variant="ghost"
-							class="bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white border-red-500/20 border"
+							class="bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-slate-900 dark:text-white border-red-500/20 border"
 						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -197,7 +197,7 @@
 
 			{#if data.pages.length === 0}
 				<div
-					class="p-16 border-slate-700 rounded-xl bg-slate-950/50 border border-dashed text-center"
+					class="p-16 border-slate-300 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-950/50 border border-dashed text-center"
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -212,7 +212,7 @@
 							d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
 						/></svg
 					>
-					<p class="text-slate-400 font-medium">Bilik ini 100% steril hampa gambar.</p>
+					<p class="text-slate-600 dark:text-slate-400 font-medium">Bilik ini 100% steril hampa gambar.</p>
 				</div>
 			{:else}
 				<div class="sm:grid-cols-3 lg:grid-cols-5 gap-4 grid grid-cols-2">

@@ -93,7 +93,7 @@
 	<div class="w-full max-w-3xl flex justify-end px-4 pt-3 pb-1">
 		<button
 			onclick={toggleReadingMode}
-			class="text-xs text-slate-500 hover:text-purple-400 bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5"
+			class="text-xs text-slate-500 hover:text-purple-400 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5"
 		>
 			{#if readingMode === 'scroll'}
 				<svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
@@ -109,7 +109,7 @@
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div class="max-w-3xl shadow-2xl relative flex w-full flex-col cursor-pointer" onclick={toggleNav}>
 		{#if data.pages.length === 0}
-			<div class="py-32 px-4 text-slate-500 border-slate-800 rounded-xl m-4 mt-12 bg-slate-900/50 border-2 border-dashed text-center">
+			<div class="py-32 px-4 text-slate-500 border-slate-200 dark:border-slate-800 rounded-xl m-4 mt-12 bg-slate-50 dark:bg-slate-900/50 border-2 border-dashed text-center">
 				<svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mb-4 text-slate-600 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
 				</svg>
@@ -129,10 +129,10 @@
 				<img src={data.pages[currentPage].imageUrl} class="max-h-[85vh] w-auto mx-auto object-contain pointer-events-none" />
 			</div>
 			<!-- Page Controls -->
-			<div class="flex items-center justify-center gap-4 py-4 bg-slate-950/80">
-				<button onclick={prevPage} disabled={currentPage === 0} class="px-4 py-2 bg-slate-800 text-white rounded-lg disabled:opacity-30 disabled:cursor-not-allowed hover:bg-purple-600 transition-colors text-sm font-bold">← Prev</button>
-				<span class="text-slate-400 text-sm font-mono">{currentPage + 1} / {data.pages.length}</span>
-				<button onclick={nextPage} disabled={currentPage === data.pages.length - 1} class="px-4 py-2 bg-slate-800 text-white rounded-lg disabled:opacity-30 disabled:cursor-not-allowed hover:bg-purple-600 transition-colors text-sm font-bold">Next →</button>
+			<div class="flex items-center justify-center gap-4 py-4 bg-white dark:bg-slate-950/80">
+				<button onclick={prevPage} disabled={currentPage === 0} class="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg disabled:opacity-30 disabled:cursor-not-allowed hover:bg-purple-600 transition-colors text-sm font-bold">← Prev</button>
+				<span class="text-slate-600 dark:text-slate-400 text-sm font-mono">{currentPage + 1} / {data.pages.length}</span>
+				<button onclick={nextPage} disabled={currentPage === data.pages.length - 1} class="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg disabled:opacity-30 disabled:cursor-not-allowed hover:bg-purple-600 transition-colors text-sm font-bold">Next →</button>
 			</div>
 		{/if}
 	</div>
@@ -144,7 +144,7 @@
 			comicSlug={data.comic.slug}
 			nextChapterNumber={data.nextChapterNumber}
 		/>
-		<div class="w-full max-w-3xl mt-6 border-t border-slate-800">
+		<div class="w-full max-w-3xl mt-6 border-t border-slate-200 dark:border-slate-800">
 			<CommentSection comments={data.comments} user={data.user} />
 		</div>
 	{/if}

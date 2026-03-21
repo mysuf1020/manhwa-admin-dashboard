@@ -6,7 +6,7 @@
 </script>
 
 <div
-	class="group bg-slate-950 rounded-lg border-slate-700 hover:border-emerald-500 shadow-lg shadow-black/40 relative aspect-2/3 overflow-hidden border transition-colors"
+	class="group bg-white dark:bg-slate-950 rounded-lg border-slate-300 dark:border-slate-700 hover:border-emerald-500 shadow-lg shadow-black/40 relative aspect-2/3 overflow-hidden border transition-colors"
 >
 	<img
 		src={page.imageUrl}
@@ -17,7 +17,7 @@
 
 	<!-- Overlay Label -->
 	<div
-		class="top-0 left-0 bg-black/80 backdrop-blur-md text-white text-xs font-black px-3 py-1.5 rounded-br-lg shadow absolute"
+		class="top-0 left-0 bg-black/80 backdrop-blur-md text-slate-900 dark:text-white text-xs font-black px-3 py-1.5 rounded-br-lg shadow absolute"
 	>
 		#{page.pageNumber}
 	</div>

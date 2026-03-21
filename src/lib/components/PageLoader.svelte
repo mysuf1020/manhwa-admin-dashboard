@@ -38,7 +38,7 @@
 </script>
 
 {#if visible}
-	<div class="fixed top-0 left-0 w-full h-1 z-[9999] pointer-events-none fade-out-transition" style="opacity: {visible ? 1 : 0}; transition: opacity 300ms ease;">
+	<div class="fixed top-0 left-0 w-full h-1 z-9999 pointer-events-none fade-out-transition" style="opacity: {visible ? 1 : 0}; transition: opacity 300ms ease;">
 		<div class="h-full bg-purple-500 shadow-[0_0_10px_#a855f7] transition-all duration-300 ease-out" style="width: {progress}%;"></div>
 	</div>
 {/if}

@@ -10,7 +10,7 @@
 </script>
 
 <div class="mb-6 flex items-center justify-between">
-	<h2 class="text-2xl font-bold text-white">Manage Comics Katalog</h2>
+	<h2 class="text-2xl font-bold text-slate-900 dark:text-white">Manage Comics Katalog</h2>
 	<Button
 		onclick={() => (isCreateModalOpen = true)}
 		class="shadow-lg shadow-purple-900/20 px-4 py-2"
@@ -49,9 +49,9 @@
 	</div>
 {/if}
 
-<div class="bg-slate-900 rounded-xl border-slate-800 shadow-xl overflow-hidden border">
-	<table class="text-slate-300 w-full text-left">
-		<thead class="bg-slate-950 border-slate-800 text-slate-400 text-sm border-b">
+<div class="bg-slate-50 dark:bg-slate-900 rounded-xl border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden border">
+	<table class="text-slate-700 dark:text-slate-300 w-full text-left">
+		<thead class="bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 text-sm border-b">
 			<tr>
 				<th class="p-4 font-medium">Aset Cover</th>
 				<th class="p-4 font-medium">Judul & SEO Slug</th>
@@ -61,24 +61,24 @@
 		</thead>
 		<tbody class="divide-slate-800 divide-y">
 			{#each data.comics as comic (comic.id)}
-				<tr class="hover:bg-slate-800/50 transition-colors">
+				<tr class="hover:bg-slate-100 dark:bg-slate-800/50 transition-colors">
 					<td class="p-4 w-20">
 						{#if comic.coverUrl}
 							<img
 								src={comic.coverUrl}
 								alt="Cover"
-								class="w-12 h-16 rounded shadow border-slate-700 bg-slate-950 border object-cover"
+								class="w-12 h-16 rounded shadow border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 border object-cover"
 							/>
 						{:else}
 							<div
-								class="w-12 h-16 bg-slate-800 rounded text-slate-500 border-slate-700 flex items-center justify-center border text-[10px]"
+								class="w-12 h-16 bg-slate-100 dark:bg-slate-800 rounded text-slate-500 border-slate-300 dark:border-slate-700 flex items-center justify-center border text-[10px]"
 							>
 								No Img
 							</div>
 						{/if}
 					</td>
 					<td class="p-4">
-						<div class="font-bold text-white text-base">{comic.title}</div>
+						<div class="font-bold text-slate-900 dark:text-white text-base">{comic.title}</div>
 						<div
 							class="text-xs text-purple-400 font-mono mt-1 bg-purple-900/20 px-2 py-0.5 rounded border-purple-500/20 w-fit border"
 						>
@@ -87,19 +87,19 @@
 					</td>
 					<td class="p-4">
 						<div class="flex gap-2 flex-wrap mb-2">
-							<span class="px-2 py-1 bg-slate-800 rounded text-xs border-slate-700 font-semibold border text-slate-300">{comic.status}</span>
+							<span class="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded text-xs border-slate-300 dark:border-slate-700 font-semibold border text-slate-700 dark:text-slate-300">{comic.status}</span>
 							<span class="px-2 py-1 bg-purple-900/30 rounded text-xs border-purple-500/20 font-semibold border text-purple-400">{comic.type}</span>
 							<form method="POST" action="?/toggleFeatured" use:enhance class="inline">
 								<input type="hidden" name="id" value={comic.id}>
 								<input type="hidden" name="isFeatured" value={String(comic.isFeatured)}>
-								<button type="submit" class="px-2 py-1 rounded text-xs font-semibold border transition-colors {comic.isFeatured ? 'bg-amber-500/20 border-amber-500/30 text-amber-400 hover:bg-amber-500 hover:text-white' : 'bg-slate-800 border-slate-700 text-slate-500 hover:text-amber-400 hover:border-amber-500/30'}">
+								<button type="submit" class="px-2 py-1 rounded text-xs font-semibold border transition-colors {comic.isFeatured ? 'bg-amber-500/20 border-amber-500/30 text-amber-400 hover:bg-amber-500 hover:text-slate-900 dark:text-white' : 'bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-500 hover:text-amber-400 hover:border-amber-500/30'}">
 									{comic.isFeatured ? '★ Featured' : '☆ Set Featured'}
 								</button>
 							</form>
 							<form method="POST" action="?/toggleMature" use:enhance class="inline">
 								<input type="hidden" name="id" value={comic.id}>
 								<input type="hidden" name="isMature" value={String(comic.isMature)}>
-								<button type="submit" class="px-2 py-1 rounded text-xs font-semibold border transition-colors {comic.isMature ? 'bg-red-500/20 border-red-500/30 text-red-400 hover:bg-red-500 hover:text-white' : 'bg-slate-800 border-slate-700 text-slate-500 hover:text-red-400 hover:border-red-500/30'}">
+								<button type="submit" class="px-2 py-1 rounded text-xs font-semibold border transition-colors {comic.isMature ? 'bg-red-500/20 border-red-500/30 text-red-400 hover:bg-red-500 hover:text-slate-900 dark:text-white' : 'bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-500 hover:text-red-400 hover:border-red-500/30'}">
 									{comic.isMature ? '🔞 18+' : '🔓 Set 18+'}
 								</button>
 							</form>
@@ -127,7 +127,7 @@
 							<Button
 								href={`/admin/comics/${comic.slug}`}
 								variant="ghost"
-								class="bg-indigo-600/10 text-indigo-400 hover:bg-indigo-600 hover:text-white px-3 border-indigo-500/30 font-medium border"
+								class="bg-indigo-600/10 text-indigo-400 hover:bg-indigo-600 hover:text-slate-900 dark:text-white px-3 border-indigo-500/30 font-medium border"
 							>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
@@ -152,7 +152,7 @@
 								<Button
 									type="submit"
 									variant="ghost"
-									class="bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white px-3 border-red-500/20 font-medium border"
+									class="bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-slate-900 dark:text-white px-3 border-red-500/20 font-medium border"
 								>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
@@ -177,7 +177,7 @@
 				<tr>
 					<td
 						colspan="4"
-						class="p-12 text-center text-slate-500 border-dashed border-2 border-slate-800 m-4 rounded-xl"
+						class="p-12 text-center text-slate-500 border-dashed border-2 border-slate-200 dark:border-slate-800 m-4 rounded-xl"
 					>
 						<div class="flex justify-center mb-3">
 							<svg
@@ -206,10 +206,10 @@
 {#if isCreateModalOpen}
 	<div class="inset-0 bg-black/80 backdrop-blur-sm p-4 fixed z-50 flex items-center justify-center">
 		<div
-			class="bg-slate-900 border-slate-700 rounded-xl shadow-2xl max-w-xl mt-6 animate-in fade-in zoom-in w-full overflow-hidden border duration-200"
+			class="bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 rounded-xl shadow-2xl max-w-xl mt-6 animate-in fade-in zoom-in w-full overflow-hidden border duration-200"
 		>
-			<div class="p-5 border-slate-800 bg-slate-950/50 flex items-center justify-between border-b">
-				<h3 class="text-xl font-bold text-white gap-2 flex items-center">
+			<div class="p-5 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/50 flex items-center justify-between border-b">
+				<h3 class="text-xl font-bold text-slate-900 dark:text-white gap-2 flex items-center">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						class="h-5 w-5 text-purple-500"
@@ -226,7 +226,7 @@
 				<button
 					onclick={() => (isCreateModalOpen = false)}
 					aria-label="Close modal"
-					class="text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 p-1.5 rounded-lg transition-colors"
+					class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:bg-slate-700 p-1.5 rounded-lg transition-colors"
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -260,7 +260,7 @@
 			>
 				<div class="md:grid-cols-2 gap-5 mb-5 grid grid-cols-1">
 					<div>
-						<label for="title" class="text-sm font-semibold text-slate-300 mb-1.5 block"
+						<label for="title" class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5 block"
 							>Judul Manhwa/Manga *</label
 						>
 						<input
@@ -268,12 +268,12 @@
 							id="title"
 							name="title"
 							required
-							class="bg-slate-950 border-slate-700 rounded-lg px-4 py-2.5 text-white focus:border-purple-500 focus:ring-purple-500 w-full border transition-all focus:ring-1 focus:outline-none"
+							class="bg-white dark:bg-slate-950 border-slate-300 dark:border-slate-700 rounded-lg px-4 py-2.5 text-slate-900 dark:text-white focus:border-purple-500 focus:ring-purple-500 w-full border transition-all focus:ring-1 focus:outline-none"
 							placeholder="Contoh: Solo Leveling"
 						/>
 					</div>
 					<div>
-						<label for="slug" class="text-sm font-semibold text-slate-300 mb-1.5 block"
+						<label for="slug" class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5 block"
 							>URL Slug (Wajib Unik) *</label
 						>
 						<input
@@ -281,7 +281,7 @@
 							id="slug"
 							name="slug"
 							required
-							class="bg-slate-950 border-slate-700 rounded-lg px-4 py-2.5 text-white font-mono focus:border-purple-500 focus:ring-purple-500 text-sm w-full border transition-all focus:ring-1 focus:outline-none"
+							class="bg-white dark:bg-slate-950 border-slate-300 dark:border-slate-700 rounded-lg px-4 py-2.5 text-slate-900 dark:text-white font-mono focus:border-purple-500 focus:ring-purple-500 text-sm w-full border transition-all focus:ring-1 focus:outline-none"
 							placeholder="solo-leveling"
 						/>
 					</div>
@@ -289,26 +289,26 @@
 
 				<div class="md:grid-cols-2 gap-5 mb-5 grid grid-cols-1">
 					<div>
-						<label for="author" class="text-sm font-semibold text-slate-300 mb-1.5 block"
+						<label for="author" class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5 block"
 							>Nama Author/Studio</label
 						>
 						<input
 							type="text"
 							id="author"
 							name="author"
-							class="bg-slate-950 border-slate-700 rounded-lg px-4 py-2.5 text-white focus:border-purple-500 w-full border transition-all focus:outline-none"
+							class="bg-white dark:bg-slate-950 border-slate-300 dark:border-slate-700 rounded-lg px-4 py-2.5 text-slate-900 dark:text-white focus:border-purple-500 w-full border transition-all focus:outline-none"
 							placeholder="Chugong"
 						/>
 					</div>
 					<div>
-						<label for="status" class="text-sm font-semibold text-slate-300 mb-1.5 block"
+						<label for="status" class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5 block"
 							>Status Rilisan</label
 						>
 						<div class="relative">
 							<select
 								id="status"
 								name="status"
-								class="bg-slate-950 border-slate-700 rounded-lg px-4 py-2.5 text-white focus:border-purple-500 font-medium w-full appearance-none border transition-all focus:outline-none"
+								class="bg-white dark:bg-slate-950 border-slate-300 dark:border-slate-700 rounded-lg px-4 py-2.5 text-slate-900 dark:text-white focus:border-purple-500 font-medium w-full appearance-none border transition-all focus:outline-none"
 							>
 								<option value="Ongoing">🟢 Ongoing</option>
 								<option value="Completed">🏁 Completed</option>
@@ -319,7 +319,7 @@
 				</div>
 
 				<div class="mb-5">
-					<label for="cover" class="text-sm font-semibold text-slate-300 mb-1.5 block"
+					<label for="cover" class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5 block"
 						>Opsi A: Upload Cover Image (Cloudflare R2)</label
 					>
 					<input
@@ -327,19 +327,19 @@
 						id="cover"
 						name="cover"
 						accept="image/png, image/jpeg, image/webp"
-						class="bg-slate-950 border-slate-700 rounded-lg px-4 py-2.5 text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-900/40 file:text-purple-400 hover:file:bg-purple-900/60 focus:border-purple-500 w-full border transition-all focus:outline-none"
+						class="bg-white dark:bg-slate-950 border-slate-300 dark:border-slate-700 rounded-lg px-4 py-2.5 text-slate-600 dark:text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-900/40 file:text-purple-400 hover:file:bg-purple-900/60 focus:border-purple-500 w-full border transition-all focus:outline-none"
 					/>
 				</div>
 
 				<div class="mb-5">
-					<label for="coverUrl" class="text-sm font-semibold text-slate-300 mb-1.5 block"
+					<label for="coverUrl" class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5 block"
 						>Opsi B: Cover Image (URL Eksternal)</label
 					>
 					<input
 						type="url"
 						id="coverUrl"
 						name="coverUrl"
-						class="bg-slate-950 border-slate-700 rounded-lg px-4 py-2.5 text-white focus:border-purple-500 font-mono text-sm w-full border transition-all focus:outline-none"
+						class="bg-white dark:bg-slate-950 border-slate-300 dark:border-slate-700 rounded-lg px-4 py-2.5 text-slate-900 dark:text-white focus:border-purple-500 font-mono text-sm w-full border transition-all focus:outline-none"
 						placeholder="https://i.ibb.co/example.jpg"
 					/>
 					<p class="text-xs text-slate-500 mt-1.5">
@@ -349,14 +349,14 @@
 
 				<div class="md:grid-cols-2 gap-5 mb-5 grid grid-cols-1">
 					<div>
-						<label for="type" class="text-sm font-semibold text-slate-300 mb-1.5 block"
+						<label for="type" class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5 block"
 							>Tipe Terbitan</label
 						>
 						<div class="relative">
 							<select
 								id="type"
 								name="type"
-								class="bg-slate-950 border-slate-700 rounded-lg px-4 py-2.5 text-white focus:border-purple-500 font-medium w-full appearance-none border transition-all focus:outline-none"
+								class="bg-white dark:bg-slate-950 border-slate-300 dark:border-slate-700 rounded-lg px-4 py-2.5 text-slate-900 dark:text-white focus:border-purple-500 font-medium w-full appearance-none border transition-all focus:outline-none"
 							>
 								<option value="Manhwa">🔥 Manhwa (Korea)</option>
 								<option value="Manga">❤️ Manga (Jepang)</option>
@@ -365,14 +365,14 @@
 						</div>
 					</div>
 					<div>
-						<label for="updateDay" class="text-sm font-semibold text-slate-300 mb-1.5 block"
+						<label for="updateDay" class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5 block"
 							>Hari Rilis Aktual</label
 						>
 						<div class="relative">
 							<select
 								id="updateDay"
 								name="updateDay"
-								class="bg-slate-950 border-slate-700 rounded-lg px-4 py-2.5 text-white focus:border-purple-500 font-medium w-full appearance-none border transition-all focus:outline-none"
+								class="bg-white dark:bg-slate-950 border-slate-300 dark:border-slate-700 rounded-lg px-4 py-2.5 text-slate-900 dark:text-white focus:border-purple-500 font-medium w-full appearance-none border transition-all focus:outline-none"
 							>
 								<option value="">-- Tidak Ditentukan --</option>
 								<option value="Senin">Senin</option>
@@ -388,32 +388,32 @@
 				</div>
 
 				<div class="mb-5">
-					<label for="genres" class="text-sm font-semibold text-slate-300 mb-1.5 block"
+					<label for="genres" class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5 block"
 						>Genre (Pipisahkan Koma)</label
 					>
 					<input
 						type="text"
 						id="genres"
 						name="genres"
-						class="bg-slate-950 border-slate-700 rounded-lg px-4 py-2.5 text-white focus:border-purple-500 w-full border transition-all focus:outline-none"
+						class="bg-white dark:bg-slate-950 border-slate-300 dark:border-slate-700 rounded-lg px-4 py-2.5 text-slate-900 dark:text-white focus:border-purple-500 w-full border transition-all focus:outline-none"
 						placeholder="Action, Fantasy, Romance"
 					/>
 				</div>
 
 				<div class="mb-6">
-					<label for="description" class="text-sm font-semibold text-slate-300 mb-1.5 block"
+					<label for="description" class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5 block"
 						>Sinopsis Singkat</label
 					>
 					<textarea
 						id="description"
 						name="description"
 						rows="3"
-						class="bg-slate-950 border-slate-700 rounded-lg px-4 py-2.5 text-white focus:border-purple-500 w-full border transition-all focus:outline-none"
+						class="bg-white dark:bg-slate-950 border-slate-300 dark:border-slate-700 rounded-lg px-4 py-2.5 text-slate-900 dark:text-white focus:border-purple-500 w-full border transition-all focus:outline-none"
 						placeholder="Sepuluh tahun lalu, sebuah gerbang muncul..."
 					></textarea>
 				</div>
 
-				<div class="gap-3 pt-5 border-slate-800 flex justify-end border-t">
+				<div class="gap-3 pt-5 border-slate-200 dark:border-slate-800 flex justify-end border-t">
 					<Button variant="ghost" onclick={() => (isCreateModalOpen = false)} class="px-5"
 						>Batal Kembali</Button
 					>

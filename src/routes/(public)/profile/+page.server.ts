@@ -55,6 +55,51 @@ export const load: PageServerLoad = async (event) => {
 
 	return {
 		userBookmarks: cleanBookmarks,
-		userHistory
+		userHistory,
+		profile: user
 	};
+};
+
+import type { Actions } from './$types';
+import { fail } from '@sveltejs/kit';
+import { uploadFile } from '$lib/server/s3';
+import { users } from '$lib/server/schema';
+
+export const actions: Actions = {
+	updateProfile: async ({ request, locals }) => {
+		if (!locals.user) return fail(401, { error: 'Unauthorized' });
+
+		const formData = await request.formData();
+		const displayName = formData.get('displayName') as string;
+		const bio = formData.get('bio') as string;
+		const avatarFile = formData.get('avatarUrl') as File;
+		const avatarUrlExt = formData.get('avatarUrlExt') as string;
+
+		try {
+			let finalAvatarUrl: string | undefined;
+
+			// Jika user mengupload file lokal
+			if (avatarFile && avatarFile.size > 0) {
+				finalAvatarUrl = await uploadFile(avatarFile, 'avatars');
+			} else if (avatarUrlExt) {
+				// Atau menggunakan link eksternal
+				finalAvatarUrl = avatarUrlExt;
+			}
+
+			const updateData: Record<string, string | null> = {
+				displayName: displayName || null,
+				bio: bio || null
+			};
+
+			if (finalAvatarUrl !== undefined) {
+				updateData.avatarUrl = finalAvatarUrl;
+			}
+
+			await db.update(users).set(updateData).where(eq(users.id, locals.user.id));
+			return { success: true };
+		} catch (e) {
+			console.error(e);
+			return fail(500, { error: 'Failed to update profile' });
+		}
+	}
 };

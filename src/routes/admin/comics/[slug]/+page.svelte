@@ -13,7 +13,7 @@
 	<Button
 		href="/admin/comics"
 		variant="ghost"
-		class="bg-slate-900 border-slate-800 shadow-sm text-slate-400 hover:text-indigo-400 px-4 w-fit rounded-full border"
+		class="bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-sm text-slate-600 dark:text-slate-400 hover:text-indigo-400 px-4 w-fit rounded-full border"
 	>
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
@@ -30,11 +30,11 @@
 		>
 		Kembali ke Daftar Komik
 	</Button>
-	<h2 class="text-3xl font-bold text-white gap-3 flex items-center">
+	<h2 class="text-3xl font-bold text-slate-900 dark:text-white gap-3 flex items-center">
 		<span class="text-indigo-500">Chapters</span>
 		<span class="text-slate-600 font-light">/</span>
 		{data.comic.title}
-		<a href="/admin/comics/{data.comic.slug}/edit" class="ml-auto text-xs text-slate-400 hover:text-purple-400 bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5">
+		<a href="/admin/comics/{data.comic.slug}/edit" class="ml-auto text-xs text-slate-600 dark:text-slate-400 hover:text-purple-400 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5">
 			<svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
 			Edit Komik
 		</a>
@@ -42,14 +42,14 @@
 </div>
 
 <div
-	class="mb-6 bg-slate-900 border-slate-800 p-4 rounded-xl shadow-lg flex items-center justify-between border"
+	class="mb-6 bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 p-4 rounded-xl shadow-lg flex items-center justify-between border"
 >
-	<div class="text-slate-400 text-sm gap-3 flex items-center">
+	<div class="text-slate-600 dark:text-slate-400 text-sm gap-3 flex items-center">
 		{#if data.comic.coverUrl}
 			<img src={data.comic.coverUrl} alt="Cover" class="w-10 h-14 rounded shadow object-cover" />
 		{/if}
 		<div>
-			Total Rilisan: <strong class="text-white text-lg">{data.chapters.length}</strong> Bab
+			Total Rilisan: <strong class="text-slate-900 dark:text-white text-lg">{data.chapters.length}</strong> Bab
 		</div>
 	</div>
 	<Button
@@ -81,9 +81,9 @@
 	</div>
 {/if}
 
-<div class="bg-slate-900 rounded-xl border-slate-800 shadow-xl overflow-hidden border">
-	<table class="text-slate-300 w-full text-left">
-		<thead class="bg-slate-950 border-slate-800 text-slate-400 text-sm border-b">
+<div class="bg-slate-50 dark:bg-slate-900 rounded-xl border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden border">
+	<table class="text-slate-700 dark:text-slate-300 w-full text-left">
+		<thead class="bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 text-sm border-b">
 			<tr>
 				<th class="p-4 font-medium w-32">Nomor</th>
 				<th class="p-4 font-medium">Judul Sub-Bab (Opsional)</th>
@@ -93,8 +93,8 @@
 		</thead>
 		<tbody class="divide-slate-800 divide-y">
 			{#each data.chapters as chapter (chapter.id)}
-				<tr class="hover:bg-slate-800/50 transition-colors">
-					<td class="p-4 font-black text-white text-lg">Ch. {chapter.chapterNumber}</td>
+				<tr class="hover:bg-slate-100 dark:bg-slate-800/50 transition-colors">
+					<td class="p-4 font-black text-slate-900 dark:text-white text-lg">Ch. {chapter.chapterNumber}</td>
 					<td class="p-4">
 						{#if chapter.title}
 							{chapter.title}
@@ -103,7 +103,7 @@
 						{/if}
 					</td>
 					<td
-						class="p-4 text-sm text-slate-400 font-mono bg-slate-950/30 rounded mt-3 mb-3 ml-4 inline-block"
+						class="p-4 text-sm text-slate-600 dark:text-slate-400 font-mono bg-white dark:bg-slate-950/30 rounded mt-3 mb-3 ml-4 inline-block"
 						>{new Date(chapter.createdAt).toLocaleString()}</td
 					>
 					<td class="p-4 text-right">
@@ -112,7 +112,7 @@
 							<Button
 								href={`/admin/chapters/${chapter.id}`}
 								variant="ghost"
-								class="bg-emerald-600/10 text-emerald-400 hover:bg-emerald-600 hover:text-white px-4 border-emerald-500/30 border"
+								class="bg-emerald-600/10 text-emerald-400 hover:bg-emerald-600 hover:text-slate-900 dark:text-white px-4 border-emerald-500/30 border"
 							>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
@@ -137,7 +137,7 @@
 								<Button
 									type="submit"
 									variant="ghost"
-									class="bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white px-3 border-red-500/20 font-medium border"
+									class="bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-slate-900 dark:text-white px-3 border-red-500/20 font-medium border"
 								>
 									Hapus
 								</Button>
@@ -149,7 +149,7 @@
 				<tr>
 					<td
 						colspan="4"
-						class="p-16 text-center text-slate-500 border-dashed border border-slate-800 m-8 rounded-xl bg-slate-950/50"
+						class="p-16 text-center text-slate-500 border-dashed border border-slate-200 dark:border-slate-800 m-8 rounded-xl bg-white dark:bg-slate-950/50"
 					>
 						<div class="flex justify-center mb-4">
 							<svg
@@ -166,7 +166,7 @@
 								/></svg
 							>
 						</div>
-						<h4 class="text-white font-medium mb-1">Belum Ada Satu Rilisan Pun</h4>
+						<h4 class="text-slate-900 dark:text-white font-medium mb-1">Belum Ada Satu Rilisan Pun</h4>
 						<p class="text-sm">
 							Klik tombol "Chapter Baru" di sudut kanan atas untuk mengunggah rilis perdana.
 						</p>
@@ -181,10 +181,10 @@
 {#if isCreateModalOpen}
 	<div class="inset-0 bg-black/80 backdrop-blur-sm p-4 fixed z-50 flex items-center justify-center">
 		<div
-			class="bg-slate-900 border-slate-700 rounded-xl shadow-2xl max-w-md animate-in fade-in zoom-in w-full overflow-hidden border duration-200"
+			class="bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 rounded-xl shadow-2xl max-w-md animate-in fade-in zoom-in w-full overflow-hidden border duration-200"
 		>
-			<div class="p-5 border-slate-800 bg-slate-950/50 flex items-center justify-between border-b">
-				<h3 class="text-xl font-bold text-white gap-2 flex items-center">
+			<div class="p-5 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/50 flex items-center justify-between border-b">
+				<h3 class="text-xl font-bold text-slate-900 dark:text-white gap-2 flex items-center">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						class="h-5 w-5 text-indigo-500"
@@ -201,7 +201,7 @@
 				<button
 					onclick={() => (isCreateModalOpen = false)}
 					aria-label="Close modal"
-					class="text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 p-1.5 rounded-lg transition-colors"
+					class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 p-1.5 rounded-lg transition-colors"
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -236,7 +236,7 @@
 				<input type="hidden" name="comicId" value={data.comic.id} />
 
 				<div class="mb-5">
-					<label for="chapterNumber" class="text-sm font-semibold text-slate-300 mb-1.5 block"
+					<label for="chapterNumber" class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5 block"
 						>Deret Nomor Chapter *</label
 					>
 					<input
@@ -244,25 +244,25 @@
 						id="chapterNumber"
 						name="chapterNumber"
 						required
-						class="bg-slate-950 border-slate-700 rounded-lg px-4 py-2.5 text-white font-mono focus:border-indigo-500 focus:ring-indigo-500 w-full border transition-all focus:ring-1 focus:outline-none"
+						class="bg-white dark:bg-slate-950 border-slate-300 dark:border-slate-700 rounded-lg px-4 py-2.5 text-slate-900 dark:text-white font-mono focus:border-indigo-500 focus:ring-indigo-500 w-full border transition-all focus:ring-1 focus:outline-none"
 						placeholder="misal: 1, 10, atau 12.5"
 					/>
 				</div>
 
 				<div class="mb-6">
-					<label for="title" class="text-sm font-semibold text-slate-300 mb-1.5 block"
+					<label for="title" class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5 block"
 						>Judul Spesifik Bab (Opsional)</label
 					>
 					<input
 						type="text"
 						id="title"
 						name="title"
-						class="bg-slate-950 border-slate-700 rounded-lg px-4 py-2.5 text-white focus:border-indigo-500 w-full border transition-all focus:outline-none"
+						class="bg-white dark:bg-slate-950 border-slate-300 dark:border-slate-700 rounded-lg px-4 py-2.5 text-slate-900 dark:text-white focus:border-indigo-500 w-full border transition-all focus:outline-none"
 						placeholder="Penyerbuan di Sarang Semut"
 					/>
 				</div>
 
-				<div class="gap-3 pt-5 border-slate-800 flex justify-end border-t">
+				<div class="gap-3 pt-5 border-slate-200 dark:border-slate-800 flex justify-end border-t">
 					<Button variant="ghost" onclick={() => (isCreateModalOpen = false)} class="px-5"
 						>Batal</Button
 					>

@@ -9,7 +9,7 @@
 	<title>Admin Dashboard - MangaReader</title>
 </svelte:head>
 
-<div class="bg-slate-950 text-slate-200 flex min-h-screen">
+<div class="bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-200 flex min-h-screen">
 	<!-- Sidebar -->
 	<Sidebar />
 

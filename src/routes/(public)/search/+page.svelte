@@ -3,20 +3,29 @@
 	import ComicCard from '$lib/components/ComicCard.svelte';
 	import ComicCardSkeleton from '$lib/components/ComicCardSkeleton.svelte';
 	import { goto } from '$app/navigation';
-	import { navigating } from '$app/stores';
+	import { navigating, page } from '$app/stores';
 
 	let { data }: { data: PageData } = $props();
 
-	let q = $state(data.filters.q);
-	let genre = $state(data.filters.genre);
-	let status = $state(data.filters.status);
-	let type = $state(data.filters.type);
-	let sort = $state(data.filters.sort);
+	let q = $derived(data.filters.q);
+	let genre = $derived(data.filters.genre);
+	let status = $derived(data.filters.status);
+	let type = $derived(data.filters.type);
+	let sort = $derived(data.filters.sort);
+
+	$effect(() => {
+		q = data.filters.q;
+		genre = data.filters.genre;
+		status = data.filters.status;
+		type = data.filters.type;
+		sort = data.filters.sort;
+	});
 
 	const genres = ['Action', 'Adventure', 'Comedy', 'Drama', 'Fantasy', 'Horror', 'Isekai', 'Martial Arts', 'Mystery', 'Romance', 'Sci-Fi', 'Slice of Life', 'Sports', 'Supernatural', 'Thriller'];
 
 	function applyFilters() {
-		const url = new URL(window.location.href);
+		// eslint-disable-next-line
+		const url = new URL($page.url);
 		url.search = '';
 		if (q) url.searchParams.set('q', q);
 		if (genre) url.searchParams.set('genre', genre);
@@ -37,45 +46,45 @@
 </svelte:head>
 
 <div class="max-w-7xl mx-auto px-4 py-8">
-	<h1 class="text-3xl font-black text-white mb-6">Pencarian Lanjutan</h1>
+	<h1 class="text-3xl font-black text-slate-900 dark:text-white mb-6">Pencarian Lanjutan</h1>
 
 	<!-- Filter Bar -->
-	<div class="bg-slate-900 border border-slate-800 rounded-xl p-4 md:p-5 mb-8 shadow-lg">
+	<div class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 md:p-5 mb-8 shadow-lg">
 		<div class="flex flex-col md:flex-row gap-3 mb-4">
 			<input
 				bind:value={q}
 				placeholder="Cari judul komik..."
-				class="grow bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-sm text-white focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+				class="grow bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
 				onkeydown={(e) => { if (e.key === 'Enter') applyFilters(); }}
 			/>
-			<button onclick={applyFilters} class="bg-purple-600 hover:bg-purple-500 text-white font-bold px-6 py-2.5 rounded-lg transition-colors shrink-0">
+			<button onclick={applyFilters} class="bg-purple-600 hover:bg-purple-500 text-slate-900 dark:text-white font-bold px-6 py-2.5 rounded-lg transition-colors shrink-0">
 				Cari
 			</button>
 		</div>
 
 		<div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-			<select bind:value={genre} onchange={applyFilters} class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-300 focus:border-purple-500 focus:outline-none appearance-none">
+			<select bind:value={genre} onchange={applyFilters} class="bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 focus:border-purple-500 focus:outline-none appearance-none">
 				<option value="">Semua Genre</option>
 				{#each genres as g (g)}
 					<option value={g}>{g}</option>
 				{/each}
 			</select>
 
-			<select bind:value={status} onchange={applyFilters} class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-300 focus:border-purple-500 focus:outline-none appearance-none">
+			<select bind:value={status} onchange={applyFilters} class="bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 focus:border-purple-500 focus:outline-none appearance-none">
 				<option value="">Semua Status</option>
 				<option value="Ongoing">Ongoing</option>
 				<option value="Completed">Completed</option>
 				<option value="Hiatus">Hiatus</option>
 			</select>
 
-			<select bind:value={type} onchange={applyFilters} class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-300 focus:border-purple-500 focus:outline-none appearance-none">
+			<select bind:value={type} onchange={applyFilters} class="bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 focus:border-purple-500 focus:outline-none appearance-none">
 				<option value="">Semua Tipe</option>
 				<option value="Manhwa">Manhwa</option>
 				<option value="Manga">Manga</option>
 				<option value="Manhua">Manhua</option>
 			</select>
 
-			<select bind:value={sort} onchange={applyFilters} class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-300 focus:border-purple-500 focus:outline-none appearance-none">
+			<select bind:value={sort} onchange={applyFilters} class="bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 focus:border-purple-500 focus:outline-none appearance-none">
 				<option value="latest">Terbaru</option>
 				<option value="popular">Terpopuler</option>
 				<option value="rating">Rating Tertinggi</option>
@@ -107,12 +116,12 @@
 
 	<!-- Results -->
 	<div class="flex items-center justify-between mb-4">
-		<p class="text-sm text-slate-400">{data.total} komik ditemukan</p>
+		<p class="text-sm text-slate-600 dark:text-slate-400">{data.total} komik ditemukan</p>
 	</div>
 
 	{#if $navigating}
 		<div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 md:gap-4">
-			{#each Array(12) as _, i (i)}
+			{#each Array.from({ length: 12 }, (x, i) => i) as i (i)}
 				<ComicCardSkeleton />
 			{/each}
 		</div>
