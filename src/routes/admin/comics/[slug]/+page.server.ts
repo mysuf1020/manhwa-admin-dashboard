@@ -1,7 +1,7 @@
 import type { PageServerLoad, Actions } from './$types';
 import { db } from '$lib/server/db';
-import { comics, chapters, bookmarks, notifications } from '$lib/server/schema';
-import { eq } from 'drizzle-orm';
+import { comics, chapters, followers, notifications } from '$lib/server/schema';
+import { eq, desc } from 'drizzle-orm';
 import { error, fail } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ params }) => {
@@ -35,15 +35,15 @@ export const actions: Actions = {
 				title: title || null
 			}).returning();
 
-			// Trigger notifikasi ke user yang bookmark komik ini
+			// Trigger notifikasi ke user yang Mengikuti komik ini
 			const comicRecord = await db.select({ title: comics.title }).from(comics).where(eq(comics.id, parseInt(comicId))).limit(1);
 			const comicTitle = comicRecord[0]?.title || 'Unknown';
 
-			const bookmarkedUsers = await db.select({ userId: bookmarks.userId }).from(bookmarks).where(eq(bookmarks.comicId, parseInt(comicId)));
+			const followingUsers = await db.select({ userId: followers.userId }).from(followers).where(eq(followers.comicId, parseInt(comicId)));
 
-			if (bookmarkedUsers.length > 0) {
+			if (followingUsers.length > 0) {
 				await db.insert(notifications).values(
-					bookmarkedUsers.map((b) => ({
+					followingUsers.map((b) => ({
 						userId: b.userId,
 						type: 'new_chapter',
 						comicId: parseInt(comicId),

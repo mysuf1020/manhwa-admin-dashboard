@@ -1,7 +1,7 @@
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
-import { comics, chapters, bookmarks, ratings, comicViews, collections, collectionItems } from '$lib/server/schema';
+import { comics, chapters, bookmarks, followers, ratings, comicViews, collections, collectionItems } from '$lib/server/schema';
 import { eq, desc, and, sql, ne, ilike, or } from 'drizzle-orm';
 import { addExperience } from '$lib/server/gamification';
 
@@ -32,8 +32,9 @@ export const load: PageServerLoad = async (event) => {
 		.where(eq(chapters.comicId, comic.id))
 		.orderBy(desc(chapters.createdAt)); // Semakin baru letaknya makin atas
 
-	// Cek status bookmark dan rating personal jika user login
+	// Cek status bookmark, following, dan rating personal jika user login
 	let isBookmarked = false;
+	let isFollowing = false;
 	let userRating: number | null = null;
 	const user = event.locals.user;
 	if (user) {
@@ -42,6 +43,12 @@ export const load: PageServerLoad = async (event) => {
 			.from(bookmarks)
 			.where(and(eq(bookmarks.userId, user.id), eq(bookmarks.comicId, comic.id)));
 		isBookmarked = result.length > 0;
+
+		const followResult = await db
+			.select()
+			.from(followers)
+			.where(and(eq(followers.userId, user.id), eq(followers.comicId, comic.id)));
+		isFollowing = followResult.length > 0;
 
 		const ratingResult = await db
 			.select()
@@ -98,6 +105,7 @@ export const load: PageServerLoad = async (event) => {
 		comic: { ...comic, viewCount: currentViewCount },
 		chapters: chapterList,
 		isBookmarked,
+		isFollowing,
 		userRating,
 		relatedComics,
 		userCollections,
@@ -130,6 +138,29 @@ export const actions: Actions = {
 				userId: user.id,
 				comicId: comic.id
 			});
+		}
+
+		return { success: true };
+	},
+	toggleFollow: async (event) => {
+		const user = event.locals.user;
+		if (!user) throw redirect(302, '/login');
+
+		const slug = event.params.slug;
+		const comicRecord = await db.select().from(comics).where(eq(comics.slug, slug)).limit(1);
+
+		if (!comicRecord.length) return fail(404, { error: 'Komik tidak ditemukan' });
+		const comic = comicRecord[0];
+
+		const existingFollow = await db
+			.select()
+			.from(followers)
+			.where(and(eq(followers.userId, user.id), eq(followers.comicId, comic.id)));
+
+		if (existingFollow.length > 0) {
+			await db.delete(followers).where(eq(followers.id, existingFollow[0].id));
+		} else {
+			await db.insert(followers).values({ userId: user.id, comicId: comic.id });
 		}
 
 		return { success: true };

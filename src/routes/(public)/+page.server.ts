@@ -1,7 +1,7 @@
 import type { PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
-import { comics, announcements, history, chapters, ads } from '$lib/server/schema';
-import { desc, ilike, and, eq, sql, asc, inArray } from 'drizzle-orm';
+import { comics, announcements, history, chapters, ads, followers } from '$lib/server/schema';
+import { desc, ilike, and, eq, sql, asc, inArray, notInArray, or } from 'drizzle-orm';
 
 export const load: PageServerLoad = async ({ url, locals }) => {
 	const searchQuery = url.searchParams.get('q') || '';
@@ -174,6 +174,104 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 		}));
 	}
 
+	// Query Update Komik Diikuti (hanya untuk user yang login)
+	let followedUpdates: {
+		comicId: number;
+		slug: string;
+		title: string;
+		cover: string;
+		chapterNumber: string;
+		chapterTitle: string | null;
+	}[] = [];
+	if (user && (!searchQuery && (!typeFilter || typeFilter === 'All') && page === 1)) {
+		const userFollows = await db.select({ comicId: followers.comicId }).from(followers).where(eq(followers.userId, user.id));
+		if (userFollows.length > 0) {
+			const followedIds = userFollows.map(f => f.comicId);
+			const updates = await db.select({
+				comicId: comics.id,
+				slug: comics.slug,
+				title: comics.title,
+				cover: comics.coverUrl,
+				chapterNumber: chapters.chapterNumber,
+				chapterTitle: chapters.title
+			})
+			.from(chapters)
+			.innerJoin(comics, eq(chapters.comicId, comics.id))
+			.where(inArray(comics.id, followedIds))
+			.orderBy(desc(chapters.createdAt))
+			.limit(10);
+
+			followedUpdates = updates.map(u => ({
+				comicId: u.comicId,
+				slug: u.slug,
+				title: u.title,
+				cover: u.cover || 'https://picsum.photos/seed/placeholder/300/400',
+				chapterNumber: u.chapterNumber,
+				chapterTitle: u.chapterTitle
+			}));
+		}
+	}
+
+	// Query "Untukmu" (Rekomendasi Cerdas berdasarkan history)
+	let forYouComics: {
+		id: number;
+		slug: string;
+		title: string;
+		type: string;
+		chapter: string;
+		time: string;
+		cover: string;
+	}[] = [];
+
+	if (user && (!searchQuery && (!typeFilter || typeFilter === 'All') && page === 1)) {
+		const readComicRecords = await db.select({ comicId: history.comicId }).from(history).where(eq(history.userId, user.id));
+		const readComicIds = readComicRecords.map(h => h.comicId);
+
+		const historyGenres = await db.select({ genres: comics.genres })
+			.from(history)
+			.innerJoin(comics, eq(history.comicId, comics.id))
+			.where(eq(history.userId, user.id))
+			.orderBy(desc(history.readAt))
+			.limit(50);
+		
+		const genreCounts: Record<string, number> = {};
+		for (const row of historyGenres) {
+			if (row.genres) {
+				const genresStr = row.genres.split(',').map(g => g.trim()).filter(Boolean);
+				for (const g of genresStr) {
+					genreCounts[g] = (genreCounts[g] || 0) + 1;
+				}
+			}
+		}
+
+		const topGenres = Object.entries(genreCounts).sort((a, b) => b[1] - a[1]).slice(0, 2).map(e => e[0]);
+
+		if (topGenres.length > 0) {
+			const genreConditions = topGenres.map(g => ilike(comics.genres, `%${g}%`));
+			
+			const recommendations = await db.select()
+				.from(comics)
+				.where(
+					and(
+						or(...genreConditions),
+						readComicIds.length > 0 ? notInArray(comics.id, readComicIds) : undefined
+					)
+				)
+				.orderBy(desc(comics.viewCount))
+				.limit(6);
+			
+			forYouComics = recommendations.map(c => ({
+				id: c.id,
+				slug: c.slug,
+				title: c.title,
+				type: c.type,
+				chapter: latestChapterMap.has(c.id) ? `Ch. ${latestChapterMap.get(c.id)}` : 'Rekomendasi',
+				time: new Date(c.updatedAt || Date.now()).toLocaleDateString(),
+				cover: c.coverUrl || 'https://picsum.photos/seed/placeholder/300/400'
+			}));
+		}
+	}
+
 	// Query Active Ads
 	const activeAds = await db.select().from(ads).where(eq(ads.isActive, true));
 
@@ -183,6 +281,8 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 		featuredComics,
 		activeAnnouncements,
 		continueReading,
+		followedUpdates,
+		forYouComics,
 		activeAds,
 		searchQuery,
 		typeFilter: typeFilter || 'All',

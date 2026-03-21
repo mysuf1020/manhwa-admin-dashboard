@@ -87,6 +87,36 @@
 		</section>
 	{/if}
 
+	<!-- Update Komik Diikuti (hanya untuk user yang login) -->
+	{#if data.followedUpdates && data.followedUpdates.length > 0}
+		<section class="mb-10">
+			<div class="flex items-center justify-between mb-4">
+				<h2 class="text-xl md:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+					<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-purple-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+					Update Manga Diikuti
+				</h2>
+				<a href="/following" class="text-sm font-bold text-purple-600 hover:text-purple-500 transition-colors">Lihat Semua</a>
+			</div>
+			<div class="flex gap-4 overflow-x-auto pb-4 pt-1 no-scrollbar snap-x">
+				{#each data.followedUpdates as item (item.comicId + item.chapterNumber)}
+					<a href="/comic/{item.slug}/{item.chapterNumber}" class="shrink-0 snap-start group w-32 md:w-40 relative rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+						<div class="aspect-[3/4] bg-slate-100 dark:bg-slate-900">
+							<img src="{item.cover}" alt="{item.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+						</div>
+						<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+						<div class="absolute top-2 right-2">
+							<span class="inline-block px-1.5 md:px-2 py-0.5 bg-rose-500 text-white text-[9px] md:text-[10px] font-bold rounded uppercase tracking-wider shadow-md">NEW</span>
+						</div>
+						<div class="absolute bottom-0 left-0 right-0 p-3 md:p-4">
+							<span class="inline-block px-1.5 py-0.5 mb-1.5 bg-purple-600 text-white text-[10px] font-bold rounded shadow-md">Ch. {item.chapterNumber}</span>
+							<h3 class="text-white font-bold text-xs md:text-sm line-clamp-2 leading-tight group-hover:text-purple-400 transition-colors drop-shadow-md">{item.title}</h3>
+						</div>
+					</a>
+				{/each}
+			</div>
+		</section>
+	{/if}
+
 	<!-- Continue Reading (hanya untuk user yang login) -->
 	{#if data.continueReading && data.continueReading.length > 0}
 		<section class="mb-8">
@@ -135,6 +165,33 @@
 			{/each}
 		</section>
 	{/if}
+
+	<!-- Untukmu (Rekomendasi Cerdas) -->
+	{#if data.forYouComics && data.forYouComics.length > 0}
+		<section class="mb-12">
+			<div class="flex items-center justify-between mb-4 mt-2">
+				<h2 class="text-xl md:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+					<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-purple-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.381z" clip-rule="evenodd" /></svg>
+					Spesial Untukmu
+				</h2>
+			</div>
+			<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4 lg:gap-6">
+				{#each data.forYouComics as comic (comic.id)}
+					<a href="/comic/{comic.slug}" class="group block relative rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-900 aspect-3/4 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+						<img src="{comic.cover}" alt="{comic.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+						<div class="absolute inset-0 bg-linear-to-t from-black/90 via-black/40 to-transparent"></div>
+						<div class="absolute bottom-0 left-0 right-0 p-3 md:p-4">
+							<span class="inline-block px-1.5 py-0.5 mb-1.5 bg-purple-600 text-white text-[10px] font-bold rounded shadow-md">{comic.chapter}</span>
+							<h3 class="text-white font-bold text-xs md:text-sm line-clamp-2 leading-tight group-hover:text-purple-400 transition-colors drop-shadow-md">{comic.title}</h3>
+						</div>
+					</a>
+				{/each}
+			</div>
+		</section>
+	{/if}
+
+	<!-- Ad Banner (Mid) -->
+	<div class="mb-6"><AdBanner ads={data.activeAds} position="homepage_mid" isVip={data.user?.isVip} /></div>
 
 	<!-- Filters -->
 	<section class="mb-6 flex justify-center">

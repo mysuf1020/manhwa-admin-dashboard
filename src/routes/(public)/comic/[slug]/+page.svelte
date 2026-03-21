@@ -109,6 +109,22 @@
 		</div>
 
 		<div class="mb-8 flex items-center gap-3 flex-wrap">
+			{#if data.isFollowing}
+				<form action="?/toggleFollow" method="POST" use:enhance>
+					<button class="flex items-center gap-2 bg-purple-500/10 text-purple-400 border border-purple-500/30 font-bold px-4 py-2.5 rounded-lg transition-all hover:bg-purple-500 hover:text-white hover:border-purple-500 shadow-lg shadow-purple-900/10 active:scale-95">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+						Mengikuti
+					</button>
+				</form>
+			{:else}
+				<form action="?/toggleFollow" method="POST" use:enhance>
+					<button class="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 font-bold px-4 py-2.5 rounded-lg transition-all hover:bg-purple-600 hover:text-slate-900 dark:hover:text-white hover:border-purple-500 shadow-lg active:scale-95">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+						Ikuti
+					</button>
+				</form>
+			{/if}
+
 			{#if data.isBookmarked}
 				<form action="?/toggleBookmark" method="POST" use:enhance>
 					<button class="flex items-center gap-2 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-bold px-4 py-2.5 rounded-lg transition-all hover:bg-emerald-500 hover:text-slate-900 dark:text-white hover:border-emerald-500 shadow-lg shadow-emerald-900/10 active:scale-95">

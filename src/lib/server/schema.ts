@@ -75,12 +75,26 @@ export const bookmarks = pgTable('bookmarks', {
 	id: serial('id').primaryKey(),
 	userId: text('user_id')
 		.notNull()
-		.references(() => users.id),
+		.references(() => users.id, { onDelete: 'cascade' }),
 	comicId: integer('comic_id')
 		.notNull()
-		.references(() => comics.id),
+		.references(() => comics.id, { onDelete: 'cascade' }),
 	createdAt: timestamp('created_at').defaultNow().notNull()
 });
+
+// Tabel Langganan/Ikuti (Followers)
+export const followers = pgTable('followers', {
+	id: serial('id').primaryKey(),
+	userId: text('user_id')
+		.notNull()
+		.references(() => users.id, { onDelete: 'cascade' }),
+	comicId: integer('comic_id')
+		.notNull()
+		.references(() => comics.id, { onDelete: 'cascade' }),
+	createdAt: timestamp('created_at').defaultNow().notNull()
+}, (t) => ({
+	unq: unique().on(t.userId, t.comicId)
+}));
 
 // Tabel Riwayat Bacaan (History)
 export const history = pgTable('history', {
