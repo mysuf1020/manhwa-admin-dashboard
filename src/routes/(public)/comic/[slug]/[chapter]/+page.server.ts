@@ -1,7 +1,7 @@
 import { error, fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { db } from '$lib/server/db';
-import { comics, chapters, pages, history, comments, users, reports } from '$lib/server/schema';
+import { comics, chapters, pages, history, comments, users, reports, ads } from '$lib/server/schema';
 import { eq, and, asc, desc } from 'drizzle-orm';
 import { addExperience } from '$lib/server/gamification';
 
@@ -84,6 +84,9 @@ export const load: PageServerLoad = async (event) => {
 		.where(eq(comments.chapterId, currentChapter.id))
 		.orderBy(desc(comments.createdAt));
 
+	// Fetch Active Ads
+	const activeAds = await db.select().from(ads).where(eq(ads.isActive, true));
+
 	return {
 		comic,
 		chapter: currentChapter,
@@ -91,7 +94,8 @@ export const load: PageServerLoad = async (event) => {
 		comments: chapterComments,
 		user,
 		prevChapterNumber,
-		nextChapterNumber
+		nextChapterNumber,
+		activeAds
 	};
 };
 

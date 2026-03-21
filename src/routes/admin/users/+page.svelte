@@ -39,6 +39,7 @@
 				<th class="p-4 font-medium">User</th>
 				<th class="p-4 font-medium">Role</th>
 				<th class="p-4 font-medium">Bergabung</th>
+				<th class="p-4 font-medium text-center">VIP</th>
 				<th class="p-4 font-medium text-right">Aksi</th>
 			</tr>
 		</thead>
@@ -62,6 +63,16 @@
 						<span class="px-2 py-1 rounded text-xs font-bold border {roleColors[user.role || 'user']}">{user.role || 'user'}</span>
 					</td>
 					<td class="p-4 text-sm text-slate-600 dark:text-slate-400">{timeAgo(String(user.createdAt))}</td>
+					<td class="p-4 text-center">
+						<form method="POST" action="?/toggleVip" use:enhance>
+							<input type="hidden" name="userId" value={user.id}>
+							<input type="hidden" name="isVip" value={String(user.isVip)}>
+							<button type="submit" class="text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded border transition-colors 
+								{user.isVip ? 'bg-amber-500/10 text-amber-500 border-amber-500/30 hover:bg-amber-500 hover:text-white' : 'bg-slate-500/10 text-slate-500 border-slate-500/30 hover:bg-slate-500 hover:text-white'}">
+								{user.isVip ? 'VIP' : 'Reguler'}
+							</button>
+						</form>
+					</td>
 					<td class="p-4 text-right">
 						<form method="POST" action="?/setRole" use:enhance class="inline-flex gap-1">
 							<input type="hidden" name="userId" value={user.id}>

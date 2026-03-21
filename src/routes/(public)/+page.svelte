@@ -1,5 +1,6 @@
 <script lang="ts">
 	import ComicCard from '$lib/components/ComicCard.svelte';
+	import AdBanner from '$lib/components/AdBanner.svelte';
 	import type { PageData } from './$types';
 	import { goto } from '$app/navigation';
 	import { onMount, onDestroy } from 'svelte';
@@ -30,7 +31,7 @@
 		} else {
 			url.searchParams.set('type', type);
 		}
-		goto(url.toString(), { keepFocus: true });
+		goto(url.toString());
 	}
 
 	const categories = [
@@ -46,6 +47,9 @@
 </svelte:head>
 
 <div class="max-w-7xl px-4 py-4 md:py-6 mx-auto">
+	<!-- Ad Banner: Homepage Top -->
+	<AdBanner ads={data.activeAds} position="homepage_top" isVip={data.user?.isVip} />
+
 	<!-- Featured Slider (Komik Pilihan Editor) -->
 	{#if data.featuredComics && data.featuredComics.length > 0 && !data.searchQuery && data.typeFilter === 'All' && data.currentPage === 1}
 		<section class="mb-6 relative overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl" style="min-height: 200px;">

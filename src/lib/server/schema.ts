@@ -57,6 +57,7 @@ export const users = pgTable('users', {
 	theme: varchar('theme', { length: 20 }).default('dark'), // 'dark' atau 'light'
 	experience: integer('experience').default(0).notNull(),
 	level: integer('level').default(1).notNull(),
+	isVip: boolean('is_vip').default(false).notNull(),
 	createdAt: timestamp('created_at').defaultNow().notNull()
 });
 
@@ -204,5 +205,17 @@ export const collectionItems = pgTable('collection_items', {
 	comicId: integer('comic_id')
 		.notNull()
 		.references(() => comics.id, { onDelete: 'cascade' }),
+	createdAt: timestamp('created_at').defaultNow().notNull()
+});
+
+// Tabel Iklan / Advertisements
+export const ads = pgTable('ads', {
+	id: serial('id').primaryKey(),
+	title: varchar('title', { length: 255 }).notNull(),
+	imageUrl: text('image_url'),
+	scriptCode: text('script_code'), // Untuk kode AdSense / HTML embed
+	linkUrl: text('link_url'),
+	positionType: varchar('position_type', { length: 50 }).notNull().default('homepage_top'), // homepage_top, homepage_mid, reader_top, reader_bottom
+	isActive: boolean('is_active').default(true).notNull(),
 	createdAt: timestamp('created_at').defaultNow().notNull()
 });

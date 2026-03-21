@@ -1,6 +1,6 @@
 import type { PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
-import { comics, announcements, history, chapters } from '$lib/server/schema';
+import { comics, announcements, history, chapters, ads } from '$lib/server/schema';
 import { desc, ilike, and, eq, sql, asc } from 'drizzle-orm';
 
 export const load: PageServerLoad = async ({ url, locals }) => {
@@ -172,12 +172,16 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 		}));
 	}
 
+	// Query Active Ads
+	const activeAds = await db.select().from(ads).where(eq(ads.isActive, true));
+
 	return {
 		latestUpdates,
 		popularComics,
 		featuredComics,
 		activeAnnouncements,
 		continueReading,
+		activeAds,
 		searchQuery,
 		typeFilter: typeFilter || 'All',
 		currentPage: page,

@@ -5,6 +5,7 @@
 	import ReaderFooter from '$lib/components/ReaderFooter.svelte';
 	import CommentSection from '$lib/components/CommentSection.svelte';
 	import DonationWidget from '$lib/components/DonationWidget.svelte';
+	import AdBanner from '$lib/components/AdBanner.svelte';
 
 	let { data }: { data: PageData } = $props();
 
@@ -222,6 +223,10 @@
 			{/if}
 		</button>
 	{/if}
+
+	<div class="px-4 w-full">
+		<AdBanner ads={data.activeAds} position="reader_bottom" isVip={data.user?.isVip} />
+	</div>
 
 	<!-- Modal Laporan -->
 	<!-- svelte-ignore a11y_click_events_have_key_events -->

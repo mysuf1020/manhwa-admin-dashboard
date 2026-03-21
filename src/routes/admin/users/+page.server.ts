@@ -12,6 +12,7 @@ export const load: PageServerLoad = async () => {
 			role: users.role,
 			displayName: users.displayName,
 			avatarUrl: users.avatarUrl,
+			isVip: users.isVip,
 			createdAt: users.createdAt
 		})
 		.from(users)
@@ -32,8 +33,20 @@ export const actions: Actions = {
 		try {
 			await db.update(users).set({ role: newRole }).where(eq(users.id, userId));
 			return { success: true };
-		} catch (e) {
-			return fail(500, { error: (e as Error).message });
+		} catch {
+			return fail(500, { error: 'Gagal merubah role' });
+		}
+	},
+	toggleVip: async ({ request }) => {
+		const formData = await request.formData();
+		const userId = formData.get('userId') as string;
+		const currentState = formData.get('isVip') === 'true';
+
+		try {
+			await db.update(users).set({ isVip: !currentState }).where(eq(users.id, userId));
+			return { success: true };
+		} catch {
+			return fail(500, { error: 'Gagal mengatur status VIP' });
 		}
 	}
 };
