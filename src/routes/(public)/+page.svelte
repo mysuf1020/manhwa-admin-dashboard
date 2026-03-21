@@ -71,7 +71,7 @@
 			<!-- Slider Dots -->
 			{#if data.featuredComics.length > 1}
 				<div class="absolute bottom-3 right-4 md:bottom-5 md:right-6 z-20 flex gap-1.5">
-					{#each data.featuredComics as _dotComic, i (i)}
+					{#each {length: data.featuredComics.length} as _, i (i)}
 						<button
 							onclick={() => { currentSlide = i; clearInterval(sliderInterval); }}
 							class="w-2 h-2 rounded-full transition-all {i === currentSlide ? 'bg-purple-400 w-5' : 'bg-white/30 hover:bg-white/50'}"

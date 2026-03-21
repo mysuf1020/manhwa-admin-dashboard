@@ -1,0 +1,39 @@
+import type { PageServerLoad, Actions } from './$types';
+import { db } from '$lib/server/db';
+import { users } from '$lib/server/schema';
+import { eq, desc } from 'drizzle-orm';
+import { fail } from '@sveltejs/kit';
+
+export const load: PageServerLoad = async () => {
+	const allUsers = await db
+		.select({
+			id: users.id,
+			username: users.username,
+			role: users.role,
+			displayName: users.displayName,
+			avatarUrl: users.avatarUrl,
+			createdAt: users.createdAt
+		})
+		.from(users)
+		.orderBy(desc(users.createdAt));
+
+	return { users: allUsers };
+};
+
+export const actions: Actions = {
+	setRole: async ({ request }) => {
+		const formData = await request.formData();
+		const userId = formData.get('userId') as string;
+		const newRole = formData.get('role') as string;
+
+		if (!userId || !newRole) return fail(400, { error: 'Invalid data' });
+		if (!['user', 'admin', 'banned'].includes(newRole)) return fail(400, { error: 'Invalid role' });
+
+		try {
+			await db.update(users).set({ role: newRole }).where(eq(users.id, userId));
+			return { success: true };
+		} catch (e) {
+			return fail(500, { error: (e as Error).message });
+		}
+	}
+};

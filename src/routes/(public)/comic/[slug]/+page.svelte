@@ -4,6 +4,7 @@
 	import ReadButton from '$lib/components/ReadButton.svelte';
 	import ChapterRow from '$lib/components/ChapterRow.svelte';
 	import RatingStars from '$lib/components/RatingStars.svelte';
+	import ShareButtons from '$lib/components/ShareButtons.svelte';
 
 	let { data }: { data: PageData } = $props();
 </script>
@@ -99,7 +100,10 @@
 		</div>
 
 		<div class="prose prose-invert mb-10 max-w-none">
-			<h3 class="text-xl font-semibold mb-3">Sinopsis Cerita</h3>
+			<div class="flex items-center justify-between mb-3">
+				<h3 class="text-xl font-semibold">Sinopsis Cerita</h3>
+				<ShareButtons comicSlug={data.comic.slug} />
+			</div>
 			<p class="text-slate-300 leading-relaxed text-[15px]">
 				{data.comic.description || 'Admin belum menuliskan deskripsi apapun untuk komik ini.'}
 			</p>
@@ -127,6 +131,23 @@
 				{/each}
 			</div>
 		</div>
+
+		<!-- Related Comics -->
+		{#if data.relatedComics && data.relatedComics.length > 0}
+			<div class="bg-slate-900 border-slate-800 rounded-xl p-4 md:p-6 shadow-inner border">
+				<h3 class="text-xl font-semibold mb-4">Komik Serupa</h3>
+				<div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2.5">
+					{#each data.relatedComics as rel (rel.id)}
+						<a href="/comic/{rel.slug}" class="group">
+							<div class="aspect-3/4 rounded-lg overflow-hidden border border-slate-700 mb-1.5">
+								<img src={rel.cover} alt={rel.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+							</div>
+							<p class="text-xs font-medium text-slate-300 line-clamp-2 group-hover:text-purple-400 transition-colors">{rel.title}</p>
+						</a>
+					{/each}
+				</div>
+			</div>
+		{/if}
 	</div>
 </div>
 

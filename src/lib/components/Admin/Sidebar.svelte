@@ -92,5 +92,14 @@
 			<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
 			Pengumuman
 		</button>
+		<button
+			onclick={() => nav('/admin/users')}
+			class="gap-3 px-3 py-2 flex items-center {$page.url.pathname.includes('/admin/users')
+				? 'bg-purple-600/10 text-purple-400 border-purple-500/20 border'
+				: 'hover:bg-slate-800 text-slate-400 hover:text-white border border-transparent'} rounded-lg font-medium w-full text-left transition-colors"
+		>
+			<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+			Kelola User
+		</button>
 	</nav>
 </aside>

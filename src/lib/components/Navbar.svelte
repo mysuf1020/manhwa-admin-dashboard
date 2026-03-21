@@ -1,5 +1,28 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import { onMount } from 'svelte';
+
+	let unreadCount = $state(0);
+	let showNotifs = $state(false);
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	let notifList = $state<any[]>([]);
+
+	onMount(async () => {
+		if ($page.data.user) {
+			try {
+				const res = await fetch('/api/notifications');
+				const data = await res.json();
+				unreadCount = data.unread || 0;
+				notifList = data.notifications || [];
+			} catch { /* silent */ }
+		}
+	});
+
+	async function markAllRead() {
+		await fetch('/api/notifications', { method: 'POST', body: JSON.stringify({ action: 'markAllRead' }), headers: { 'Content-Type': 'application/json' } });
+		unreadCount = 0;
+		notifList = notifList.map((n) => ({ ...n, isRead: true }));
+	}
 </script>
 
 <header class="bg-slate-900 border-slate-800 top-0 shadow-md shadow-black/20 sticky z-50 border-b">
@@ -46,40 +69,42 @@
 					class="right-2 text-slate-400 hover:text-purple-400 absolute"
 					aria-label="Search"
 				>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						class="h-4 w-4"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke="currentColor"
-						><path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-						/></svg
-					>
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
 				</button>
 			</form>
-			<a
-				href="/"
-				class="md:hidden p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-full transition-colors"
-				aria-label="Search"
-			>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					class="h-5 w-5"
-					fill="none"
-					viewBox="0 0 24 24"
-					stroke="currentColor"
-					><path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-					/></svg
-				>
+			<a href="/" class="md:hidden p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-full transition-colors" aria-label="Search">
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
 			</a>
+
+			<!-- Notification Bell -->
+			{#if $page.data.user}
+				<div class="relative">
+					<button onclick={() => { showNotifs = !showNotifs; if (showNotifs && unreadCount > 0) markAllRead(); }} class="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-full transition-colors relative" aria-label="Notifications">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+						{#if unreadCount > 0}
+							<span class="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">{unreadCount}</span>
+						{/if}
+					</button>
+					{#if showNotifs}
+						<div class="absolute right-0 top-12 w-72 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl overflow-hidden z-50">
+							<div class="px-4 py-3 border-b border-slate-800 flex items-center justify-between">
+								<h4 class="text-sm font-bold text-white">Notifikasi</h4>
+								<button onclick={() => showNotifs = false} class="text-slate-500 hover:text-white text-xs">Tutup</button>
+							</div>
+							<div class="max-h-64 overflow-y-auto">
+								{#each notifList.slice(0, 10) as notif (notif.id)}
+									<div class="px-4 py-3 border-b border-slate-800/50 last:border-none {notif.isRead ? 'opacity-60' : ''}">
+										<p class="text-xs text-slate-300">{notif.message}</p>
+										<span class="text-[10px] text-slate-500">{new Date(notif.createdAt).toLocaleDateString()}</span>
+									</div>
+								{:else}
+									<div class="px-4 py-6 text-center text-xs text-slate-500">Belum ada notifikasi.</div>
+								{/each}
+							</div>
+						</div>
+					{/if}
+				</div>
+			{/if}
 
 			{#if $page.data.user}
 				<div class="gap-2 pl-2 flex items-center">

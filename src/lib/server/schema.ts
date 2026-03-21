@@ -47,7 +47,12 @@ export const users = pgTable('users', {
 	id: text('id').primaryKey(), // UUID string
 	username: varchar('username', { length: 255 }).notNull().unique(),
 	passwordHash: text('password_hash').notNull(),
-	role: varchar('role', { length: 50 }).default('user'), // 'user' atau 'admin'
+	role: varchar('role', { length: 50 }).default('user'), // 'user', 'admin', 'banned'
+	displayName: varchar('display_name', { length: 255 }),
+	bio: text('bio'),
+	avatarUrl: text('avatar_url'),
+	readingMode: varchar('reading_mode', { length: 20 }).default('scroll'), // 'scroll' atau 'page'
+	theme: varchar('theme', { length: 20 }).default('dark'), // 'dark' atau 'light'
 	createdAt: timestamp('created_at').defaultNow().notNull()
 });
 
@@ -114,7 +119,24 @@ export const comments = pgTable('comments', {
 	chapterId: integer('chapter_id')
 		.notNull()
 		.references(() => chapters.id, { onDelete: 'cascade' }), // Komentar terikat kuat pada sebuah Chapter spesifik
+	parentId: integer('parent_id'), // Self-referencing: null = top-level, integer = reply to comment ID
 	content: text('content').notNull(),
+	createdAt: timestamp('created_at').defaultNow().notNull()
+});
+
+// Tabel Notifikasi (Chapter Baru, dll)
+export const notifications = pgTable('notifications', {
+	id: serial('id').primaryKey(),
+	userId: text('user_id')
+		.notNull()
+		.references(() => users.id, { onDelete: 'cascade' }),
+	type: varchar('type', { length: 50 }).notNull(), // 'new_chapter', 'reply', dll
+	comicId: integer('comic_id')
+		.references(() => comics.id, { onDelete: 'cascade' }),
+	chapterId: integer('chapter_id')
+		.references(() => chapters.id, { onDelete: 'cascade' }),
+	message: text('message').notNull(),
+	isRead: boolean('is_read').default(false).notNull(),
 	createdAt: timestamp('created_at').defaultNow().notNull()
 });
 

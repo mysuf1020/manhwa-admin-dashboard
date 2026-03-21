@@ -3,9 +3,19 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="theme-color" content="#7c3aed" />
+		<meta name="description" content="Baca Manhwa, Manga & Manhua gratis di MangaReader" />
+		<link rel="manifest" href="/manifest.json" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover" class="bg-slate-950 text-slate-200 antialiased">
 		<div style="display: contents">%sveltekit.body%</div>
+		<script>
+			if ('serviceWorker' in navigator) {
+				navigator.serviceWorker.register('/service-worker.js');
+			}
+		</script>
 	</body>
 </html>

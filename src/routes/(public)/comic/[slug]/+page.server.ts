@@ -2,7 +2,7 @@ import { error, fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
 import { comics, chapters, bookmarks, ratings, comicViews } from '$lib/server/schema';
-import { eq, desc, and, sql } from 'drizzle-orm';
+import { eq, desc, and, sql, ne, ilike, or } from 'drizzle-orm';
 
 export const load: PageServerLoad = async (event) => {
 	// Temukan profil komik berdasarkan URL slug
@@ -51,11 +51,34 @@ export const load: PageServerLoad = async (event) => {
 		}
 	}
 
+	// Query Related Comics (genre overlap)
+	let relatedComics: { id: number; slug: string; title: string; cover: string; type: string }[] = [];
+	if (comic.genres) {
+		const genreList = comic.genres.split(',').map((g) => g.trim()).filter(Boolean);
+		if (genreList.length > 0) {
+			const genreConditions = genreList.slice(0, 3).map((g) => ilike(comics.genres, `%${g}%`));
+			const related = await db
+				.select()
+				.from(comics)
+				.where(and(ne(comics.id, comic.id), or(...genreConditions)))
+				.orderBy(desc(comics.viewCount))
+				.limit(6);
+			relatedComics = related.map((c) => ({
+				id: c.id,
+				slug: c.slug,
+				title: c.title,
+				cover: c.coverUrl || 'https://picsum.photos/seed/placeholder/300/400',
+				type: c.type
+			}));
+		}
+	}
+
 	return {
 		comic: { ...comic, viewCount: currentViewCount },
 		chapters: chapterList,
 		isBookmarked,
 		userRating,
+		relatedComics,
 		user
 	};
 };
