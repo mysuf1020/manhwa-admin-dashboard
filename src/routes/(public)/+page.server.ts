@@ -1,7 +1,7 @@
 import type { PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
 import { comics, announcements, history, chapters, ads } from '$lib/server/schema';
-import { desc, ilike, and, eq, sql, asc } from 'drizzle-orm';
+import { desc, ilike, and, eq, sql, asc, inArray } from 'drizzle-orm';
 
 export const load: PageServerLoad = async ({ url, locals }) => {
 	const searchQuery = url.searchParams.get('q') || '';
@@ -79,16 +79,18 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 	const comicIds = allComics.map((c) => c.id);
 	const latestChapterMap = new Map<number, string>();
 	if (comicIds.length > 0) {
-		const latestChapters = await db.execute(sql`
-			SELECT DISTINCT ON (comic_id) comic_id, chapter_number
-			FROM chapters
-			WHERE comic_id = ANY(${comicIds})
-			ORDER BY comic_id, created_at DESC
-		`);
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		(latestChapters.rows || latestChapters).forEach((r: any) => {
-			latestChapterMap.set(r.comic_id, r.chapter_number);
-		});
+		const latestChaptersQuery = await db
+			.select({ comicId: chapters.comicId, chapterNumber: chapters.chapterNumber })
+			.from(chapters)
+			.where(inArray(chapters.comicId, comicIds))
+			.orderBy(desc(chapters.createdAt));
+		
+		// Map manual untuk DISTINCT karena sqlite/pg driver perbedaan syntax
+		for (const row of latestChaptersQuery) {
+			if (!latestChapterMap.has(row.comicId)) {
+				latestChapterMap.set(row.comicId, row.chapterNumber);
+			}
+		}
 	}
 
 	const latestUpdates = allComics.map((c) => ({

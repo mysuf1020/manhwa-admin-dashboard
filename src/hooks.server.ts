@@ -7,23 +7,25 @@ import type { Handle } from '@sveltejs/kit';
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const sessionId = event.cookies.get('session') ?? null;
-	if (!sessionId) {
-		event.locals.user = null;
-		event.locals.session = null;
-		return resolve(event);
-	}
+	let user = null;
+	let sessionData = null;
 
-	const { session, user } = await validateSessionToken(sessionId);
-	if (session) {
-		// Reset cookie expiration safely
-		setSessionTokenCookie(event, session.id, session.expiresAt);
-	} else {
-		// Delete invalid/expired cookie
-		deleteSessionTokenCookie(event);
+	if (sessionId) {
+		const { session, user: sessionUser } = await validateSessionToken(sessionId);
+		sessionData = session;
+		user = sessionUser;
+		
+		if (session) {
+			// Reset cookie expiration safely
+			setSessionTokenCookie(event, session.id, session.expiresAt);
+		} else {
+			// Delete invalid/expired cookie
+			deleteSessionTokenCookie(event);
+		}
 	}
 
 	event.locals.user = user;
-	event.locals.session = session;
+	event.locals.session = sessionData;
 
 	// Global Admin Route Protection (Mencegah Bypass Actions)
 	const path = event.url.pathname;
