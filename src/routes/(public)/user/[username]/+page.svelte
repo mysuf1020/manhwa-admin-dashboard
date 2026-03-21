@@ -39,6 +39,9 @@
                 <span class="px-3 py-1 bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 rounded-full text-xs font-bold uppercase tracking-widest">
                     Bergabung {formatDistanceToNow(new Date(user.createdAt), { addSuffix: true, locale: id })}
                 </span>
+                <span class="px-3 py-1 bg-amber-500/10 text-amber-500 dark:text-amber-400 border border-amber-500/30 rounded-full text-xs font-bold uppercase tracking-widest">
+                    Lv. {user.level || 1} ({user.experience || 0} EXP)
+                </span>
             </div>
 
             <div class="bg-white dark:bg-slate-950/50 p-5 rounded-2xl border border-slate-200 dark:border-slate-800/50 inline-block text-left relative min-w-full md:min-w-[300px]">

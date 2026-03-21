@@ -38,8 +38,9 @@
 				<h1 class="text-3xl font-black text-slate-900 dark:text-white mb-1 tracking-tight">{data.profile?.displayName || data.user?.username}</h1>
 				<p class="text-slate-600 dark:text-slate-400 font-medium">@{data.user?.username}</p>
 				{#if data.user?.role === 'admin'}
-					<span class="inline-block mt-3 px-3 py-1 bg-rose-500/10 text-rose-400 border border-rose-500/30 rounded-full text-xs font-bold uppercase tracking-widest">Administrator</span>
+					<span class="inline-block mt-3 mr-2 px-3 py-1 bg-rose-500/10 text-rose-400 border border-rose-500/30 rounded-full text-xs font-bold uppercase tracking-widest">Administrator</span>
 				{/if}
+				<span class="inline-block mt-3 px-3 py-1 bg-amber-500/10 text-amber-500 dark:text-amber-400 border border-amber-500/30 rounded-full text-xs font-bold uppercase tracking-widest">Lv. {data.user?.level || 1} ({data.user?.experience || 0} EXP)</span>
 			</div>
 		</div>
 

@@ -1,8 +1,9 @@
 import { error, fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { db } from '$lib/server/db';
-import { comics, chapters, pages, history, comments, users } from '$lib/server/schema';
+import { comics, chapters, pages, history, comments, users, reports } from '$lib/server/schema';
 import { eq, and, asc, desc } from 'drizzle-orm';
+import { addExperience } from '$lib/server/gamification';
 
 export const load: PageServerLoad = async (event) => {
 	const { params, locals } = event;
@@ -59,6 +60,8 @@ export const load: PageServerLoad = async (event) => {
 				comicId: comic.id,
 				chapterId: currentChapter.id
 			});
+			// Give +10 EXP for reading a chapter for the first time
+			await addExperience(user.id, 10);
 		}
 	}
 
@@ -72,7 +75,8 @@ export const load: PageServerLoad = async (event) => {
 			user: {
 				id: users.id,
 				username: users.username,
-				role: users.role
+				role: users.role,
+				level: users.level
 			}
 		})
 		.from(comments)
@@ -122,6 +126,42 @@ export const actions: Actions = {
 			chapterId: chapterRecord[0].id,
 			content,
 			parentId
+		});
+
+		// Give +5 EXP for engaging in comments
+		await addExperience(user.id, 5);
+
+		return { success: true };
+	},
+	submitReport: async (event) => {
+		const user = event.locals.user;
+		if (!user) return fail(401, { error: 'Harap Login untuk lapor' });
+
+		const formData = await event.request.formData();
+		const reasonCategory = formData.get('reasonCategory') as string;
+		const description = formData.get('description') as string;
+
+		if (!reasonCategory) return fail(400, { error: 'Alasan harus diisi' });
+
+		const slug = event.params.slug;
+		const chapterNumber = event.params.chapter;
+		
+		const comicRecord = await db.select().from(comics).where(eq(comics.slug, slug)).limit(1);
+		if (!comicRecord.length) return fail(404, { error: 'Komik tidak valid' });
+
+		const chapterRecord = await db
+			.select()
+			.from(chapters)
+			.where(and(eq(chapters.comicId, comicRecord[0].id), eq(chapters.chapterNumber, chapterNumber)))
+			.limit(1);
+		if (!chapterRecord.length) return fail(404, { error: 'Chapter tidak valid' });
+
+		await db.insert(reports).values({
+			userId: user.id,
+			comicId: comicRecord[0].id,
+			chapterId: chapterRecord[0].id,
+			reasonCategory,
+			description
 		});
 
 		return { success: true };

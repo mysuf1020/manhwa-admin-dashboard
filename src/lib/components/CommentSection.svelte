@@ -6,7 +6,7 @@
 		content: string;
 		createdAt: Date;
 		parentId: number | null;
-		user: { id: string; username: string; role: string | null };
+		user: { id: string; username: string; role: string | null; level?: number };
 	}
 
 	let { comments = [], user = null } = $props<{
@@ -60,7 +60,7 @@
 		{:else}
 			<div class="py-8 text-center bg-white dark:bg-slate-950/50 rounded-lg border border-dashed border-slate-200 dark:border-slate-800">
 				<p class="text-slate-600 dark:text-slate-400 mb-4 text-sm">Anda harus login untuk ikut berdiskusi.</p>
-				<a href="/login" class="inline-block bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-700 font-semibold py-2 px-6 rounded-lg transition-colors">Login via Akun</a>
+				<a href="/login" class="inline-block bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-700 font-semibold py-2 px-6 rounded-lg transition-colors">Login via Akun</a>
 			</div>
 		{/if}
 	</div>
@@ -79,6 +79,7 @@
 							{#if comment.user.role === 'admin'}
 								<span class="bg-rose-500/20 text-rose-400 text-[10px] px-2 py-0.5 rounded font-black border border-rose-500/20 tracking-wider">ADMIN</span>
 							{/if}
+							<span class="bg-indigo-500/10 text-indigo-500 dark:text-indigo-400 text-[10px] px-2 py-0.5 rounded-full font-bold border border-indigo-500/20">Lv. {comment.user.level || 1}</span>
 							<span class="text-xs text-slate-500 ml-auto">{new Date(comment.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
 						</div>
 						<p class="text-slate-600 dark:text-slate-400 text-sm md:text-[15px] leading-relaxed whitespace-pre-wrap">{comment.content}</p>
@@ -110,6 +111,7 @@
 									{#if reply.user.role === 'admin'}
 										<span class="bg-rose-500/20 text-rose-400 text-[9px] px-1.5 py-0.5 rounded font-black">ADMIN</span>
 									{/if}
+									<span class="bg-indigo-500/10 text-indigo-500 dark:text-indigo-400 text-[9px] px-1.5 py-0.5 rounded-full font-bold border border-indigo-500/20">Lv. {reply.user.level || 1}</span>
 									<span class="text-[10px] text-slate-500">{new Date(reply.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</span>
 								</div>
 								<p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed whitespace-pre-wrap">{reply.content}</p>

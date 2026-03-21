@@ -55,6 +55,8 @@ export const users = pgTable('users', {
 	avatarUrl: text('avatar_url'),
 	readingMode: varchar('reading_mode', { length: 20 }).default('scroll'), // 'scroll' atau 'page'
 	theme: varchar('theme', { length: 20 }).default('dark'), // 'dark' atau 'light'
+	experience: integer('experience').default(0).notNull(),
+	level: integer('level').default(1).notNull(),
 	createdAt: timestamp('created_at').defaultNow().notNull()
 });
 
@@ -160,5 +162,22 @@ export const announcements = pgTable('announcements', {
 	content: text('content'), // Isi pengumuman (opsional)
 	isActive: boolean('is_active').default(true).notNull(),
 	sortOrder: integer('sort_order').default(0).notNull(),
+	createdAt: timestamp('created_at').defaultNow().notNull()
+});
+
+// Tabel Laporan/Pengaduan
+export const reports = pgTable('reports', {
+	id: serial('id').primaryKey(),
+	userId: text('user_id')
+		.notNull()
+		.references(() => users.id, { onDelete: 'cascade' }),
+	comicId: integer('comic_id')
+		.notNull()
+		.references(() => comics.id, { onDelete: 'cascade' }),
+	chapterId: integer('chapter_id')
+		.references(() => chapters.id, { onDelete: 'cascade' }),
+	reasonCategory: varchar('reason_category', { length: 50 }).notNull(), // 'broken_image', 'wrong_chapter', dll
+	description: text('description'),
+	status: varchar('status', { length: 20 }).default('pending').notNull(), // 'pending', 'resolved', 'dismissed'
 	createdAt: timestamp('created_at').defaultNow().notNull()
 });

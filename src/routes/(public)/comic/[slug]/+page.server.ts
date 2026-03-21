@@ -3,6 +3,7 @@ import type { Actions, PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
 import { comics, chapters, bookmarks, ratings, comicViews } from '$lib/server/schema';
 import { eq, desc, and, sql, ne, ilike, or } from 'drizzle-orm';
+import { addExperience } from '$lib/server/gamification';
 
 export const load: PageServerLoad = async (event) => {
 	// Temukan profil komik berdasarkan URL slug
@@ -138,6 +139,8 @@ export const actions: Actions = {
 		} else {
 			// Insert jika baru pertama kali
 			await db.insert(ratings).values({ userId: user.id, comicId: comic.id, score });
+			// Give +5 EXP for rating
+			await addExperience(user.id, 5);
 		}
 
 		// Hitung ulang rata-rata skor se-Database dan perbarui cache `comics`
