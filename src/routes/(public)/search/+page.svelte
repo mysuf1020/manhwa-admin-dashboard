@@ -50,17 +50,18 @@
 
 	<!-- Filter Bar -->
 	<div class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 md:p-5 mb-8 shadow-lg">
-		<div class="flex flex-col md:flex-row gap-3 mb-4">
+		<form onsubmit={(e) => { e.preventDefault(); applyFilters(); }} class="flex flex-col md:flex-row gap-3 mb-4">
 			<input
 				bind:value={q}
+				type="text"
+				name="q"
 				placeholder="Cari judul komik..."
 				class="grow bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
-				onkeydown={(e) => { if (e.key === 'Enter') applyFilters(); }}
 			/>
-			<button onclick={applyFilters} class="bg-purple-600 hover:bg-purple-500 text-slate-900 dark:text-white font-bold px-6 py-2.5 rounded-lg transition-colors shrink-0">
+			<button type="submit" class="bg-purple-600 hover:bg-purple-500 text-slate-900 dark:text-white font-bold px-6 py-2.5 rounded-lg transition-colors shrink-0">
 				Cari
 			</button>
-		</div>
+		</form>
 
 		<div class="grid grid-cols-2 md:grid-cols-4 gap-3">
 			<select bind:value={genre} onchange={applyFilters} class="bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 focus:border-purple-500 focus:outline-none appearance-none">
