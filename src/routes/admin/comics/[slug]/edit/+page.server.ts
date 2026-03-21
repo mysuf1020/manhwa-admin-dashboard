@@ -21,6 +21,7 @@ export const actions: Actions = {
 		const type = formData.get('type') as string;
 		const genres = formData.get('genres') as string;
 		const coverFile = formData.get('cover') as File;
+		const updateDay = formData.get('updateDay') as string;
 
 		if (!title) return fail(400, { error: 'Title is required' });
 
@@ -40,6 +41,7 @@ export const actions: Actions = {
 				status: status || 'Ongoing',
 				type: type || 'Manhwa',
 				genres: genres || null,
+				updateDay: updateDay || null,
 				updatedAt: new Date().toISOString()
 			};
 

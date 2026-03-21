@@ -1,7 +1,9 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import ComicCard from '$lib/components/ComicCard.svelte';
+	import ComicCardSkeleton from '$lib/components/ComicCardSkeleton.svelte';
 	import { goto } from '$app/navigation';
+	import { navigating } from '$app/stores';
 
 	let { data }: { data: PageData } = $props();
 
@@ -108,7 +110,13 @@
 		<p class="text-sm text-slate-400">{data.total} komik ditemukan</p>
 	</div>
 
-	{#if data.results.length === 0}
+	{#if $navigating}
+		<div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 md:gap-4">
+			{#each Array(12) as _, i (i)}
+				<ComicCardSkeleton />
+			{/each}
+		</div>
+	{:else if data.results.length === 0}
 		<div class="text-center py-20 text-slate-600">
 			<svg class="w-16 h-16 mx-auto mb-4 text-slate-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
 			<p class="text-lg font-semibold mb-1">Tidak ada hasil</p>

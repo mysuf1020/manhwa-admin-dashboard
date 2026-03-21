@@ -22,6 +22,7 @@ export const actions: Actions = {
 		const type = formData.get('type') as string;
 		const genres = formData.get('genres') as string;
 		const description = formData.get('description') as string;
+		const updateDay = formData.get('updateDay') as string;
 
 		if (!title || !slug) {
 			return fail(400, { error: 'Title and Slug are required' });
@@ -41,7 +42,8 @@ export const actions: Actions = {
 				status: status || 'Ongoing',
 				type: type || 'Manhwa',
 				genres: genres || null,
-				description: description || null
+				description: description || null,
+				updateDay: updateDay || null
 			});
 			return { success: true };
 		} catch (e) {

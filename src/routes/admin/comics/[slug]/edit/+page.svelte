@@ -69,9 +69,24 @@
 			</div>
 		</div>
 
-		<div>
-			<label for="genres" class="text-xs font-semibold text-slate-400 mb-1 block">Genres (comma-separated)</label>
-			<input id="genres" name="genres" value={data.comic.genres || ''} placeholder="Action, Fantasy, Romance" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-white focus:border-purple-500 focus:outline-none">
+		<div class="grid grid-cols-2 gap-4">
+			<div>
+				<label for="updateDay" class="text-xs font-semibold text-slate-400 mb-1 block">Hari Rilis Aktual</label>
+				<select id="updateDay" name="updateDay" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-white focus:border-purple-500 focus:outline-none appearance-none">
+					<option value="" selected={!data.comic.updateDay}>-- Tidak Ditentukan --</option>
+					<option value="Senin" selected={data.comic.updateDay === 'Senin'}>Senin</option>
+					<option value="Selasa" selected={data.comic.updateDay === 'Selasa'}>Selasa</option>
+					<option value="Rabu" selected={data.comic.updateDay === 'Rabu'}>Rabu</option>
+					<option value="Kamis" selected={data.comic.updateDay === 'Kamis'}>Kamis</option>
+					<option value="Jumat" selected={data.comic.updateDay === 'Jumat'}>Jumat</option>
+					<option value="Sabtu" selected={data.comic.updateDay === 'Sabtu'}>Sabtu</option>
+					<option value="Minggu" selected={data.comic.updateDay === 'Minggu'}>Minggu</option>
+				</select>
+			</div>
+			<div>
+				<label for="genres" class="text-xs font-semibold text-slate-400 mb-1 block">Genres (comma-separated)</label>
+				<input id="genres" name="genres" value={data.comic.genres || ''} placeholder="Action, Fantasy, Romance" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-white focus:border-purple-500 focus:outline-none">
+			</div>
 		</div>
 
 		<button type="submit" class="w-full py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-lg transition-colors">Simpan Perubahan</button>

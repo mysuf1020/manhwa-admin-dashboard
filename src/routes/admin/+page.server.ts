@@ -18,12 +18,22 @@ export const load: PageServerLoad = async () => {
 		LIMIT 8
 	`);
 
+	// Analytics data for charts
+	const topComicsRows = await db.execute(sql`SELECT title, view_count FROM comics ORDER BY view_count DESC LIMIT 5`);
+	const statusDistRows = await db.execute(sql`SELECT status, COUNT(*) as count FROM comics GROUP BY status`);
+	const typeDistRows = await db.execute(sql`SELECT type, COUNT(*) as count FROM comics GROUP BY type`);
+
 	return {
 		stats: {
 			comics: Number(comicCount[0]?.count) || 0,
 			chapters: Number(chapterCount[0]?.count) || 0,
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			views: Number((totalViews as any)[0]?.total) || 0
+		},
+		charts: {
+			topComics: topComicsRows.rows || topComicsRows,
+			statusDist: statusDistRows.rows || statusDistRows,
+			typeDist: typeDistRows.rows || typeDistRows
 		},
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		recentChapters: (recentChapters.rows || recentChapters).map((r: any) => ({

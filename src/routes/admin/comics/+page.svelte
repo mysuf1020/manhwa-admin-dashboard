@@ -365,17 +365,39 @@
 						</div>
 					</div>
 					<div>
-						<label for="genres" class="text-sm font-semibold text-slate-300 mb-1.5 block"
-							>Genre (Pipisahkan Koma)</label
+						<label for="updateDay" class="text-sm font-semibold text-slate-300 mb-1.5 block"
+							>Hari Rilis Aktual</label
 						>
-						<input
-							type="text"
-							id="genres"
-							name="genres"
-							class="bg-slate-950 border-slate-700 rounded-lg px-4 py-2.5 text-white focus:border-purple-500 w-full border transition-all focus:outline-none"
-							placeholder="Action, Fantasy, Romance"
-						/>
+						<div class="relative">
+							<select
+								id="updateDay"
+								name="updateDay"
+								class="bg-slate-950 border-slate-700 rounded-lg px-4 py-2.5 text-white focus:border-purple-500 font-medium w-full appearance-none border transition-all focus:outline-none"
+							>
+								<option value="">-- Tidak Ditentukan --</option>
+								<option value="Senin">Senin</option>
+								<option value="Selasa">Selasa</option>
+								<option value="Rabu">Rabu</option>
+								<option value="Kamis">Kamis</option>
+								<option value="Jumat">Jumat</option>
+								<option value="Sabtu">Sabtu</option>
+								<option value="Minggu">Minggu</option>
+							</select>
+						</div>
 					</div>
+				</div>
+
+				<div class="mb-5">
+					<label for="genres" class="text-sm font-semibold text-slate-300 mb-1.5 block"
+						>Genre (Pipisahkan Koma)</label
+					>
+					<input
+						type="text"
+						id="genres"
+						name="genres"
+						class="bg-slate-950 border-slate-700 rounded-lg px-4 py-2.5 text-white focus:border-purple-500 w-full border transition-all focus:outline-none"
+						placeholder="Action, Fantasy, Romance"
+					/>
 				</div>
 
 				<div class="mb-6">
