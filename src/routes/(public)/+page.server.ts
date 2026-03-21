@@ -1,7 +1,7 @@
 import type { PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
-import { comics } from '$lib/server/schema';
-import { desc, ilike, and, eq, sql } from 'drizzle-orm';
+import { comics, announcements } from '$lib/server/schema';
+import { desc, ilike, and, eq, sql, asc } from 'drizzle-orm';
 
 export const load: PageServerLoad = async ({ url }) => {
 	const searchQuery = url.searchParams.get('q') || '';
@@ -85,9 +85,44 @@ export const load: PageServerLoad = async ({ url }) => {
 		cover: c.coverUrl || 'https://picsum.photos/seed/placeholder/300/400'
 	}));
 
+	// Query Featured Comics (Slider Pilihan Editor)
+	let featuredComics: {
+		id: number;
+		slug: string;
+		title: string;
+		author: string | null;
+		description: string | null;
+		cover: string;
+	}[] = [];
+	if (!searchQuery && (!typeFilter || typeFilter === 'All') && page === 1) {
+		const featured = await db
+			.select()
+			.from(comics)
+			.where(eq(comics.isFeatured, true))
+			.orderBy(desc(comics.updatedAt))
+			.limit(5);
+		featuredComics = featured.map((c) => ({
+			id: c.id,
+			slug: c.slug,
+			title: c.title,
+			author: c.author,
+			description: c.description,
+			cover: c.coverUrl || 'https://picsum.photos/seed/placeholder/800/400'
+		}));
+	}
+
+	// Query Announcements Aktif (Banner)
+	const activeAnnouncements = await db
+		.select()
+		.from(announcements)
+		.where(eq(announcements.isActive, true))
+		.orderBy(asc(announcements.sortOrder));
+
 	return {
 		latestUpdates,
 		popularComics,
+		featuredComics,
+		activeAnnouncements,
 		searchQuery,
 		typeFilter: typeFilter || 'All',
 		currentPage: page,

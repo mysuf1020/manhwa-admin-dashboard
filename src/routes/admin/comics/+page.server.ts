@@ -1,9 +1,9 @@
 import type { PageServerLoad, Actions } from './$types';
-import { db } from '$lib/server/db';
 import { comics } from '$lib/server/schema';
 import { uploadFile } from '$lib/server/s3';
 import { eq, desc } from 'drizzle-orm';
 import { fail } from '@sveltejs/kit';
+import { db } from '$lib/server/db';
 
 export const load: PageServerLoad = async () => {
 	const allComics = await db.select().from(comics).orderBy(desc(comics.createdAt));
@@ -58,8 +58,22 @@ export const actions: Actions = {
 			return { success: true };
 		} catch (e) {
 			return fail(500, {
-				error: (e as Error).message || 'Cannot delete comic, maybe it has chapters attached?'
+					error: (e as Error).message || 'Cannot delete comic, maybe it has chapters attached?'
 			});
+		}
+	},
+	toggleFeatured: async ({ request }) => {
+		const formData = await request.formData();
+		const id = parseInt(formData.get('id') as string);
+		const currentFeatured = formData.get('isFeatured') === 'true';
+
+		try {
+			await db.update(comics)
+				.set({ isFeatured: !currentFeatured })
+				.where(eq(comics.id, id));
+			return { success: true };
+		} catch (e) {
+			return fail(500, { error: (e as Error).message });
 		}
 	}
 };

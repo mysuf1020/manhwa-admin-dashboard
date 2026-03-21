@@ -2,8 +2,25 @@
 	import ComicCard from '$lib/components/ComicCard.svelte';
 	import type { PageData } from './$types';
 	import { goto } from '$app/navigation';
+	import { onMount, onDestroy } from 'svelte';
 
 	let { data }: { data: PageData } = $props();
+
+	// State untuk Featured Slider
+	let currentSlide = $state(0);
+	let sliderInterval: ReturnType<typeof setInterval>;
+
+	onMount(() => {
+		if (data.featuredComics && data.featuredComics.length > 1) {
+			sliderInterval = setInterval(() => {
+				currentSlide = (currentSlide + 1) % data.featuredComics.length;
+			}, 5000);
+		}
+	});
+
+	onDestroy(() => {
+		if (sliderInterval) clearInterval(sliderInterval);
+	});
 
 	function setTypeFilter(type: string) {
 		const url = new URL(window.location.href);
@@ -29,6 +46,69 @@
 </svelte:head>
 
 <div class="max-w-7xl px-4 py-4 md:py-6 mx-auto">
+	<!-- Featured Slider (Komik Pilihan Editor) -->
+	{#if data.featuredComics && data.featuredComics.length > 0 && !data.searchQuery && data.typeFilter === 'All' && data.currentPage === 1}
+		<section class="mb-6 relative overflow-hidden rounded-2xl border border-slate-800 shadow-2xl" style="min-height: 200px;">
+			{#each data.featuredComics as comic, i (comic.id)}
+				<a
+					href="/comic/{comic.slug}"
+					class="absolute inset-0 transition-opacity duration-700 {i === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'}"
+				>
+					<img src={comic.cover} alt={comic.title} class="w-full h-full object-cover">
+					<div class="absolute inset-0 bg-linear-to-t from-black/90 via-black/40 to-transparent"></div>
+					<div class="absolute bottom-0 left-0 right-0 p-4 md:p-8">
+						<span class="text-[10px] md:text-xs font-bold uppercase tracking-widest text-purple-400 mb-1 md:mb-2 block">Pilihan Editor</span>
+						<h2 class="text-xl md:text-3xl font-black text-white mb-1 md:mb-2 drop-shadow-lg">{comic.title}</h2>
+						{#if comic.author}
+							<p class="text-xs md:text-sm text-slate-300 mb-1">oleh {comic.author}</p>
+						{/if}
+						{#if comic.description}
+							<p class="text-xs md:text-sm text-slate-400 line-clamp-2 max-w-xl hidden md:block">{comic.description}</p>
+						{/if}
+					</div>
+				</a>
+			{/each}
+			<!-- Slider Dots -->
+			{#if data.featuredComics.length > 1}
+				<div class="absolute bottom-3 right-4 md:bottom-5 md:right-6 z-20 flex gap-1.5">
+					{#each data.featuredComics as _dotComic, i (i)}
+						<button
+							onclick={() => { currentSlide = i; clearInterval(sliderInterval); }}
+							class="w-2 h-2 rounded-full transition-all {i === currentSlide ? 'bg-purple-400 w-5' : 'bg-white/30 hover:bg-white/50'}"
+							aria-label="Slide {i + 1}"
+						></button>
+					{/each}
+				</div>
+			{/if}
+		</section>
+	{/if}
+
+	<!-- Announcement Banners -->
+	{#if data.activeAnnouncements && data.activeAnnouncements.length > 0}
+		<section class="mb-6 flex gap-3 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-1">
+			{#each data.activeAnnouncements as ann (ann.id)}
+				<a
+					href={ann.linkUrl || '#'}
+					class="shrink-0 snap-start w-full md:w-auto md:grow relative rounded-xl overflow-hidden border border-slate-800 hover:border-purple-500/30 transition-colors group"
+				>
+					{#if ann.imageUrl}
+						<img src={ann.imageUrl} alt={ann.title} class="w-full h-20 md:h-24 object-cover group-hover:scale-105 transition-transform duration-500">
+						<div class="absolute inset-0 bg-linear-to-r from-black/70 to-transparent flex items-center px-4">
+							<span class="text-white text-sm font-bold drop-shadow-lg">{ann.title}</span>
+						</div>
+					{:else}
+						<div class="h-20 md:h-24 bg-linear-to-r from-purple-900/40 to-slate-900 flex items-center px-4">
+							<span class="text-white text-sm font-bold">{ann.title}</span>
+							{#if ann.content}
+								<span class="text-xs text-slate-400 ml-3 hidden md:inline">{ann.content}</span>
+							{/if}
+						</div>
+					{/if}
+				</a>
+			{/each}
+		</section>
+	{/if}
+
 	<!-- Filters -->
 	<section class="mb-6 flex justify-center">
 		<div

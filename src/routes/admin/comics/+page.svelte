@@ -89,6 +89,13 @@
 						<div class="flex gap-2 flex-wrap mb-2">
 							<span class="px-2 py-1 bg-slate-800 rounded text-xs border-slate-700 font-semibold border text-slate-300">{comic.status}</span>
 							<span class="px-2 py-1 bg-purple-900/30 rounded text-xs border-purple-500/20 font-semibold border text-purple-400">{comic.type}</span>
+							<form method="POST" action="?/toggleFeatured" use:enhance class="inline">
+								<input type="hidden" name="id" value={comic.id}>
+								<input type="hidden" name="isFeatured" value={String(comic.isFeatured)}>
+								<button type="submit" class="px-2 py-1 rounded text-xs font-semibold border transition-colors {comic.isFeatured ? 'bg-amber-500/20 border-amber-500/30 text-amber-400 hover:bg-amber-500 hover:text-white' : 'bg-slate-800 border-slate-700 text-slate-500 hover:text-amber-400 hover:border-amber-500/30'}">
+									{comic.isFeatured ? '★ Featured' : '☆ Set Featured'}
+								</button>
+							</form>
 						</div>
 						<div class="text-xs text-slate-500 mt-2 gap-1 flex items-center">
 							<svg

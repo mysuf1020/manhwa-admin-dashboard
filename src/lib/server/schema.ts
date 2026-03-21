@@ -1,4 +1,4 @@
-import { pgTable, serial, text, varchar, timestamp, integer, real, unique } from 'drizzle-orm/pg-core';
+import { pgTable, serial, text, varchar, timestamp, integer, real, unique, boolean } from 'drizzle-orm/pg-core';
 
 // Tabel Direktori Utama Komik
 export const comics = pgTable('comics', {
@@ -15,6 +15,7 @@ export const comics = pgTable('comics', {
 	averageRating: real('average_rating').default(0).notNull(), // Perhitungan Cache untuk Rendering Cepat
 	ratingCount: integer('rating_count').default(0).notNull(), // Total orang yang me-rating
 	viewCount: integer('view_count').default(0).notNull(), // Analytics Total Dilihat
+	isFeatured: boolean('is_featured').default(false).notNull(), // Komik Pilihan Editor
 	createdAt: timestamp('created_at').defaultNow().notNull(),
 	updatedAt: timestamp('updated_at').defaultNow().notNull()
 });
@@ -123,5 +124,17 @@ export const comicViews = pgTable('comic_views', {
 	comicId: integer('comic_id')
 		.notNull()
 		.references(() => comics.id, { onDelete: 'cascade' }),
+	createdAt: timestamp('created_at').defaultNow().notNull()
+});
+
+// Tabel Pengumuman & Banner Iklan
+export const announcements = pgTable('announcements', {
+	id: serial('id').primaryKey(),
+	title: varchar('title', { length: 255 }).notNull(),
+	imageUrl: text('image_url'), // Banner gambar (R2 atau URL)
+	linkUrl: text('link_url'), // URL tujuan saat diklik
+	content: text('content'), // Isi pengumuman (opsional)
+	isActive: boolean('is_active').default(true).notNull(),
+	sortOrder: integer('sort_order').default(0).notNull(),
 	createdAt: timestamp('created_at').defaultNow().notNull()
 });
