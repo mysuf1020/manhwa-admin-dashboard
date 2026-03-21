@@ -75,5 +75,19 @@ export const actions: Actions = {
 		} catch (e) {
 			return fail(500, { error: (e as Error).message });
 		}
+	},
+	toggleMature: async ({ request }) => {
+		const formData = await request.formData();
+		const id = parseInt(formData.get('id') as string);
+		const currentMature = formData.get('isMature') === 'true';
+
+		try {
+			await db.update(comics)
+				.set({ isMature: !currentMature })
+				.where(eq(comics.id, id));
+			return { success: true };
+		} catch (e) {
+			return fail(500, { error: (e as Error).message });
+		}
 	}
 };

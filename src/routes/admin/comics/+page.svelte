@@ -96,6 +96,13 @@
 									{comic.isFeatured ? '★ Featured' : '☆ Set Featured'}
 								</button>
 							</form>
+							<form method="POST" action="?/toggleMature" use:enhance class="inline">
+								<input type="hidden" name="id" value={comic.id}>
+								<input type="hidden" name="isMature" value={String(comic.isMature)}>
+								<button type="submit" class="px-2 py-1 rounded text-xs font-semibold border transition-colors {comic.isMature ? 'bg-red-500/20 border-red-500/30 text-red-400 hover:bg-red-500 hover:text-white' : 'bg-slate-800 border-slate-700 text-slate-500 hover:text-red-400 hover:border-red-500/30'}">
+									{comic.isMature ? '🔞 18+' : '🔓 Set 18+'}
+								</button>
+							</form>
 						</div>
 						<div class="text-xs text-slate-500 mt-2 gap-1 flex items-center">
 							<svg

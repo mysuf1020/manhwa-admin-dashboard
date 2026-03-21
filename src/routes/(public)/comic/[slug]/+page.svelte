@@ -7,6 +7,9 @@
 	import ShareButtons from '$lib/components/ShareButtons.svelte';
 
 	let { data }: { data: PageData } = $props();
+
+	// Age-gate for mature content
+	let matureConsent = $state(!data.comic.isMature);
 </script>
 
 <svelte:head>
@@ -41,7 +44,12 @@
 
 	<!-- Right Side: Details & Chapters Database -->
 	<div class="grow">
-		<h1 class="text-2xl md:text-4xl font-bold mb-2">{data.comic.title}</h1>
+		<h1 class="text-2xl md:text-4xl font-bold mb-2">
+			{data.comic.title}
+			{#if data.comic.isMature}
+				<span class="ml-2 inline-block align-middle text-sm bg-red-500/20 text-red-400 border border-red-500/30 px-2 py-0.5 rounded font-bold">18+</span>
+			{/if}
+		</h1>
 		{#if data.comic.genres}
 			<div class="flex flex-wrap gap-1.5 mb-3">
 				{#each data.comic.genres.split(',').map((g: string) => g.trim()).filter(Boolean) as genre (genre)}
@@ -174,3 +182,32 @@
 		background: rgba(148, 163, 184, 0.8);
 	}
 </style>
+
+<!-- Age Gate Warning Overlay for Mature Content -->
+{#if !matureConsent}
+	<div class="fixed inset-0 z-[9999] bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
+		<div class="bg-slate-900 border-2 border-red-500/40 rounded-2xl p-8 max-w-md w-full text-center shadow-2xl shadow-red-900/30">
+			<!-- Warning Icon -->
+			<div class="w-20 h-20 mx-auto mb-5 rounded-full bg-red-500/10 border-2 border-red-500/30 flex items-center justify-center">
+				<span class="text-4xl">🔞</span>
+			</div>
+
+			<h2 class="text-2xl font-black text-red-400 mb-3">Peringatan Konten Dewasa</h2>
+			<p class="text-sm text-slate-400 leading-relaxed mb-6">
+				Komik <strong class="text-white">{data.comic.title}</strong> mengandung konten yang ditujukan untuk pembaca berusia <strong class="text-red-400">18 tahun ke atas</strong>. 
+				Dengan melanjutkan, Anda menyatakan bahwa Anda sudah berusia 18 tahun atau lebih dan bersedia melihat konten ini.
+			</p>
+
+			<div class="flex gap-3">
+				<a href="/" class="flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl transition-colors border border-slate-700">
+					Kembali
+				</a>
+				<button onclick={() => matureConsent = true} class="flex-1 py-3 bg-red-600 hover:bg-red-500 text-white font-bold rounded-xl transition-colors shadow-lg shadow-red-900/30">
+					Saya 18+ Tahun
+				</button>
+			</div>
+
+			<p class="text-[10px] text-slate-600 mt-4">Keputusan ini berlaku selama sesi browser Anda saat ini.</p>
+		</div>
+	</div>
+{/if}

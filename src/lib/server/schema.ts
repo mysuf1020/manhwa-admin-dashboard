@@ -16,6 +16,7 @@ export const comics = pgTable('comics', {
 	ratingCount: integer('rating_count').default(0).notNull(), // Total orang yang me-rating
 	viewCount: integer('view_count').default(0).notNull(), // Analytics Total Dilihat
 	isFeatured: boolean('is_featured').default(false).notNull(), // Komik Pilihan Editor
+	isMature: boolean('is_mature').default(false).notNull(), // Konten Dewasa 18+
 	createdAt: timestamp('created_at').defaultNow().notNull(),
 	updatedAt: timestamp('updated_at').defaultNow().notNull()
 });
