@@ -42,6 +42,13 @@
 	<!-- Right Side: Details & Chapters Database -->
 	<div class="grow">
 		<h1 class="text-2xl md:text-4xl font-bold mb-2">{data.comic.title}</h1>
+		{#if data.comic.genres}
+			<div class="flex flex-wrap gap-1.5 mb-3">
+				{#each data.comic.genres.split(',').map((g: string) => g.trim()).filter(Boolean) as genre (genre)}
+					<a href="/genre/{encodeURIComponent(genre)}" class="text-xs bg-purple-500/10 text-purple-400 border border-purple-500/20 px-2.5 py-1 rounded-full hover:bg-purple-500 hover:text-white transition-colors">{genre}</a>
+				{/each}
+			</div>
+		{/if}
 		<div class="gap-4 text-sm text-slate-400 mb-6 mt-3 flex items-center">
 			<span class="bg-slate-800 text-slate-200 px-3 py-1 border-slate-700 rounded-full border"
 				>{data.comic.status}</span

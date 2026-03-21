@@ -1,6 +1,6 @@
 import type { PageServerLoad, Actions } from './$types';
 import { db } from '$lib/server/db';
-import { comics, chapters } from '$lib/server/schema';
+import { comics, chapters, bookmarks, notifications } from '$lib/server/schema';
 import { eq } from 'drizzle-orm';
 import { error, fail } from '@sveltejs/kit';
 
@@ -29,11 +29,30 @@ export const actions: Actions = {
 			return fail(400, { error: 'Chapter Number and Comic ID are required' });
 
 		try {
-			await db.insert(chapters).values({
+			const [newChapter] = await db.insert(chapters).values({
 				comicId: parseInt(comicId),
 				chapterNumber,
 				title: title || null
-			});
+			}).returning();
+
+			// Trigger notifikasi ke user yang bookmark komik ini
+			const comicRecord = await db.select({ title: comics.title }).from(comics).where(eq(comics.id, parseInt(comicId))).limit(1);
+			const comicTitle = comicRecord[0]?.title || 'Unknown';
+
+			const bookmarkedUsers = await db.select({ userId: bookmarks.userId }).from(bookmarks).where(eq(bookmarks.comicId, parseInt(comicId)));
+
+			if (bookmarkedUsers.length > 0) {
+				await db.insert(notifications).values(
+					bookmarkedUsers.map((b) => ({
+						userId: b.userId,
+						type: 'new_chapter',
+						comicId: parseInt(comicId),
+						chapterId: newChapter.id,
+						message: `${comicTitle} Ch. ${chapterNumber} baru telah dirilis!`
+					}))
+				);
+			}
+
 			return { success: true };
 		} catch (e) {
 			return fail(500, { error: (e as Error).message || 'Failed to create chapter' });

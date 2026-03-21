@@ -75,12 +75,28 @@ export const load: PageServerLoad = async ({ url }) => {
 		.limit(searchQuery ? 100 : pageSize)
 		.offset(searchQuery ? 0 : (page - 1) * pageSize);
 
+	// Join latest chapter number per comic
+	const comicIds = allComics.map((c) => c.id);
+	const latestChapterMap = new Map<number, string>();
+	if (comicIds.length > 0) {
+		const latestChapters = await db.execute(sql`
+			SELECT DISTINCT ON (comic_id) comic_id, chapter_number
+			FROM chapters
+			WHERE comic_id = ANY(${comicIds})
+			ORDER BY comic_id, created_at DESC
+		`);
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		(latestChapters.rows || latestChapters).forEach((r: any) => {
+			latestChapterMap.set(r.comic_id, r.chapter_number);
+		});
+	}
+
 	const latestUpdates = allComics.map((c) => ({
 		id: c.id,
 		slug: c.slug,
 		title: c.title,
 		type: c.type,
-		chapter: 'Ch. 最新', // Mockup state presentasi sementara (nantinya bisa di join)
+		chapter: latestChapterMap.has(c.id) ? `Ch. ${latestChapterMap.get(c.id)}` : 'Belum ada chapter',
 		time: new Date(c.updatedAt || Date.now()).toLocaleDateString(),
 		cover: c.coverUrl || 'https://picsum.photos/seed/placeholder/300/400'
 	}));

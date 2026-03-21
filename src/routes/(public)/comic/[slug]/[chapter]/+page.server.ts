@@ -68,6 +68,7 @@ export const load: PageServerLoad = async (event) => {
 			id: comments.id,
 			content: comments.content,
 			createdAt: comments.createdAt,
+			parentId: comments.parentId,
 			user: {
 				id: users.id,
 				username: users.username,
@@ -112,11 +113,15 @@ export const actions: Actions = {
 			.limit(1);
 		if (!chapterRecord.length) return fail(404, { error: 'Chapter tidak valid' });
 
+		const parentIdStr = formData.get('parentId') as string;
+		const parentId = parentIdStr ? parseInt(parentIdStr) : null;
+
 		await db.insert(comments).values({
 			userId: user.id,
 			comicId: comicRecord[0].id,
 			chapterId: chapterRecord[0].id,
-			content
+			content,
+			parentId
 		});
 
 		return { success: true };
