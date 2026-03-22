@@ -1,27 +1,56 @@
 <script lang="ts">
 	import { base } from '$app/paths';
-	let { slug, chapterNumber, title, createdAt } = $props<{
+	let { slug, chapterNumber, title, createdAt, coverUrl } = $props<{
 		slug: string;
 		chapterNumber: string;
 		title: string | null;
 		createdAt: Date;
+		coverUrl?: string | null;
 	}>();
+
+	// Function to calculate relative time (e.g., "1 hari lalu", "2 jam lalu")
+	function getRelativeTime(date: Date) {
+		const rtf = new Intl.RelativeTimeFormat('id', { numeric: 'auto' });
+		const daysDifference = Math.round((date.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+		if (Math.abs(daysDifference) > 30) {
+			const months = Math.round(daysDifference / 30);
+			return rtf.format(months, 'month');
+		} else if (Math.abs(daysDifference) > 0) {
+			return rtf.format(daysDifference, 'day');
+		} else {
+			const hoursDifference = Math.round((date.getTime() - new Date().getTime()) / (1000 * 60 * 60));
+			if (Math.abs(hoursDifference) > 0) return rtf.format(hoursDifference, 'hour');
+			return 'Baru saja';
+		}
+	}
+
+	const isNew = new Date().getTime() - new Date(createdAt).getTime() < 3 * 24 * 60 * 60 * 1000;
 </script>
 
-<!-- eslint-disable-next-line -->
 <a
 	href="{base}/comic/{slug}/{chapterNumber}"
-	class="p-4 bg-white dark:bg-slate-950 hover:bg-slate-100 dark:bg-slate-800 rounded-lg border-slate-200 dark:border-slate-800/50 hover:border-purple-500/50 font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:text-white group flex items-center justify-between border transition-all"
+	class="group flex items-center bg-[#1a1c23] hover:bg-[#252830] border border-white/5 hover:border-white/10 rounded-lg overflow-hidden transition-all duration-200"
 >
-	<span>
-		Chapter {chapterNumber}
-		<span class="ml-2 text-slate-500 font-normal group-hover:text-slate-700 dark:text-slate-300">
-			{title ? `- ${title}` : ''}
-		</span>
-	</span>
-	<span
-		class="text-xs text-slate-600 bg-slate-50 dark:bg-slate-900 px-2 py-1 rounded group-hover:bg-slate-200 dark:bg-slate-700 transition-colors"
-	>
-		{new Date(createdAt).toLocaleDateString()}
-	</span>
+	<!-- Thumbnail -->
+	<div class="w-24 shrink-0 aspect-video relative bg-black/50 overflow-hidden">
+		{#if coverUrl}
+			<img src={coverUrl} alt="Chapter {chapterNumber}" class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+		{:else}
+			<div class="w-full h-full flex items-center justify-center text-white/20">IMAGE</div>
+		{/if}
+		<div class="absolute inset-0 bg-linear-to-r from-transparent to-[#1a1c23] group-hover:to-[#252830] transition-colors"></div>
+	</div>
+
+	<!-- Info -->
+	<div class="p-3 flex flex-col justify-center flex-1 min-w-0">
+		<h4 class="text-sm font-bold text-white truncate group-hover:text-purple-400 transition-colors">
+			Chapter {chapterNumber} {title ? `- ${title}` : ''}
+		</h4>
+		<div class="flex items-center gap-2 mt-1">
+			<span class="text-xs text-zinc-400">{getRelativeTime(new Date(createdAt))}</span>
+			{#if isNew}
+				<span class="bg-red-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider">UP</span>
+			{/if}
+		</div>
+	</div>
 </a>

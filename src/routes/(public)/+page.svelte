@@ -46,13 +46,13 @@
 	<title>MangaReader - Katalog Lengkap</title>
 </svelte:head>
 
-<div class="max-w-7xl px-4 py-4 md:py-6 mx-auto">
+<div class="max-w-7xl px-4 md:px-6 py-6 md:py-8 mx-auto">
 	<!-- Ad Banner: Homepage Top -->
 	<AdBanner ads={data.activeAds} position="homepage_top" isVip={data.user?.isVip} />
 
 	<!-- Featured Slider (Komik Pilihan Editor) -->
 	{#if data.featuredComics && data.featuredComics.length > 0 && !data.searchQuery && data.typeFilter === 'All' && data.currentPage === 1}
-		<section class="mb-6 relative overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl" style="min-height: 200px;">
+		<section class="mb-10 relative overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl" style="min-height: 200px;">
 			{#each data.featuredComics as comic, i (comic.id)}
 				<a
 					href="/comic/{comic.slug}"
@@ -99,15 +99,15 @@
 			</div>
 			<div class="flex gap-4 overflow-x-auto pb-4 pt-1 no-scrollbar snap-x">
 				{#each data.followedUpdates as item (item.comicId + item.chapterNumber)}
-					<a href="/comic/{item.slug}/{item.chapterNumber}" class="shrink-0 snap-start group w-32 md:w-40 relative rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-						<div class="aspect-[3/4] bg-slate-100 dark:bg-slate-900">
+					<a href="/comic/{item.slug}/{item.chapterNumber}" class="shrink-0 snap-start group w-36 md:w-44 relative rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+						<div class="aspect-3/4 bg-slate-100 dark:bg-slate-900">
 							<img src="{item.cover}" alt="{item.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
 						</div>
-						<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+						<div class="absolute inset-0 bg-linear-to-t from-black/90 via-black/40 to-transparent"></div>
 						<div class="absolute top-2 right-2">
 							<span class="inline-block px-1.5 md:px-2 py-0.5 bg-rose-500 text-white text-[9px] md:text-[10px] font-bold rounded uppercase tracking-wider shadow-md">NEW</span>
 						</div>
-						<div class="absolute bottom-0 left-0 right-0 p-3 md:p-4">
+						<div class="absolute bottom-0 left-0 right-0 p-4">
 							<span class="inline-block px-1.5 py-0.5 mb-1.5 bg-purple-600 text-white text-[10px] font-bold rounded shadow-md">Ch. {item.chapterNumber}</span>
 							<h3 class="text-white font-bold text-xs md:text-sm line-clamp-2 leading-tight group-hover:text-purple-400 transition-colors drop-shadow-md">{item.title}</h3>
 						</div>
@@ -119,14 +119,14 @@
 
 	<!-- Continue Reading (hanya untuk user yang login) -->
 	{#if data.continueReading && data.continueReading.length > 0}
-		<section class="mb-8">
-			<h2 class="text-lg font-bold mb-3 text-slate-800 dark:text-slate-200 flex items-center gap-2">
+		<section class="mb-10">
+			<h2 class="text-lg font-bold mb-4 text-slate-800 dark:text-slate-200 flex items-center gap-2">
 				<svg class="w-5 h-5 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
 				Lanjutkan Membaca
 			</h2>
-			<div class="flex gap-3 overflow-x-auto pb-2 no-scrollbar snap-x">
+			<div class="flex gap-4 overflow-x-auto pb-2 no-scrollbar snap-x">
 				{#each data.continueReading as item (item.comicId)}
-					<a href="/comic/{item.slug}/{item.chapterNumber}" class="shrink-0 snap-start group w-28 md:w-32">
+					<a href="/comic/{item.slug}/{item.chapterNumber}" class="shrink-0 snap-start group w-36 md:w-44">
 						<div class="aspect-3/4 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 mb-1.5 relative">
 							<img src={item.cover} alt={item.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
 							<div class="absolute bottom-0 inset-x-0 bg-linear-to-t from-black/90 to-transparent p-2 pt-6">
@@ -142,7 +142,7 @@
 
 	<!-- Announcement Banners -->
 	{#if data.activeAnnouncements && data.activeAnnouncements.length > 0}
-		<section class="mb-6 flex gap-3 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-1">
+		<section class="mb-10 flex gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-1">
 			{#each data.activeAnnouncements as ann (ann.id)}
 				<a
 					href={ann.linkUrl || '#'}
@@ -168,14 +168,14 @@
 
 	<!-- Untukmu (Rekomendasi Cerdas) -->
 	{#if data.forYouComics && data.forYouComics.length > 0}
-		<section class="mb-12">
-			<div class="flex items-center justify-between mb-4 mt-2">
+		<section class="mb-10">
+			<div class="flex items-center justify-between mb-4">
 				<h2 class="text-xl md:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
 					<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-purple-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.381z" clip-rule="evenodd" /></svg>
 					Spesial Untukmu
 				</h2>
 			</div>
-			<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4 lg:gap-6">
+			<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
 				{#each data.forYouComics as comic (comic.id)}
 					<a href="/comic/{comic.slug}" class="group block relative rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-900 aspect-3/4 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
 						<img src="{comic.cover}" alt="{comic.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
@@ -191,10 +191,10 @@
 	{/if}
 
 	<!-- Ad Banner (Mid) -->
-	<div class="mb-6"><AdBanner ads={data.activeAds} position="homepage_mid" isVip={data.user?.isVip} /></div>
+	<div class="mb-10"><AdBanner ads={data.activeAds} position="homepage_mid" isVip={data.user?.isVip} /></div>
 
 	<!-- Filters -->
-	<section class="mb-6 flex justify-center">
+	<section class="mb-10 flex justify-center">
 		<div
 			class="flex items-center gap-1.5 md:gap-2 overflow-x-auto no-scrollbar bg-slate-50 dark:bg-slate-900/80 backdrop-blur-xl p-1.5 rounded-xl border border-slate-300 dark:border-slate-700/50 shadow-lg"
 		>
@@ -211,16 +211,16 @@
 
 	<!-- Popular Comics Section -->
 	{#if data.popularComics && data.popularComics.length > 0 && !data.searchQuery && data.typeFilter === 'All' && data.currentPage === 1}
-		<section class="mb-8">
+		<section class="mb-10">
 			<div class="mb-4 flex items-center justify-between">
 				<h2 class="text-lg md:text-xl font-black text-slate-900 dark:text-white">
 					Trending Minggu Ini
 				</h2>
 			</div>
 			<!-- Horizontal Scroll Container -->
-			<div class="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-4 no-scrollbar">
+			<div class="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 no-scrollbar">
 				{#each data.popularComics as comic (comic.slug)}
-					<div class="w-[120px] md:w-[150px] snap-start shrink-0">
+					<div class="w-36 md:w-44 snap-start shrink-0">
 						<ComicCard href="/comic/{comic.slug}" {comic} isHot={true} />
 					</div>
 				{/each}
@@ -288,7 +288,7 @@
 				>
 			</div>
 		{:else}
-			<div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2.5 md:gap-4">
+			<div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4">
 				{#each data.latestUpdates as comic (comic.slug)}
 					<ComicCard href="/comic/{comic.slug}" {comic} isHot={false} />
 				{/each}

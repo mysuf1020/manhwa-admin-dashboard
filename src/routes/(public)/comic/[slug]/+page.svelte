@@ -28,157 +28,156 @@
 	<meta name="twitter:image" content="{data.comic.coverUrl}" />
 </svelte:head>
 
-<div class="max-w-5xl px-4 py-4 md:py-8 md:flex-row gap-4 md:gap-8 mx-auto flex min-h-screen flex-col">
-	<!-- Left Side: Cover Image Profil -->
-	<div class="md:w-64 w-full max-w-[200px] md:max-w-none mx-auto md:mx-0 shrink-0">
-		<div class="rounded-xl shadow-2xl border-slate-200 dark:border-slate-800 overflow-hidden border">
-			<img
-				src={data.comic.coverUrl}
-				alt="Cover {data.comic.title}"
-				class="h-auto w-full object-cover"
-			/>
-		</div>
+<div class="w-full bg-[#0c0d10] min-h-screen font-sans text-slate-300">
+	<!-- Hero Header Cinematic -->
+	<div class="relative w-full border-b border-white/5 pt-10 pb-8 md:pt-16 md:pb-12">
+		<!-- Blurred Background -->
+		<div class="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20" style="background-image: url('{data.comic.coverUrl}'); filter: blur(20px);"></div>
+		<div class="absolute inset-0 bg-linear-to-t from-[#0c0d10] via-transparent to-[#0c0d10]/50"></div>
 
-		{#if data.chapters.length > 0}
-			<ReadButton
-				slug={data.comic.slug}
-				chapterNumber={data.chapters[data.chapters.length - 1].chapterNumber}
-			/>
-		{:else}
-			<button
-				disabled
-				class="mt-4 bg-slate-100 dark:bg-slate-800 text-slate-500 font-bold py-3 px-4 rounded-lg w-full cursor-not-allowed"
-			>
-				Belum Ada Chapter
-			</button>
-		{/if}
+		<div class="relative max-w-6xl mx-auto px-4 md:px-6 flex flex-col md:flex-row gap-6 md:gap-8 items-center md:items-end">
+			<!-- Cover Image -->
+			<div class="w-48 md:w-56 shrink-0 relative z-10 mx-auto md:mx-0">
+				<div class="rounded-xl shadow-2xl shadow-black/80 border border-white/10 overflow-hidden bg-black/50">
+					<img src={data.comic.coverUrl} alt="Cover {data.comic.title}" class="w-full h-auto object-cover" />
+				</div>
+			</div>
+
+			<!-- Title and Actions (Right Side align bottom) -->
+			<div class="grow flex flex-col w-full text-center md:text-left">
+				<h1 class="text-3xl md:text-4xl lg:text-5xl font-black text-white mb-4 drop-shadow-lg leading-tight">
+					{data.comic.title}
+					{#if data.comic.isMature}
+						<span class="ml-3 inline-block align-middle text-sm bg-red-600 text-white px-2 py-0.5 rounded font-black uppercase tracking-wider relative -top-1">18+</span>
+					{/if}
+				</h1>
+
+				<div class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-2">
+					<!-- Action Buttons -->
+					<div class="flex items-center gap-3">
+						<!-- Read Button (Primary) -->
+						{#if data.chapters.length > 0}
+							<a href="/comic/{data.comic.slug}/{data.chapters[data.chapters.length - 1].chapterNumber}" class="bg-purple-600 hover:bg-purple-500 text-white font-bold py-2.5 px-6 rounded transition-colors flex items-center gap-2 shadow-lg shadow-purple-900/20 uppercase text-sm tracking-wide">
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z" /><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" /></svg>
+								Baca
+							</a>
+						{:else}
+							<button disabled class="bg-zinc-800 text-zinc-500 font-bold py-2.5 px-6 rounded cursor-not-allowed uppercase text-sm tracking-wide">
+								Belum Ada Chapter
+							</button>
+						{/if}
+
+						<!-- Bookmark/Favorite Toggle -->
+						<form action="?/toggleBookmark" method="POST" use:enhance>
+							<button class="bg-[#242529] hover:bg-[#2d2e34] border border-white/5 text-white font-bold py-2.5 px-5 rounded transition-colors flex items-center gap-2 uppercase text-sm tracking-wide group">
+								{#if data.isBookmarked}
+									<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-400" viewBox="0 0 20 20" fill="currentColor"><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" /></svg>
+									Tersimpan
+								{:else}
+									<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-zinc-400 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg>
+									Bookmark
+								{/if}
+							</button>
+						</form>
+
+						<!-- Follow Toggle (Readlist) -->
+						<form action="?/toggleFollow" method="POST" use:enhance>
+							<button class="bg-[#242529] hover:bg-[#2d2e34] border border-white/5 text-white font-bold py-2.5 px-5 rounded transition-colors flex items-center gap-2 uppercase text-sm tracking-wide group flex-nowrap whitespace-nowrap">
+								{#if data.isFollowing}
+									<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-purple-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+									Dalam Readlist
+								{:else}
+									<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-zinc-400 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" /></svg>
+									Tambah ke Readlist
+								{/if}
+							</button>
+						</form>
+					</div>
+
+					<!-- Stats Grid -->
+					<div class="flex items-center gap-4 text-sm font-bold text-zinc-300 bg-[#16171b]/80 border border-white/5 px-4 py-2 rounded-lg">
+						<span class="flex items-center gap-1.5"><span class="text-orange-400">★</span> {data.comic.averageRating}</span>
+						<span class="flex items-center gap-1.5"><span class="text-cyan-400">📖</span> {new Intl.NumberFormat('id-ID').format(data.comic.viewCount)}</span>
+						<span class="flex items-center gap-1.5"><span class="text-purple-400">🏆</span> {data.comic.ratingCount}</span>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 
-	<!-- Right Side: Details & Chapters Database -->
-	<div class="grow">
-		<h1 class="text-2xl md:text-4xl font-bold mb-2">
-			{data.comic.title}
-			{#if data.comic.isMature}
-				<span class="ml-2 inline-block align-middle text-sm bg-red-500/20 text-red-400 border border-red-500/30 px-2 py-0.5 rounded font-bold">18+</span>
-			{/if}
-		</h1>
-		{#if data.comic.genres}
-			<div class="flex flex-wrap gap-1.5 mb-3">
-				{#each data.comic.genres.split(',').map((g: string) => g.trim()).filter(Boolean) as genre (genre)}
-					<a href="/genre/{encodeURIComponent(genre)}" class="text-xs bg-purple-500/10 text-purple-400 border border-purple-500/20 px-2.5 py-1 rounded-full hover:bg-purple-500 hover:text-slate-900 dark:text-white transition-colors">{genre}</a>
-				{/each}
+	<!-- Main Detail Content Layout -->
+	<div class="max-w-6xl mx-auto px-4 md:px-6 py-8">
+		<!-- Summary & Info Grid -->
+		<div class="mb-10 text-sm md:text-[15px] leading-relaxed text-zinc-300 bg-[#131418] p-5 md:p-6 rounded-xl border border-white/5 shadow-lg">
+			<p class="mb-6 whitespace-pre-wrap">{data.comic.description || 'Admin belum menuliskan deskripsi apapun untuk komik ini.'}</p>
+			
+			<div class="flex flex-wrap gap-4 text-xs font-bold font-mono">
+				{#if data.comic.genres}
+					<div class="flex gap-2 items-center bg-[#1a1c23] px-3 py-1.5 rounded border border-white/5">
+						<span class="text-zinc-500 uppercase tracking-wider">Genre</span>
+						<div class="flex gap-1.5">
+							{#each data.comic.genres.split(',').map((g: string) => g.trim()).filter(Boolean) as genre (genre)}
+								<a href="/genre/{encodeURIComponent(genre)}" class="bg-[#242529] hover:bg-[#2d2e34] px-2 py-0.5 rounded text-zinc-300 transition-colors">{genre}</a>
+							{/each}
+						</div>
+					</div>
+				{/if}
+				<div class="flex gap-2 items-center bg-[#1a1c23] px-3 py-1.5 rounded border border-white/5">
+					<span class="text-zinc-500 uppercase tracking-wider">Author</span>
+					<span class="bg-[#242529] px-2 py-0.5 rounded text-zinc-300">{data.comic.author || '-'}</span>
+				</div>
+				<div class="flex gap-2 items-center bg-[#1a1c23] px-3 py-1.5 rounded border border-white/5">
+					<span class="text-zinc-500 uppercase tracking-wider">Format</span>
+					<span class="bg-[#242529] px-2 py-0.5 rounded text-zinc-300">{data.comic.type || 'Manhwa'}</span>
+				</div>
+				<div class="flex gap-2 items-center bg-[#1a1c23] px-3 py-1.5 rounded border border-white/5">
+					<span class="text-zinc-500 uppercase tracking-wider">Status</span>
+					<span class="bg-[#242529] px-2 py-0.5 rounded text-zinc-300">{data.comic.status}</span>
+				</div>
 			</div>
-		{/if}
-		<div class="gap-4 text-sm text-slate-600 dark:text-slate-400 mb-6 mt-3 flex items-center">
-			<span class="bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 px-3 py-1 border-slate-300 dark:border-slate-700 rounded-full border"
-				>{data.comic.status}</span
-			>
-			<span class="gap-1 flex items-center">
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					class="h-4 w-4"
-					fill="none"
-					viewBox="0 0 24 24"
-					stroke="currentColor"
-					><path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-					/></svg
-				>
-				{data.comic.author || 'Author Tidak Diketahui'}
-			</span>
-			<span class="gap-1 flex items-center text-emerald-400 font-medium ml-1">
-				<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-				{new Intl.NumberFormat('id-ID').format(data.comic.viewCount)} Views
-			</span>
 		</div>
 
-		<!-- Action Bar: Ratings & Bookmarks -->
-		<div class="mb-5">
-			<RatingStars 
-				interactive={!!data.user} 
-				rating={data.comic.averageRating} 
-				count={data.comic.ratingCount} 
-				userRating={data.userRating} 
-			/>
-			{#if !data.user}
-				<p class="text-xs text-slate-500 mt-2">Masuk/Login untuk memberikan penilaian karya ini.</p>
-			{/if}
-		</div>
-
-		<div class="mb-8 flex items-center gap-3 flex-wrap">
-			{#if data.isFollowing}
-				<form action="?/toggleFollow" method="POST" use:enhance>
-					<button class="flex items-center gap-2 bg-purple-500/10 text-purple-400 border border-purple-500/30 font-bold px-4 py-2.5 rounded-lg transition-all hover:bg-purple-500 hover:text-white hover:border-purple-500 shadow-lg shadow-purple-900/10 active:scale-95">
-						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
-						Mengikuti
-					</button>
-				</form>
-			{:else}
-				<form action="?/toggleFollow" method="POST" use:enhance>
-					<button class="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 font-bold px-4 py-2.5 rounded-lg transition-all hover:bg-purple-600 hover:text-slate-900 dark:hover:text-white hover:border-purple-500 shadow-lg active:scale-95">
-						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
-						Ikuti
-					</button>
-				</form>
-			{/if}
-
-			{#if data.isBookmarked}
-				<form action="?/toggleBookmark" method="POST" use:enhance>
-					<button class="flex items-center gap-2 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-bold px-4 py-2.5 rounded-lg transition-all hover:bg-emerald-500 hover:text-slate-900 dark:text-white hover:border-emerald-500 shadow-lg shadow-emerald-900/10 active:scale-95">
-						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" /></svg>
-						Tersimpan di Favorit
-					</button>
-				</form>
-			{:else}
-				<form action="?/toggleBookmark" method="POST" use:enhance>
-					<button class="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 font-bold px-4 py-2.5 rounded-lg transition-all hover:bg-purple-600 hover:text-slate-900 dark:hover:text-white hover:border-purple-500 shadow-lg active:scale-95">
-						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg>
-						Tambah ke Favorit
-					</button>
-				</form>
-			{/if}
-
-			{#if data.user}
-				<button onclick={() => {(document.getElementById('collectionModal') as HTMLDialogElement)?.showModal()}} class="flex items-center gap-2 bg-rose-500/10 text-rose-500 border border-rose-500/30 font-bold px-4 py-2.5 rounded-lg transition-all hover:bg-rose-500 hover:text-white shadow-[0_0_15px_rgba(244,63,94,0.1)] active:scale-95">
-					<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
-					Simpan ke List Pribadi
-				</button>
-			{/if}
-		</div>
-
-		<div class="prose prose-invert mb-10 max-w-none">
-			<div class="flex items-center justify-between mb-3">
-				<h3 class="text-xl font-semibold">Sinopsis Cerita</h3>
-				<ShareButtons comicSlug={data.comic.slug} />
+		<!-- Donation/Ratings Bar -->
+		<div class="mb-8 flex items-center justify-between flex-wrap gap-4">
+			<DonationWidget />
+			<div class="flex flex-col items-end">
+				<RatingStars 
+					interactive={!!data.user} 
+					rating={data.comic.averageRating} 
+					count={data.comic.ratingCount} 
+					userRating={data.userRating} 
+				/>
+				{#if !data.user}
+					<span class="text-[10px] text-zinc-500 mt-1 uppercase tracking-wider">Login untuk review</span>
+				{/if}
 			</div>
-			<p class="text-slate-700 dark:text-slate-300 leading-relaxed text-[15px]">
-				{data.comic.description || 'Admin belum menuliskan deskripsi apapun untuk komik ini.'}
-			</p>
 		</div>
 
-		<DonationWidget />
+		<!-- Chapters Section -->
+		<div class="mb-12">
+			<div class="flex items-center gap-3 mb-4 text-white">
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" /></svg>
+				<h3 class="text-xl font-bold uppercase tracking-wide">Chapters</h3>
+			</div>
 
-		<!-- Chapter List UI -->
-		<div class="bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 rounded-xl p-1 md:p-6 mb-8 mt-10 shadow-inner border">
-			<h3 class="text-xl font-semibold mb-4 mx-3 md:mx-0 border-slate-200 dark:border-slate-800 pb-3 border-b">
-				Daftar Chapter
-			</h3>
-			<div class="gap-2 px-2 custom-scrollbar flex max-h-[500px] flex-col overflow-y-auto">
+			<!-- Search Bar -->
+			<div class="mb-6 relative">
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+				<input type="text" placeholder="Cari Chapter, Contoh: 89 atau 76" class="w-full bg-[#16171b] border border-white/5 rounded-lg py-3 pl-11 pr-4 text-sm text-zinc-300 focus:outline-none focus:border-purple-500/50 transition-colors placeholder:text-zinc-600 block">
+			</div>
+
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 {data.chapters.length > 30 ? 'max-h-[800px] overflow-y-auto custom-scrollbar pr-2' : ''}">
 				{#each data.chapters as chapter (chapter.id)}
 					<ChapterRow
 						slug={data.comic.slug}
 						chapterNumber={chapter.chapterNumber}
 						title={chapter.title}
 						createdAt={chapter.createdAt}
+						coverUrl={data.comic.coverUrl}
 					/>
 				{:else}
-					<div
-						class="text-center p-12 bg-white dark:bg-slate-950/50 rounded-lg text-slate-500 border border-dashed border-slate-200 dark:border-slate-800"
-					>
-						Wah, belum ada chapter yang diunggah sejauh ini.
+					<div class="col-span-full text-center p-12 bg-[#131418] rounded-xl text-zinc-500 border border-dashed border-white/5">
+						Belum ada chapter yang tersedia untuk komik ini.
 					</div>
 				{/each}
 			</div>
@@ -186,15 +185,15 @@
 
 		<!-- Related Comics -->
 		{#if data.relatedComics && data.relatedComics.length > 0}
-			<div class="bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 rounded-xl p-4 md:p-6 shadow-inner border">
-				<h3 class="text-xl font-semibold mb-4">Komik Serupa</h3>
-				<div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2.5">
+			<div class="mb-10">
+				<h3 class="text-xl font-bold uppercase tracking-wide text-white border-b border-white/10 pb-3 mb-4">Komik Serupa</h3>
+				<div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
 					{#each data.relatedComics as rel (rel.id)}
-						<a href="/comic/{rel.slug}" class="group">
-							<div class="aspect-3/4 rounded-lg overflow-hidden border border-slate-300 dark:border-slate-700 mb-1.5">
-								<img src={rel.cover} alt={rel.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+						<a href="/comic/{rel.slug}" class="group block relative rounded-lg overflow-hidden aspect-[3/4] bg-[#1a1c23] border border-white/5">
+							<img src={rel.cover} alt={rel.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-90 group-hover:opacity-100">
+							<div class="absolute inset-x-0 bottom-0 bg-linear-to-t from-black via-black/80 to-transparent p-2">
+								<p class="text-[10px] md:text-xs font-bold text-white line-clamp-2 leading-tight drop-shadow">{rel.title}</p>
 							</div>
-							<p class="text-xs font-medium text-slate-700 dark:text-slate-300 line-clamp-2 group-hover:text-purple-400 transition-colors">{rel.title}</p>
 						</a>
 					{/each}
 				</div>
