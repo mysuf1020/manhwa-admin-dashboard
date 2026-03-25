@@ -98,33 +98,38 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 		.limit(searchQuery ? 100 : pageSize)
 		.offset(searchQuery ? 0 : (page - 1) * pageSize);
 
-	// Join latest chapter number per comic
+	// Join latest chapters per comic (up to 5 each)
 	const comicIds = allComics.map((c) => c.id);
-	const latestChapterMap = new Map<number, string>();
+	const chaptersMap = new Map<number, { number: string; time: string }[]>();
 	if (comicIds.length > 0) {
-		const latestChaptersQuery = await db
-			.select({ comicId: chapters.comicId, chapterNumber: chapters.chapterNumber })
+		const chaptersQuery = await db
+			.select({ comicId: chapters.comicId, chapterNumber: chapters.chapterNumber, createdAt: chapters.createdAt })
 			.from(chapters)
 			.where(inArray(chapters.comicId, comicIds))
 			.orderBy(desc(chapters.createdAt));
 		
-		// Map manual untuk DISTINCT karena sqlite/pg driver perbedaan syntax
-		for (const row of latestChaptersQuery) {
-			if (!latestChapterMap.has(row.comicId)) {
-				latestChapterMap.set(row.comicId, row.chapterNumber);
+		for (const row of chaptersQuery) {
+			const list = chaptersMap.get(row.comicId) || [];
+			if (list.length < 5) {
+				list.push({ number: row.chapterNumber, time: timeAgo(row.createdAt) });
+				chaptersMap.set(row.comicId, list);
 			}
 		}
 	}
 
-	const latestUpdates = allComics.map((c) => ({
-		id: c.id,
-		slug: c.slug,
-		title: c.title,
-		type: c.type,
-		chapter: latestChapterMap.has(c.id) ? `Ch. ${latestChapterMap.get(c.id)}` : 'Belum ada chapter',
-		time: timeAgo(c.updatedAt),
-		cover: c.coverUrl || 'https://picsum.photos/seed/placeholder/300/400'
-	}));
+	const latestUpdates = allComics.map((c) => {
+		const chList = chaptersMap.get(c.id) || [];
+		return {
+			id: c.id,
+			slug: c.slug,
+			title: c.title,
+			type: c.type,
+			chapter: chList.length > 0 ? `Ch. ${chList[0].number}` : 'Belum ada chapter',
+			chapters: chList,
+			time: timeAgo(c.updatedAt),
+			cover: c.coverUrl || 'https://picsum.photos/seed/placeholder/300/400'
+		};
+	});
 
 	// Query Featured Comics (Slider Pilihan Editor)
 	let featuredComics: {
@@ -288,7 +293,7 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 				slug: c.slug,
 				title: c.title,
 				type: c.type,
-				chapter: latestChapterMap.has(c.id) ? `Ch. ${latestChapterMap.get(c.id)}` : 'Rekomendasi',
+				chapter: chaptersMap.has(c.id) ? `Ch. ${chaptersMap.get(c.id)![0].number}` : 'Rekomendasi',
 				time: timeAgo(c.updatedAt),
 				cover: c.coverUrl || 'https://picsum.photos/seed/placeholder/300/400'
 			}));
