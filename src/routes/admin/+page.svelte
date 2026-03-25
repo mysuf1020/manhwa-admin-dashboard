@@ -17,42 +17,10 @@
 		return `${Math.floor(hours / 24)} hari lalu`;
 	}
 
-	import { Pie, Bar } from 'svelte-chartjs';
-	import {
-		Chart as ChartJS,
-		Title,
-		Tooltip,
-		Legend,
-		ArcElement,
-		CategoryScale,
-		LinearScale,
-		BarElement
-	} from 'chart.js';
-
-	ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale, LinearScale, BarElement);
-
-	let statusChartData = $derived({
-		labels: data.charts.statusDist.map((d: any) => d.status || 'Unknown'),
-		datasets: [
-			{
-				data: data.charts.statusDist.map((d: any) => Number(d.count)),
-				backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#8b5cf6', '#ec4899'],
-				borderWidth: 0
-			}
-		]
-	});
-
-	let topComicsChartData = $derived({
-		labels: data.charts.topComics.map((d: any) => d.title.substring(0, 15) + '...'),
-		datasets: [
-			{
-				label: 'Views',
-				data: data.charts.topComics.map((d: any) => d.view_count),
-				backgroundColor: '#a855f7',
-				borderRadius: 6
-			}
-		]
-	});
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const maxViews = $derived(
+		Math.max(...(data.charts.topComics as any[]).map((d: any) => Number(d.view_count) || 0), 1)
+	);
 </script>
 
 <div class="md:grid-cols-3 gap-6 mb-8 grid grid-cols-1">
@@ -67,6 +35,41 @@
 	<div class="bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-lg border">
 		<h3 class="text-slate-600 dark:text-slate-400 text-sm font-medium mb-1">Total Views</h3>
 		<p class="text-3xl font-bold text-slate-900 dark:text-white">{formatNumber(data.stats.views)}</p>
+	</div>
+</div>
+
+<!-- Analytics: Top Comics & Status (CSS-based bars) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+	<div class="bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-lg border">
+		<h3 class="font-bold text-slate-900 dark:text-white mb-4">Top Comics by Views</h3>
+		<div class="space-y-3">
+			{#each (data.charts.topComics as any[]) as item}
+				<div>
+					<div class="flex justify-between text-sm mb-1">
+						<span class="text-slate-700 dark:text-slate-300 truncate mr-2">{item.title}</span>
+						<span class="text-slate-500 text-xs font-mono shrink-0">{formatNumber(Number(item.view_count))}</span>
+					</div>
+					<div class="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-2.5">
+						<div class="bg-purple-500 h-2.5 rounded-full transition-all" style="width: {(Number(item.view_count) / maxViews * 100).toFixed(1)}%"></div>
+					</div>
+				</div>
+			{/each}
+		</div>
+	</div>
+	<div class="bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-lg border">
+		<h3 class="font-bold text-slate-900 dark:text-white mb-4">Status Distribution</h3>
+		<div class="space-y-3">
+			{#each (data.charts.statusDist as any[]) as item, i}
+				{@const colors = ['bg-emerald-500', 'bg-blue-500', 'bg-amber-500', 'bg-purple-500', 'bg-pink-500']}
+				<div class="flex items-center justify-between">
+					<div class="flex items-center gap-2">
+						<div class="w-3 h-3 rounded-full {colors[i % colors.length]}"></div>
+						<span class="text-sm text-slate-700 dark:text-slate-300">{item.status || 'Unknown'}</span>
+					</div>
+					<span class="text-sm font-bold text-slate-900 dark:text-white">{item.count}</span>
+				</div>
+			{/each}
+		</div>
 	</div>
 </div>
 
