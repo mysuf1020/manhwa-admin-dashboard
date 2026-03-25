@@ -12,7 +12,7 @@
 
 <a
 	{href}
-	class="group block relative rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:border-purple-500/50 transition-all hover:shadow-[0_0_15px_rgba(168,85,247,0.15)] aspect-3/4"
+	class="group block relative rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:border-purple-500/50 transition-all hover:shadow-[0_0_15px_rgba(168,85,247,0.15)] aspect-3/4 h-full w-full"
 >
 	<img
 		src={comic.cover}

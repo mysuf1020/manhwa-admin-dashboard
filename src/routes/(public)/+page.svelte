@@ -251,7 +251,7 @@
 			<!-- Horizontal Scroll Container -->
 			<div class="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 no-scrollbar">
 				{#each data.popularComics as comic (comic.slug)}
-					<div class="w-36 md:w-44 snap-start shrink-0">
+					<div class="w-36 md:w-44 aspect-3/4 snap-start shrink-0">
 						<ComicCard href="/comic/{comic.slug}" {comic} isHot={true} />
 					</div>
 				{/each}
