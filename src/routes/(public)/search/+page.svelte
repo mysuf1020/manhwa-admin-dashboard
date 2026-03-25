@@ -135,7 +135,9 @@
 	{:else}
 		<div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 md:gap-4">
 			{#each data.results as comic (comic.id)}
-				<ComicCard href="/comic/{comic.slug}" {comic} />
+				<div class="h-52 md:h-64">
+					<ComicCard href="/comic/{comic.slug}" {comic} />
+				</div>
 			{/each}
 		</div>
 	{/if}

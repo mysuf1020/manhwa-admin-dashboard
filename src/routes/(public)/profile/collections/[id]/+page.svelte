@@ -92,7 +92,7 @@
 	{:else}
 		<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
 			{#each data.items as item (item.id)}
-				<div class="relative group">
+				<div class="relative group h-52 md:h-64">
 					<ComicCard comic={item} href={`/comic/${item.slug}`} />
 					
 					{#if data.isOwner}

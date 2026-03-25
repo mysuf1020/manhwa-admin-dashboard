@@ -22,7 +22,9 @@
 	{:else}
 		<div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2.5 md:gap-4">
 			{#each data.comics as comic (comic.slug)}
-				<ComicCard href="/comic/{comic.slug}" {comic} isHot={false} />
+				<div class="h-52 md:h-64">
+					<ComicCard href="/comic/{comic.slug}" {comic} isHot={false} />
+				</div>
 			{/each}
 		</div>
 	{/if}

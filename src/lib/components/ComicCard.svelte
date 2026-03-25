@@ -12,7 +12,7 @@
 
 <a
 	{href}
-	class="group block relative rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:border-purple-500/50 transition-all hover:shadow-[0_0_15px_rgba(168,85,247,0.15)] aspect-3/4 h-full w-full"
+	class="group block relative rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:border-purple-500/50 transition-all hover:shadow-[0_0_15px_rgba(168,85,247,0.15)] h-full"
 >
 	<img
 		src={comic.cover}
@@ -20,7 +20,7 @@
 		class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
 		loading="lazy"
 	/>
-	<div class="absolute inset-0 bg-linear-to-t from-black/90 via-black/30 to-transparent"></div>
+	<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div>
 	{#if isHot}
 		<div class="absolute top-2 left-2 bg-purple-600 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider text-white z-10">HOT</div>
 	{/if}
@@ -34,4 +34,3 @@
 		</div>
 	</div>
 </a>
-
