@@ -6,6 +6,7 @@ import { desc, ilike, and, eq, sql, asc, inArray, notInArray, or } from 'drizzle
 export const load: PageServerLoad = async ({ url, locals }) => {
 	const searchQuery = url.searchParams.get('q') || '';
 	const typeFilter = url.searchParams.get('type') || '';
+	const genreFilter = url.searchParams.get('genre') || '';
 
 	const conditions = [];
 
@@ -15,6 +16,10 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 
 	if (typeFilter && typeFilter !== 'All') {
 		conditions.push(eq(comics.type, typeFilter));
+	}
+
+	if (genreFilter) {
+		conditions.push(ilike(comics.genres, `%${genreFilter}%`));
 	}
 
 	const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
@@ -272,6 +277,18 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 		}
 	}
 
+	// Extract all unique genres from comics table
+	const genresResult = await db.select({ genres: comics.genres }).from(comics);
+	const genreSet = new Set<string>();
+	for (const row of genresResult) {
+		if (row.genres) {
+			for (const g of row.genres.split(',').map(s => s.trim()).filter(Boolean)) {
+				genreSet.add(g);
+			}
+		}
+	}
+	const allGenres = Array.from(genreSet).sort();
+
 	// Query Active Ads
 	const activeAds = await db.select().from(ads).where(eq(ads.isActive, true));
 
@@ -284,8 +301,10 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 		followedUpdates,
 		forYouComics,
 		activeAds,
+		allGenres,
 		searchQuery,
 		typeFilter: typeFilter || 'All',
+		genreFilter,
 		currentPage: page,
 		totalPages
 	};

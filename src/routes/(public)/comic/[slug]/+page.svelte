@@ -35,7 +35,7 @@
 		<div class="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20" style="background-image: url('{data.comic.coverUrl}'); filter: blur(20px);"></div>
 		<div class="absolute inset-0 bg-linear-to-t from-[#0c0d10] via-transparent to-[#0c0d10]/50"></div>
 
-		<div class="relative max-w-6xl mx-auto px-4 md:px-6 flex flex-col md:flex-row gap-6 md:gap-8 items-center md:items-end">
+		<div class="relative max-w-6xl mx-auto px-4 md:px-6 flex flex-col md:flex-row gap-6 md:gap-8 items-center md:items-start">
 			<!-- Cover Image -->
 			<div class="w-48 md:w-56 shrink-0 relative z-10 mx-auto md:mx-0">
 				<div class="rounded-xl shadow-2xl shadow-black/80 border border-white/10 overflow-hidden bg-black/50">
@@ -43,8 +43,23 @@
 				</div>
 			</div>
 
-			<!-- Title and Actions (Right Side align bottom) -->
+			<!-- Info Column (Right Side) -->
 			<div class="grow flex flex-col w-full text-center md:text-left">
+				<!-- Description (above title to fill space) -->
+				<p class="text-sm md:text-[15px] leading-relaxed text-zinc-400 mb-4 line-clamp-4 md:line-clamp-3 whitespace-pre-wrap">{data.comic.description || 'Belum ada deskripsi.'}</p>
+
+				<!-- Info Tags Row -->
+				<div class="flex flex-wrap gap-2 mb-4 justify-center md:justify-start text-[11px] font-bold font-mono">
+					{#if data.comic.genres}
+						{#each data.comic.genres.split(',').map((g) => g.trim()).filter(Boolean) as genre (genre)}
+							<a href="/genre/{encodeURIComponent(genre)}" class="bg-[#242529] hover:bg-[#2d2e34] px-2.5 py-1 rounded text-zinc-300 transition-colors border border-white/5">{genre}</a>
+						{/each}
+					{/if}
+					<span class="bg-[#1a1c23] px-2.5 py-1 rounded text-zinc-400 border border-white/5"><span class="text-zinc-600 uppercase tracking-wider mr-1">Author</span> {data.comic.author || '-'}</span>
+					<span class="bg-[#1a1c23] px-2.5 py-1 rounded text-zinc-400 border border-white/5"><span class="text-zinc-600 uppercase tracking-wider mr-1">Format</span> {data.comic.type || 'Manhwa'}</span>
+					<span class="bg-[#1a1c23] px-2.5 py-1 rounded text-zinc-400 border border-white/5"><span class="text-zinc-600 uppercase tracking-wider mr-1">Status</span> {data.comic.status}</span>
+				</div>
+
 				<h1 class="text-3xl md:text-4xl lg:text-5xl font-black text-white mb-4 drop-shadow-lg leading-tight">
 					{data.comic.title}
 					{#if data.comic.isMature}
@@ -107,35 +122,6 @@
 
 	<!-- Main Detail Content Layout -->
 	<div class="max-w-6xl mx-auto px-4 md:px-6 py-8">
-		<!-- Summary & Info Grid -->
-		<div class="mb-10 text-sm md:text-[15px] leading-relaxed text-zinc-300 bg-[#131418] p-5 md:p-6 rounded-xl border border-white/5 shadow-lg">
-			<p class="mb-6 whitespace-pre-wrap">{data.comic.description || 'Admin belum menuliskan deskripsi apapun untuk komik ini.'}</p>
-			
-			<div class="flex flex-wrap gap-4 text-xs font-bold font-mono">
-				{#if data.comic.genres}
-					<div class="flex gap-2 items-center bg-[#1a1c23] px-3 py-1.5 rounded border border-white/5">
-						<span class="text-zinc-500 uppercase tracking-wider">Genre</span>
-						<div class="flex gap-1.5">
-							{#each data.comic.genres.split(',').map((g: string) => g.trim()).filter(Boolean) as genre (genre)}
-								<a href="/genre/{encodeURIComponent(genre)}" class="bg-[#242529] hover:bg-[#2d2e34] px-2 py-0.5 rounded text-zinc-300 transition-colors">{genre}</a>
-							{/each}
-						</div>
-					</div>
-				{/if}
-				<div class="flex gap-2 items-center bg-[#1a1c23] px-3 py-1.5 rounded border border-white/5">
-					<span class="text-zinc-500 uppercase tracking-wider">Author</span>
-					<span class="bg-[#242529] px-2 py-0.5 rounded text-zinc-300">{data.comic.author || '-'}</span>
-				</div>
-				<div class="flex gap-2 items-center bg-[#1a1c23] px-3 py-1.5 rounded border border-white/5">
-					<span class="text-zinc-500 uppercase tracking-wider">Format</span>
-					<span class="bg-[#242529] px-2 py-0.5 rounded text-zinc-300">{data.comic.type || 'Manhwa'}</span>
-				</div>
-				<div class="flex gap-2 items-center bg-[#1a1c23] px-3 py-1.5 rounded border border-white/5">
-					<span class="text-zinc-500 uppercase tracking-wider">Status</span>
-					<span class="bg-[#242529] px-2 py-0.5 rounded text-zinc-300">{data.comic.status}</span>
-				</div>
-			</div>
-		</div>
 
 		<!-- Donation/Ratings Bar -->
 		<div class="mb-8 flex items-center justify-between flex-wrap gap-4">

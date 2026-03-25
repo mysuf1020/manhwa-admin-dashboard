@@ -40,6 +40,17 @@
 		{ id: 'Manga', label: 'Manga' },
 		{ id: 'Manhua', label: 'Manhua' }
 	];
+
+	function setGenreFilter(genre: string) {
+		const url = new URL(window.location.href);
+		url.searchParams.delete('page');
+		if (!genre) {
+			url.searchParams.delete('genre');
+		} else {
+			url.searchParams.set('genre', genre);
+		}
+		goto(url.toString());
+	}
 </script>
 
 <svelte:head>
@@ -194,7 +205,7 @@
 	<div class="mb-10"><AdBanner ads={data.activeAds} position="homepage_mid" isVip={data.user?.isVip} /></div>
 
 	<!-- Filters -->
-	<section class="mb-10 flex justify-center">
+	<section class="mb-10 flex flex-col items-center gap-4">
 		<div
 			class="flex items-center gap-1.5 md:gap-2 overflow-x-auto no-scrollbar bg-slate-50 dark:bg-slate-900/80 backdrop-blur-xl p-1.5 rounded-xl border border-slate-300 dark:border-slate-700/50 shadow-lg"
 		>
@@ -207,6 +218,26 @@
 				</button>
 			{/each}
 		</div>
+
+		<!-- Genre Filter Pills -->
+		{#if data.allGenres && data.allGenres.length > 0}
+			<div class="flex items-center gap-2 overflow-x-auto no-scrollbar w-full max-w-4xl pb-1 px-1">
+				<button
+					onclick={() => setGenreFilter('')}
+					class={`shrink-0 whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-bold transition-all border ${!data.genreFilter ? 'bg-purple-600 text-white border-purple-500 shadow-md shadow-purple-900/30' : 'bg-slate-50 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-purple-500/50 hover:text-purple-400'}`}
+				>
+					Semua Genre
+				</button>
+				{#each data.allGenres as genre (genre)}
+					<button
+						onclick={() => setGenreFilter(genre)}
+						class={`shrink-0 whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-bold transition-all border ${data.genreFilter === genre ? 'bg-purple-600 text-white border-purple-500 shadow-md shadow-purple-900/30' : 'bg-slate-50 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-purple-500/50 hover:text-purple-400'}`}
+					>
+						{genre}
+					</button>
+				{/each}
+			</div>
+		{/if}
 	</section>
 
 	<!-- Popular Comics Section -->
