@@ -3,6 +3,24 @@ import { db } from '$lib/server/db';
 import { comics, announcements, history, chapters, ads, followers } from '$lib/server/schema';
 import { desc, ilike, and, eq, sql, asc, inArray, notInArray, or } from 'drizzle-orm';
 
+function timeAgo(date: Date | string | null): string {
+	const now = Date.now();
+	const d = date ? new Date(date).getTime() : now;
+	const diff = now - d;
+	const mins = Math.floor(diff / 60000);
+	if (mins < 1) return 'Baru saja';
+	if (mins < 60) return `${mins} menit lalu`;
+	const hours = Math.floor(mins / 60);
+	if (hours < 24) return `${hours} jam lalu`;
+	const days = Math.floor(hours / 24);
+	if (days < 7) return `${days} hari lalu`;
+	const weeks = Math.floor(days / 7);
+	if (weeks < 5) return `${weeks} minggu lalu`;
+	const months = Math.floor(days / 30);
+	if (months < 12) return `${months} bulan lalu`;
+	return `${Math.floor(months / 12)} tahun lalu`;
+}
+
 export const load: PageServerLoad = async ({ url, locals }) => {
 	const searchQuery = url.searchParams.get('q') || '';
 	const typeFilter = url.searchParams.get('type') || '';
@@ -55,7 +73,7 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 			title: c.title,
 			type: c.type,
 			chapter: '🔥 HOT',
-			time: new Date(c.updated_at || Date.now()).toLocaleDateString(),
+			time: timeAgo(c.updated_at),
 			cover: c.cover_url || 'https://picsum.photos/seed/placeholder/300/400'
 		}));
 	}
@@ -104,7 +122,7 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 		title: c.title,
 		type: c.type,
 		chapter: latestChapterMap.has(c.id) ? `Ch. ${latestChapterMap.get(c.id)}` : 'Belum ada chapter',
-		time: new Date(c.updatedAt || Date.now()).toLocaleDateString(),
+		time: timeAgo(c.updatedAt),
 		cover: c.coverUrl || 'https://picsum.photos/seed/placeholder/300/400'
 	}));
 
@@ -271,7 +289,7 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 				title: c.title,
 				type: c.type,
 				chapter: latestChapterMap.has(c.id) ? `Ch. ${latestChapterMap.get(c.id)}` : 'Rekomendasi',
-				time: new Date(c.updatedAt || Date.now()).toLocaleDateString(),
+				time: timeAgo(c.updatedAt),
 				cover: c.coverUrl || 'https://picsum.photos/seed/placeholder/300/400'
 			}));
 		}
