@@ -30,7 +30,7 @@
 			{#if data.profile?.avatarUrl}
 				<img src={data.profile.avatarUrl} alt="Avatar" class="w-24 h-24 rounded-2xl object-cover shadow-xl shadow-purple-900/30 border border-slate-200 dark:border-slate-800" />
 			{:else}
-				<div class="w-24 h-24 bg-linear-to-br from-purple-500 to-indigo-600 rounded-2xl flex items-center justify-center text-4xl font-black text-slate-900 dark:text-white shadow-xl shadow-purple-900/30 transform rotate-3">
+				<div class="w-24 h-24 bg-linear-to-br from-purple-500 to-indigo-600 rounded-2xl flex items-center justify-center text-4xl font-black text-white shadow-xl shadow-purple-900/30 transform rotate-3">
 					{data.user?.username[0].toUpperCase()}
 				</div>
 			{/if}
@@ -73,7 +73,7 @@
 					</div>
 					<div class="flex gap-2 justify-end pt-2 border-t border-slate-200 dark:border-slate-800">
 						<button type="button" onclick={() => isEditMode = false} class="px-4 py-1.5 text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">Batal</button>
-						<button type="submit" class="px-4 py-1.5 text-xs font-bold bg-purple-600 hover:bg-purple-500 text-slate-900 dark:text-white rounded-lg transition-colors">Simpan Perubahan</button>
+						<button type="submit" class="inline-block bg-purple-600 hover:bg-purple-500 text-white font-bold px-6 py-2.5 rounded-xl transition-colors shadow-lg shadow-purple-600/20">Simpan Perubahan</button>
 					</div>
 				</form>
 			{/if}
@@ -91,7 +91,7 @@
             <div class="bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-800 border-dashed rounded-2xl p-10 text-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-slate-700 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
                 <p class="text-slate-600 dark:text-slate-400 font-medium text-lg">Hampa. Anda belum membaca komik satupun.</p>
-                <a href="/" class="text-emerald-400 hover:text-emerald-300 transition-colors mt-3 inline-block font-bold bg-emerald-500/10 px-6 py-2.5 rounded-full border border-emerald-500/20">Mulai Eksplorasi Katalog</a>
+                <a href="/" class="text-emerald-400 hover:text-emerald-300 transition-colors mt-3 inline-block font-bold bg-emerald-500/10 px-6 py-2.5 rounded-xl border border-emerald-500/20">Mulai Eksplorasi Katalog</a>
             </div>
         {:else}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -133,9 +133,7 @@
         {:else}
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
                 {#each data.userBookmarks as comic (comic.id)}
-                    <div class="h-52 md:h-64">
-                        <ComicCard {comic} href={`/comic/${comic.slug}`} />
-                    </div>
+                    <ComicCard {comic} href={`/comic/${comic.slug}`} />
                 {/each}
             </div>
         {/if}

@@ -58,7 +58,7 @@
 				placeholder="Cari judul komik..."
 				class="grow bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
 			/>
-			<button type="submit" class="bg-purple-600 hover:bg-purple-500 text-slate-900 dark:text-white font-bold px-6 py-2.5 rounded-lg transition-colors shrink-0">
+			<button type="submit" class="bg-purple-600 hover:bg-purple-500 text-white font-bold px-6 py-2.5 rounded-xl transition-colors shrink-0 shadow-md shadow-purple-600/20">
 				Cari
 			</button>
 		</form>
@@ -135,9 +135,7 @@
 	{:else}
 		<div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 md:gap-4">
 			{#each data.results as comic (comic.id)}
-				<div class="h-52 md:h-64">
-					<ComicCard href="/comic/{comic.slug}" {comic} />
-				</div>
+				<ComicCard href="/comic/{comic.slug}" {comic} />
 			{/each}
 		</div>
 	{/if}
